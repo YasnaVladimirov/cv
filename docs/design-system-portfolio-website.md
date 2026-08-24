@@ -318,6 +318,16 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
 @import 'tailwindcss' source(none);
 @source '../**/*.{astro,ts,tsx,js,jsx,mdx}';
 
+/* Self-hosted variable fonts — §3.2, §9.2. The `wght` cut carries the weight
+   axis only, which is all this system uses (400/500/600/700); no italics are
+   specified anywhere, so the italic files are deliberately not imported.
+   Fontsource splits each family by unicode-range, so a browser fetches the
+   latin-ext file — the one holding š đ č ć ž — only when the page actually
+   contains those characters. font-display: swap is already set upstream.
+   Glyph coverage is asserted at build time by scripts/verify-fonts.mjs. */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
 /* ------------------------------------------------------------------ *
  * 1. Tailwind theme — Section 3 tokens, verbatim.                     *
  *    Every namespace is wiped with `initial` first so ONLY these      *

@@ -47,6 +47,9 @@ jobs:
       - name: Verify theme
         run: pnpm verify:theme
 
+      - name: Verify fonts
+        run: pnpm verify:fonts
+
       - name: Build
         run: pnpm build
 
