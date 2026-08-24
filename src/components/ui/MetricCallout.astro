@@ -1,0 +1,36 @@
+---
+/**
+ * A measured outcome (Design System §6.4).
+ *
+ * Reserved for real numbers with a unit and a direction. "5 years experience"
+ * is not one of these — §6.4 is explicit that it is body text in secondary
+ * colour, and the whole point of the treatment is that it means something when
+ * it appears.
+ *
+ * `tabular-nums` so a row of metrics keeps its digits on a common grid; the
+ * value is not translated (a number is a number) but its label is.
+ */
+import T from './T.astro';
+
+interface Props {
+  /** Carries unit and direction: "-58%", not "58". */
+  value: string;
+  /** Dictionary key, or a literal via `label` when the string lives in content. */
+  labelKey?: string;
+  /** Pre-resolved label from a content collection's _en/_sr pair. */
+  labelEn?: string;
+  labelSr?: string;
+  class?: string;
+}
+
+const { value, labelKey, labelEn, labelSr, class: className } = Astro.props;
+---
+
+<div class:list={['flex flex-col', className]}>
+  <span class="font-sans text-metric text-accent tabular-nums">{value}</span>
+  <span class="text-sm text-text-secondary">
+    {labelKey && <T k={labelKey} />}
+    {!labelKey && labelEn !== undefined && <span data-lang="en">{labelEn}</span>}
+    {!labelKey && labelSr !== undefined && <span data-lang="sr">{labelSr}</span>}
+  </span>
+</div>

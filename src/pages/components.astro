@@ -21,6 +21,7 @@ import Button from '../components/ui/Button.astro';
 import Link from '../components/ui/Link.astro';
 import Tag from '../components/ui/Tag.astro';
 import AvailabilityBadge from '../components/ui/AvailabilityBadge.astro';
+import MetricCallout from '../components/ui/MetricCallout.astro';
 import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
 ---
 
@@ -231,6 +232,19 @@ import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
         note="hero.availability.enabled is false in the dictionary, so the component renders nothing at all. There should be an empty row below this line."
       >
         <AvailabilityBadge />
+      </Case>
+    </Section>
+
+    <Section id="metrics" spec="§6.4" title="Metric callout">
+      <Case
+        label="a row of three, as on a case-study card"
+        note="tabular-nums: the digits sit on a common grid, so the three values line up regardless of which numerals they use. Every one carries a unit and a direction — §6.4 forbids this treatment for anything that is not a measured outcome."
+      >
+        <div class="flex flex-wrap gap-8">
+          <MetricCallout value="-58%" labelEn="LCP on mobile" labelSr="LCP na mobilnom" />
+          <MetricCallout value="+6.2%" labelEn="Checkout conversion" labelSr="Konverzija naplate" />
+          <MetricCallout value="200k" labelEn="Monthly users" labelSr="Mesečnih korisnika" />
+        </div>
       </Case>
     </Section>
   </main>
