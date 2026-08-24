@@ -68,6 +68,7 @@
   },
   "caseStudy": {
     "eyebrow": {
+      "card": "--studija-slucaja",
       "context": "--kontekst",
       "problem": "--problem",
       "role": "--moja-uloga",

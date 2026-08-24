@@ -68,6 +68,7 @@
   },
   "caseStudy": {
     "eyebrow": {
+      "card": "--case-study",
       "context": "--context",
       "problem": "--problem",
       "role": "--my-role",

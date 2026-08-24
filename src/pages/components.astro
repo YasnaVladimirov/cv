@@ -24,6 +24,7 @@ import AvailabilityBadge from '../components/ui/AvailabilityBadge.astro';
 import MetricCallout from '../components/ui/MetricCallout.astro';
 import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
 import TimelineEntry from '../components/content/TimelineEntry.astro';
+import CaseStudyCard from '../components/content/CaseStudyCard.astro';
 import TestimonialCard from '../components/content/TestimonialCard.astro';
 import { getCollection } from 'astro:content';
 import fixtureAvatar from '../content/case-studies/fixture-1.png';
@@ -288,6 +289,55 @@ const caseStudies = (await getCollection('caseStudies'))
         <div class="w-full">
           <TimelineEntry role={roles[0].data} filter="match" />
           <TimelineEntry role={roles[1].data} filter="out" />
+        </div>
+      </Case>
+    </Section>
+
+    <Section id="case-study-cards" spec="§7.10" title="Case study card">
+      <Case
+        label="spotlight — one published study, the probable launch state"
+        wide
+        note="Horizontal from md up, 4:3 image. The whole card is a single anchor and therefore a single tab stop: Tab into it once and the next Tab leaves it. The Read case study line is a span for exactly that reason."
+      >
+        <div class="w-full">
+          <CaseStudyCard
+            layout="spotlight"
+            href={`/work/${caseStudies[0].id}`}
+            title_en={caseStudies[0].data.title_en}
+            title_sr={caseStudies[0].data.title_sr}
+            outcome_en={caseStudies[0].data.outcome_en}
+            outcome_sr={caseStudies[0].data.outcome_sr}
+            metrics={caseStudies[0].data.metrics}
+            stack={caseStudies[0].data.stack}
+            image={caseStudies[0].data.hero_image}
+            imageAlt_en={caseStudies[0].data.hero_image_alt_en}
+            imageAlt_sr={caseStudies[0].data.hero_image_alt_sr}
+          />
+        </div>
+      </Case>
+
+      <Case
+        label="grid — three up"
+        wide
+        note="Same component, 16:10 image, min-height 420px so the row stays even. Switch language and it becomes 460px: Serbian runs about 35% longer, and without that the tallest card drags the whole row on every toggle."
+      >
+        <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
+          {
+            caseStudies.map((entry) => (
+              <CaseStudyCard
+                href={`/work/${entry.id}`}
+                title_en={entry.data.title_en}
+                title_sr={entry.data.title_sr}
+                outcome_en={entry.data.outcome_en}
+                outcome_sr={entry.data.outcome_sr}
+                metrics={entry.data.metrics}
+                stack={entry.data.stack}
+                image={entry.data.hero_image}
+                imageAlt_en={entry.data.hero_image_alt_en}
+                imageAlt_sr={entry.data.hero_image_alt_sr}
+              />
+            ))
+          }
         </div>
       </Case>
     </Section>

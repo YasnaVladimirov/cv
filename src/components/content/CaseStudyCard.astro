@@ -1,0 +1,174 @@
+---
+/**
+ * A case study preview on the home page (Design System §7.10).
+ *
+ * The whole card is one link and therefore one tab stop. That has a
+ * consequence worth stating: the "Read case study →" affordance at the bottom
+ * is a `<span>`, not an `<a>`. Nesting an anchor inside an anchor is invalid
+ * HTML, browsers recover from it unpredictably, and it would put a second tab
+ * stop inside a control that is already the link.
+ *
+ * Glass at 0.55 rather than glass-strong is the one exception §10.1 grants,
+ * and it grants it to this component by name: the screenshot supplies the
+ * contrast the panel opacity otherwise would.
+ *
+ * The three layouts are content-driven, not a style choice — App Flow §4.3
+ * picks one from how many case studies are published, so a single launched
+ * case study reads as a deliberate spotlight rather than a lonely grid cell.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { LANGS, type Lang } from '../../lib/i18n';
+import SectionEyebrow from '../ui/SectionEyebrow.astro';
+import MetricCallout from '../ui/MetricCallout.astro';
+import Tag from '../ui/Tag.astro';
+import T from '../ui/T.astro';
+import { ArrowRight } from '../../lib/icons';
+
+interface Metric {
+  value: string;
+  label_en: string;
+  label_sr: string;
+}
+
+interface Props {
+  href: string;
+  title_en: string;
+  title_sr: string;
+  outcome_en: string;
+  outcome_sr: string;
+  metrics: Metric[];
+  stack: string[];
+  image: ImageMetadata;
+  imageAlt_en: string;
+  imageAlt_sr: string;
+  /** 3-up grid, 2-up pair, or a single horizontal spotlight (§7.10). */
+  layout?: 'grid' | 'pair' | 'spotlight';
+  class?: string;
+}
+
+const {
+  href,
+  title_en,
+  title_sr,
+  outcome_en,
+  outcome_sr,
+  metrics,
+  stack,
+  image,
+  imageAlt_en,
+  imageAlt_sr,
+  layout = 'grid',
+  class: className,
+} = Astro.props;
+
+const title: Record<Lang, string> = { en: title_en, sr: title_sr };
+const outcome: Record<Lang, string> = { en: outcome_en, sr: outcome_sr };
+
+const isSpotlight = layout === 'spotlight';
+// §7.10: the spotlight's image becomes 4:3, the stacked layouts stay 16:10.
+const aspect = isSpotlight ? 'aspect-[4/3]' : 'aspect-[16/10]';
+---
+
+<a
+  href={href}
+  class:list={[
+    'case-study-card group glass block overflow-hidden p-8 no-underline',
+    isSpotlight ? 'md:grid md:grid-cols-2 md:items-center md:gap-8' : 'flex flex-col',
+    className,
+  ]}
+>
+  <div class:list={['overflow-hidden rounded-md', aspect, !isSpotlight && 'mb-6']}>
+    {
+      LANGS.map((lang) => (
+        <span data-lang={lang}>
+          <Image
+            src={image}
+            alt={lang === 'en' ? imageAlt_en : imageAlt_sr}
+            class="h-full w-full object-cover"
+            widths={[400, 800, 1200]}
+            sizes="(min-width: 1024px) 400px, 100vw"
+          />
+        </span>
+      ))
+    }
+  </div>
+
+  <div class="flex min-w-0 flex-col gap-3">
+    <SectionEyebrow k="caseStudy.eyebrow.card" />
+
+    {
+      LANGS.map((lang) => (
+        <h3
+          data-lang={lang}
+          class="card-title text-xl font-semibold text-text-primary transition-colors duration-base ease-out"
+        >
+          {title[lang]}
+        </h3>
+      ))
+    }
+
+    {
+      LANGS.map((lang) => (
+        <p data-lang={lang} class="text-base text-text-secondary">
+          {outcome[lang]}
+        </p>
+      ))
+    }
+
+    {
+      metrics.length > 0 && (
+        <div class="mt-2 flex flex-col gap-4 sm:flex-row sm:gap-8">
+          {metrics.slice(0, 3).map((metric) => (
+            <MetricCallout
+              value={metric.value}
+              labelEn={metric.label_en}
+              labelSr={metric.label_sr}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    <div class="mt-2 flex flex-wrap gap-2">
+      {stack.map((item) => <Tag label={item} />)}
+    </div>
+
+    {
+      /*
+      A span, not a Link. The card itself is the anchor; an <a> here would
+      nest anchors and add a second tab stop inside one control.
+    */
+    }
+    <span class="mt-4 inline-flex items-center gap-1 text-accent text-sm font-medium">
+      <T k="timeline.readCaseStudy" />
+      <ArrowRight size={16} aria-hidden="true" />
+    </span>
+  </div>
+</a>
+
+<style>
+  /* §7.10 dimensions. min-height rises in Serbian, where strings run roughly
+     35% longer (§9.1) — without it the SR grid has one card taller than the
+     rest and the row reflows on every language switch. */
+  .case-study-card {
+    box-shadow: var(--shadow-glass);
+    transition: box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  @media (min-width: 1024px) {
+    .case-study-card {
+      min-height: 420px;
+    }
+    :global(html[lang^='sr']) .case-study-card {
+      min-height: 460px;
+    }
+  }
+
+  .case-study-card:hover {
+    box-shadow: var(--shadow-glass-hover);
+  }
+  .case-study-card:hover .card-title {
+    color: var(--color-accent);
+  }
+</style>
