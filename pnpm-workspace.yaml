@@ -1,0 +1,11 @@
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@astrojs/markdown-satteri@0.3.8'
+  - '@astrojs/mdx@7.0.8'
+  - '@types/react-dom@19.2.5'
+  - astro@7.2.6
+  - lucide-react@1.34.0
+  - '@lucide/astro@1.34.0'
+onlyBuiltDependencies:
+  - esbuild
