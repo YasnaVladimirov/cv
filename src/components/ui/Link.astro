@@ -1,0 +1,55 @@
+---
+/**
+ * Link — three variants (Design System §7.5). Underlines are load-bearing:
+ * inline links carry one at rest because in prose there is nothing else to
+ * distinguish them, and the two arrow variants do not because the arrow is
+ * already the affordance.
+ *
+ * Focus-visible deliberately does not change the underline (§7.5). Moving it
+ * on focus makes the ring read as a second, competing indicator.
+ */
+import { ArrowRight, ArrowUpRight } from '../../lib/icons';
+import T from './T.astro';
+
+interface Props {
+  variant?: 'inline' | 'standalone' | 'external';
+  href: string;
+  /** Serbian href when the target differs. Swapped at runtime, not by CSS. */
+  hrefSr?: string;
+  /** Dictionary key for the label. Omit to pass content through the slot. */
+  labelKey?: string;
+  download?: boolean;
+  class?: string;
+}
+
+const { variant = 'inline', href, hrefSr, labelKey, download, class: className } = Astro.props;
+
+const VARIANT = {
+  // Underline colour is the accent, text colour is not — that is what keeps
+  // prose readable while still marking the link.
+  inline:
+    'text-text-primary underline decoration-accent decoration-1 underline-offset-[3px] transition-colors duration-fast ease-out hover:text-accent',
+  standalone:
+    'inline-flex items-center gap-1 text-accent font-medium no-underline transition-colors duration-fast ease-out hover:underline',
+  external:
+    'inline-flex items-center gap-1 text-accent font-medium no-underline transition-colors duration-fast ease-out hover:underline',
+} as const;
+
+const isExternal = variant === 'external';
+const Arrow = isExternal ? ArrowUpRight : variant === 'standalone' ? ArrowRight : null;
+
+const hrefAttrs =
+  hrefSr !== undefined ? { 'data-i18n-href-en': href, 'data-i18n-href-sr': hrefSr } : {};
+---
+
+<a
+  href={href}
+  download={download}
+  target={isExternal ? '_blank' : undefined}
+  rel={isExternal ? 'noopener' : undefined}
+  class:list={[VARIANT[variant], className]}
+  {...hrefAttrs}
+>
+  {labelKey ? <T k={labelKey} /> : <slot />}
+  {Arrow && <Arrow size={16} aria-hidden="true" />}
+</a>

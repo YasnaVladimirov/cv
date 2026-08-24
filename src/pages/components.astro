@@ -18,6 +18,7 @@ import Section from '../components/dev/Section.astro';
 import SectionEyebrow from '../components/ui/SectionEyebrow.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
 import Button from '../components/ui/Button.astro';
+import Link from '../components/ui/Link.astro';
 import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
 ---
 
@@ -154,6 +155,39 @@ import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
           download
           icon={ArrowRight}
         />
+      </Case>
+    </Section>
+
+    <Section id="links" spec="§7.5" title="Link">
+      <Case
+        label="inline — inside prose"
+        note="Underlined at rest because in a paragraph there is nothing else marking it. The underline is accent-coloured, the text is not; on hover the text catches up."
+      >
+        <p class="max-w-prose text-base text-text-primary">
+          A sentence with <Link href="#links">an inline link</Link> in the middle of it, so the underline
+          offset can be judged against a real line of text.
+        </p>
+      </Case>
+
+      <Case label="standalone — the card and timeline link">
+        <Link variant="standalone" href="#links" labelKey="timeline.readCaseStudy" />
+      </Case>
+
+      <Case
+        label="external — new tab, arrow-up-right"
+        note="target=_blank with rel=noopener. The arrow differs from standalone on purpose: it is the only signal that the link leaves the site."
+      >
+        <Link variant="external" href="https://github.com" labelKey="footer.github" />
+        <Link variant="external" href="https://linkedin.com" labelKey="footer.linkedin" />
+      </Case>
+
+      <Case
+        label="all three, focused"
+        note="Tab through these. The ring appears and the underline must NOT change — a moving underline reads as a second, competing focus indicator."
+      >
+        <Link href="#links" labelKey="nav.contact" />
+        <Link variant="standalone" href="#links" labelKey="nav.work" />
+        <Link variant="external" href="https://example.com" labelKey="footer.email" />
       </Case>
     </Section>
   </main>
