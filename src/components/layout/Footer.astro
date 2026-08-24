@@ -1,0 +1,72 @@
+---
+/**
+ * Site footer (Design System §7.20).
+ *
+ * `bg-elevated`, not glass. Glass is for content that sits above something
+ * worth blurring; the footer sits at the end of the page where there is
+ * nothing behind it, and §3.6 forbids glass over plain background.
+ *
+ * The external URLs come from the dictionary rather than props because they
+ * are content — changing a LinkedIn handle must not mean touching a component
+ * (PRD 5.6).
+ */
+import { t, DEFAULT_LANG } from '../../lib/i18n';
+import LanguageToggle from '../interactive/LanguageToggle';
+import Link from '../ui/Link.astro';
+import T from '../ui/T.astro';
+
+const NAV = [
+  { key: 'nav.work', href: '#work' },
+  { key: 'nav.skills', href: '#skills' },
+  { key: 'nav.contact', href: '#contact' },
+] as const;
+
+const email = t('contact.email', DEFAULT_LANG);
+const ELSEWHERE = [
+  { key: 'footer.github', href: t('social.githubUrl', DEFAULT_LANG) },
+  { key: 'footer.linkedin', href: t('social.linkedinUrl', DEFAULT_LANG) },
+] as const;
+---
+
+<footer class="border-t border-border-subtle bg-bg-elevated py-12">
+  <div class="mx-auto grid max-w-container grid-cols-2 gap-6 px-4 sm:px-6 md:grid-cols-4 md:px-8">
+    <div class="flex flex-col gap-2">
+      <p class="text-base font-semibold text-text-primary"><T k="hero.name" /></p>
+      <p class="text-sm text-text-secondary"><T k="footer.tagline" /></p>
+    </div>
+
+    <nav class="flex flex-col gap-2" aria-label={t('footer.links', DEFAULT_LANG)}>
+      <h2 class="text-sm font-semibold text-text-primary"><T k="footer.links" /></h2>
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class="text-sm text-text-secondary no-underline transition-colors duration-fast ease-out hover:text-text-primary"
+          >
+            <T k={item.key} />
+          </a>
+        ))
+      }
+    </nav>
+
+    <nav class="flex flex-col gap-2" aria-label={t('footer.elsewhere', DEFAULT_LANG)}>
+      <h2 class="text-sm font-semibold text-text-primary"><T k="footer.elsewhere" /></h2>
+      {
+        ELSEWHERE.map((item) => (
+          <Link variant="external" href={item.href} labelKey={item.key} class="text-sm" />
+        ))
+      }
+      <a
+        href={`mailto:${email}`}
+        class="text-sm text-text-secondary no-underline transition-colors duration-fast ease-out hover:text-text-primary"
+      >
+        <T k="footer.email" />
+      </a>
+    </nav>
+
+    <div class="flex flex-col items-start gap-3">
+      <LanguageToggle client:load />
+      <p class="text-sm text-text-tertiary"><T k="footer.builtWith" /></p>
+    </div>
+  </div>
+</footer>
