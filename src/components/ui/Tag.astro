@@ -1,0 +1,72 @@
+---
+/**
+ * Tag — skills in the matrix, stack tags on cards and timeline entries
+ * (Design System §7.12).
+ *
+ * `matches` is the important prop and it is not cosmetic. A skill with no
+ * timeline matches renders as plain, unfocusable text rather than a dead
+ * button, which is what makes App Flow §4.6's zero-result filter state
+ * impossible to reach rather than merely unlikely. Content decides it: the
+ * schema allows an empty `timeline_matches`, and this is where that shows up.
+ *
+ * Filter wiring lands in Phase 5; here `active` is just a prop.
+ */
+import T from './T.astro';
+
+interface Props {
+  /** Literal text — skill and stack names are proper nouns, not translated. */
+  label?: string;
+  /** Dictionary key, for the rare translated tag. */
+  labelKey?: string;
+  /** A skill in the matrix, as opposed to a stack tag. */
+  interactive?: boolean;
+  /** This skill is the filter currently applied. */
+  active?: boolean;
+  /** This skill appears in at least one role. Ignored unless interactive. */
+  matches?: boolean;
+  /** Phase 5 reads this to apply the filter. */
+  skillName?: string;
+  class?: string;
+}
+
+const {
+  label,
+  labelKey,
+  interactive = false,
+  active = false,
+  matches = true,
+  skillName,
+  class: className,
+} = Astro.props;
+
+const BASE = 'inline-flex h-[24px] items-center rounded-sm px-2 font-mono text-mono-sm';
+
+// An interactive skill with no matches is not interactive. Deciding that here
+// rather than at every call site is the point of the component.
+const isButton = interactive && matches;
+
+const STATIC = 'border border-border-subtle bg-bg-elevated text-text-secondary';
+const INTERACTIVE = [
+  'border transition-colors duration-fast ease-out',
+  active
+    ? 'border-accent bg-accent text-text-inverse'
+    : 'border-border bg-bg-elevated text-text-primary hover:border-accent hover:bg-accent-subtle-bg hover:text-accent',
+].join(' ');
+
+const classes = [BASE, isButton ? INTERACTIVE : STATIC, className];
+---
+
+{
+  isButton ? (
+    <button
+      type="button"
+      class:list={classes}
+      data-skill={skillName ?? label}
+      aria-pressed={active ? 'true' : 'false'}
+    >
+      {labelKey ? <T k={labelKey} /> : label}
+    </button>
+  ) : (
+    <span class:list={classes}>{labelKey ? <T k={labelKey} /> : label}</span>
+  )
+}

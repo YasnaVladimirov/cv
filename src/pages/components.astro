@@ -19,6 +19,7 @@ import SectionEyebrow from '../components/ui/SectionEyebrow.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
 import Button from '../components/ui/Button.astro';
 import Link from '../components/ui/Link.astro';
+import Tag from '../components/ui/Tag.astro';
 import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
 ---
 
@@ -188,6 +189,31 @@ import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
         <Link href="#links" labelKey="nav.contact" />
         <Link variant="standalone" href="#links" labelKey="nav.work" />
         <Link variant="external" href="https://example.com" labelKey="footer.email" />
+      </Case>
+    </Section>
+
+    <Section id="tags" spec="§7.12" title="Tag">
+      <Case label="stack tag — non-interactive, renders as a span">
+        <Tag label="React" />
+        <Tag label="TypeScript" />
+        <Tag label="Astro" />
+      </Case>
+
+      <Case
+        label="interactive skill — default · active (filter applied)"
+        note="Hover the first: border, background and text all move to accent together. The second is the filter-applied state, carrying aria-pressed=true."
+      >
+        <Tag label="React" interactive />
+        <Tag label="TypeScript" interactive active />
+      </Case>
+
+      <Case
+        label="skill with no timeline matches — falls back to the static style"
+        note="This is the one that matters. A skill whose timeline_matches is empty renders as a span, not a button: unfocusable, no hover, nothing to click. That is what makes the zero-result filter state in App Flow §4.6 unreachable rather than just unlikely — Tab through this row and only two of the three stop."
+      >
+        <Tag label="React" interactive matches />
+        <Tag label="Figma" interactive matches={false} />
+        <Tag label="Astro" interactive matches />
       </Case>
     </Section>
   </main>
