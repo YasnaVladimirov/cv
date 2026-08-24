@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.6 |
-| **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.2 |
+| **Document status** | v1.7 |
+| **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.3 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v1.7** — Phase 4 build rules added to §4.0, again each from a failure found while building. `break-words` alone cannot break a long word inside `flex-col items-start`, because max-content sizing measures as if it could not wrap; `max-w-full` is the other half. Metric rows need `flex-wrap` to survive the three-card grid. `list-style: disc` is rewritten by the minifier and must be written as the longhand. §4.0 also records one **open question for the human**: Design System §5.4 and §3.3 give different section rhythms, and Phase 4 followed §5.4.
 
 **v1.5** — In-place translation mechanism specified concretely: dual-render + CSS for static text, `data-i18n-*` attribute pairs for attributes, store subscription for React islands only. See §2.4.
 
@@ -583,6 +585,15 @@ Report Phase 3 summary. **[HUMAN]** — invite the human to visit `<preview>.ver
 **Objective**: All three screen types from App Flow §1 are assembled from Phase 3 components, using Phase 2 fixture content, and are navigable.
 
 **Prerequisites**: Phase 3 complete and human-approved.
+
+### 4.0 — General page assembly rules
+
+- **A long word inside `items-start` cannot break, whatever you tell it.** `flex-col items-start` sizes every child to its **max-content** width, and max-content is measured as if no word could wrap — so `break-words` never gets the chance to act. Found at 320px in the hero, where `TODO(human):` at 48px pushed the document to 355px and put the whole page into horizontal scroll. Both halves are needed: `break-words` **and** `max-w-full`. This applies to any display-size text in a flex column, and it is invisible above `sm`.
+- **Metric rows must wrap.** Three `text-metric` callouts in one row need ~340px; a card in the three-up grid has ~300px of content box. Without `flex-wrap` the third label is clipped and the card scrolls sideways. Card-internal rows sized for a spotlight layout have to be re-checked in the grid layout.
+- **Use `list-style-type`, never the `list-style` shorthand.** The CSS minifier rewrites `list-style: disc` to `list-style: outside` on the reasoning that `disc` is the initial value. It is — but Tailwind's preflight sets `list-style: none` on every `ul`, so the shorthand is doing real work and a rewritten one only happens to still work. The longhand cannot be reduced.
+- **A `<style>` inside `<noscript>` is left alone by the Astro compiler** — not scoped, not hoisted into the bundled stylesheet. That is what makes the no-JS Calendly fallback possible: `#calendly { display: none }` reaches a global id, and only when scripting is off.
+- **Skills render as plain text in Phase 4.** PRD FR-3 makes the filter "progressive enhancement only" and App Flow §4.6 puts the no-JS state at plain text for every skill, so a server-rendered `<button>` that cannot act until an island loads is a promise the page may never keep. Each item carries `data-skill` and `data-timeline-matches`; Phase 5.2 upgrades only the ones with a non-empty match list.
+- **OPEN — section rhythm is ambiguous and was not resolved here.** Design System §5.4 says every top-level section uses `py-24 md:py-32`; §3.3 says the spacing *between* major sections is 96px mobile / 128px desktop. Per-section padding produces **192px / 256px between adjacent section content**, which is double the §3.3 figure. §5.4 is the explicit implementation instruction and is what Phase 4 built, so the gaps currently measure 256px on desktop. If §3.3's number is the intended one, the fix is one line in `src/components/sections/Section.astro` (`py-12 md:py-16`). **Human decision required.**
 
 ### Step 4.1 — BaseLayout
 `src/layouts/BaseLayout.astro`. `<html lang="en">` (updated at runtime by the i18n script). `<head>` includes the inline `apply-language.js` script (Phase 2.4) BEFORE any stylesheet — this is critical to prevent SR flash. Includes base stylesheet, fonts, viewport meta, charset, sensible default meta description and title (per-page metadata handled in Phase 7).
