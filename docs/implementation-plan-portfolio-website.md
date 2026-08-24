@@ -404,12 +404,15 @@ Commit: `phase-2.4: implement i18n runtime with parity check`
 MDX case study bodies contain long-form prose that also needs to switch. Two viable approaches:
 
 **Chosen approach**: dual-render — the MDX file contains two body blocks tagged with `data-lang="en"` and `data-lang="sr"`; a stylesheet rule shows only the block matching `html[lang]`.
+The rule itself lives in Design System §4.2 and uses `display: contents`, not `display: block`:
+
 ```css
-[data-lang="en"] { display: none; }
-[data-lang="sr"] { display: none; }
-html[lang="en"] [data-lang="en"] { display: block; }
-html[lang^="sr"] [data-lang="sr"] { display: block; }
+[data-lang] { display: none; }
+html[lang='en'] [data-lang='en'],
+html[lang^='sr'] [data-lang='sr'] { display: contents; }
 ```
+
+`contents` rather than `block` because the same rule has to serve both the block `<div>` wrapping a case-study body and the inline `<span>` the `<T>` component puts around a button label. With `block`, every inline swapped string would become a block and break the line it sits in.
 This means both languages ship in the HTML (~2x page weight for case studies) but the switch is instant and CSS-only. Given case studies are the highest-value pages and file size is dominated by images, the trade is worth it.
 
 **Not chosen**: separate MDX files per language. Would require URL-based routing (which we rejected in PRD FR-6) or JS-driven MDX swapping (complex).

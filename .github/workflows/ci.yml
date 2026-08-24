@@ -53,6 +53,9 @@ jobs:
       - name: Verify i18n parity
         run: pnpm verify:i18n
 
+      - name: Verify content integrity
+        run: pnpm verify:content
+
       - name: Build
         run: pnpm build
 
