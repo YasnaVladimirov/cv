@@ -33,6 +33,7 @@ import LanguageToggle from '../components/interactive/LanguageToggle';
 import StickyFAB from '../components/interactive/StickyFAB';
 import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
+import FilterPillDemo from '../components/dev/FilterPillDemo';
 
 // Real fixture content, not hand-written demo data: the showcase has to prove
 // these components survive the shapes the schema actually allows — a null end
@@ -403,6 +404,15 @@ const caseStudies = (await getCollection('caseStudies'))
           </div>
         </div>
         <StickyFAB client:load />
+      </Case>
+    </Section>
+
+    <Section id="filter-pill" spec="§7.21" title="Filter pill">
+      <Case
+        label="active — the close button clears it"
+        note="Sticky within #work only, never to the viewport: the pill answers why the list is short, so it should not follow the reader past the list it is describing. Its close button names the skill — read out of context, Clear filter leaves a screen reader user to remember which one."
+      >
+        <FilterPillDemo client:load />
       </Case>
     </Section>
   </main>
