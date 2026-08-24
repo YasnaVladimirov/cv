@@ -1,3 +1,5 @@
+.docs
+
 # build output
 dist/
 .astro/
