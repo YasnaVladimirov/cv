@@ -28,6 +28,8 @@ import CaseStudyCard from '../components/content/CaseStudyCard.astro';
 import TestimonialCard from '../components/content/TestimonialCard.astro';
 import { getCollection } from 'astro:content';
 import fixtureAvatar from '../content/case-studies/fixture-1.png';
+import ToastHost from '../components/interactive/Toast';
+import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
 
 // Real fixture content, not hand-written demo data: the showcase has to prove
@@ -373,5 +375,16 @@ const caseStudies = (await getCollection('caseStudies'))
         <FormFieldDemo client:load />
       </Case>
     </Section>
+
+    <Section id="toast" spec="§7.6" title="Toast">
+      <Case
+        label="trigger — then leave it, hover it, and press Escape"
+        note="Three things to check. It auto-dismisses after 3s. Hovering pauses that timer, and so does tabbing to the close button — hover alone would let it vanish under a keyboard user's hands. Triggering again while one is visible replaces it and replays the entry; toasts never stack."
+      >
+        <ToastDemo client:load />
+      </Case>
+    </Section>
   </main>
+
+  <ToastHost client:load />
 </BaseLayout>
