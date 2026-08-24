@@ -310,7 +310,7 @@ Commit: `phase-1.4: add token showcase page for visual verification`
 
 ### Phase 1 verification
 
-- [ ] `_tokens` page renders every token correctly on the deploy preview.
+- [ ] `tokens` page renders every token correctly on the deploy preview.
 - [ ] Zero gradient strings in the built CSS.
 - [ ] Font subset check passes (Latin Extended glyphs present).
 - [ ] Focus ring visible on Tab.
@@ -446,14 +446,14 @@ Commit: `phase-2.5: bilingual mdx strategy with build-time enforcement`
 ### Step 3.1 — Section eyebrow + section heading (§7.15, §6.3)
 Build together — they always appear together. `.astro` component. Takes props: `eyebrowKey` (i18n key like `sections.experience.eyebrow`), `titleKey`, `subtitleKey` (optional). Renders per Design System §7.15.
 
-Add to `_components` page with 4 examples covering both languages.
+Add to `components` page with 4 examples covering both languages.
 
 Commit: `phase-3.1: SectionHeading and SectionEyebrow`
 
 ### Step 3.2 — Buttons (§7.1–7.4)
 Build `Button.astro` accepting props: `variant` (`primary` | `secondary` | `ghost` | `icon`), `size` (`default` | `small` for headers), `href` (renders as `<a>` if present, else `<button>`), `icon` (Lucide name for trailing icon), `iconPosition`, `disabled`, `loadingKey` (i18n key for loading label, only used inside forms — see 3.15).
 
-Render every state of every variant on `_components`. Tab through them — every one must show the focus ring correctly.
+Render every state of every variant on `components`. Tab through them — every one must show the focus ring correctly.
 
 Commit: `phase-3.2: Button component with all variants and states`
 
@@ -482,14 +482,14 @@ Commit: `phase-3.6: MetricCallout`
 ### Step 3.7 — Timeline entry (§7.14)
 `TimelineEntry.astro`: takes a `role` object matching the Phase 2 schema. Renders per §7.14 including stack tags, optional case-study link, and the filtered/unfiltered visual states (opacity 0.35 for non-match).
 
-Filter state is driven by a CSS class `data-filtered-out` — the actual filter logic that adds/removes this class comes in Phase 5. For now, allow toggling via a prop on `_components` to visually verify both states.
+Filter state is driven by a CSS class `data-filtered-out` — the actual filter logic that adds/removes this class comes in Phase 5. For now, allow toggling via a prop on `components` to visually verify both states.
 
 Commit: `phase-3.7: TimelineEntry with filtered states`
 
 ### Step 3.8 — Case study card (§7.10)
 `CaseStudyCard.astro`: takes a case study entry. Supports three layout variants via a prop `layout`: `grid` (default 3-up), `pair` (2-up), `spotlight` (1-up horizontal on desktop). Uses the `glass` recipe. Whole card is one link.
 
-Render all three layouts on `_components` using fixture case studies.
+Render all three layouts on `components` using fixture case studies.
 
 Commit: `phase-3.8: CaseStudyCard with grid/pair/spotlight layouts`
 
@@ -506,26 +506,26 @@ Commit: `phase-3.10: form primitives as react island components`
 ### Step 3.11 — Toast (§7.6) — React island
 `Toast.jsx` — controlled by a tiny toast store (module-scope subject pattern; no library). Exposes `showToast({ messageKey, linkKey?, linkHref? })`. Auto-dismiss 3s, timer pauses on hover/focus, Esc dismisses, never stacks.
 
-Add a Toast trigger button on `_components` to manually verify entry/exit, reduced-motion, and stacking behavior.
+Add a Toast trigger button on `components` to manually verify entry/exit, reduced-motion, and stacking behavior.
 
 Commit: `phase-3.11: Toast with store`
 
 ### Step 3.12 — Language toggle (§7.16) — React island
 `LanguageToggle.jsx` — subscribes to the i18n store from Phase 2.4. Renders both labels always visible. On click: calls the store's `setLanguage`, which handles localStorage, `document.documentElement.lang`, and event dispatch.
 
-Verify: clicking the toggle on `_components` swaps every localized string on the page without reload, scroll position preserved, `<html lang>` updated in devtools.
+Verify: clicking the toggle on `components` swaps every localized string on the page without reload, scroll position preserved, `<html lang>` updated in devtools.
 
 Commit: `phase-3.12: LanguageToggle wired to i18n store`
 
 ### Step 3.13 — Sticky FAB (§7.17) — React island
 `StickyFAB.jsx` — uses IntersectionObserver on `#hero` and `#contact` elements. Hides while either is in view. Hides while any `input`, `textarea`, or `[contenteditable]` is focused (mobile keyboard collision — subscribe to `focusin`/`focusout`).
 
-For `_components`, place fake `#hero` and `#contact` divs to test the observer behavior.
+For `components`, place fake `#hero` and `#contact` divs to test the observer behavior.
 
 Commit: `phase-3.13: StickyFAB with intersection and focus handling`
 
 ### Step 3.14 — Filter pill (§7.21) — React island
-`FilterPill.jsx` — appears when a skill filter is active, per App Flow §4.5. Sticky within the `#work` section. Close button clears the filter (wiring in Phase 5). For now, drive from a prop on `_components`.
+`FilterPill.jsx` — appears when a skill filter is active, per App Flow §4.5. Sticky within the `#work` section. Close button clears the filter (wiring in Phase 5). For now, drive from a prop on `components`.
 
 Commit: `phase-3.14: FilterPill`
 
@@ -563,14 +563,14 @@ Commit: `phase-3.20: BackdropShapes`
 
 ### Phase 3 verification
 
-- [ ] Every component listed above renders on `_components` in every state.
+- [ ] Every component listed above renders on `components` in every state.
 - [ ] Zero raw hex or px in component code (grep for `#[0-9a-fA-F]{3,6}` and `\d+px` — every match must be either in a token file or in a rare justified place, none in component code).
-- [ ] Language toggle on `_components` swaps every rendered string.
+- [ ] Language toggle on `components` swaps every rendered string.
 - [ ] Focus ring visible on Tab through every interactive element.
 - [ ] Toast interactions (hover-pause, Esc-dismiss, no-stack) verified.
 - [ ] All React islands successfully hydrate in the preview deploy.
 
-Report Phase 3 summary. **[HUMAN]** — invite the human to visit `<preview>.vercel.app/_components` and give a visual pass before Phase 4 page assembly.
+Report Phase 3 summary. **[HUMAN]** — invite the human to visit `<preview>.vercel.app/components` and give a visual pass before Phase 4 page assembly.
 
 ---
 
@@ -1159,8 +1159,8 @@ Every point where the plan requires human input, in phase order:
 |---|---|---|
 | 0 | 0.1 | GitHub repo creation and access |
 | 0 | 0.5 | Vercel project setup |
-| 1 | 1.4 | Approval of visual foundation on `_tokens` page |
-| 3 | end | Approval of components on `_components` page |
+| 1 | 1.4 | Approval of visual foundation on `tokens` page |
+| 3 | end | Approval of components on `components` page |
 | 6 | 6.1 | Form service selection and credentials |
 | 6 | 6.2 | Calendly URL |
 | 6 | 6.3 | Analytics provider selection and credentials |

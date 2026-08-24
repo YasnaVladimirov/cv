@@ -1,0 +1,19 @@
+---
+/**
+ * One component's block on the showcase (plan §3.0). DEV-ONLY.
+ */
+interface Props {
+  /** Design System section this implements, e.g. "§7.1–7.4". */
+  spec: string;
+  title: string;
+  /** Anchor id, so a review can be pointed at one component. */
+  id: string;
+}
+const { spec, title, id } = Astro.props;
+---
+
+<section id={id} class="scroll-mt-24 border-t border-border-subtle pt-12 pb-24">
+  <p class="font-mono text-mono-sm text-text-tertiary">{spec}</p>
+  <h2 class="mb-8 text-2xl text-text-primary">{title}</h2>
+  <div class="flex flex-col gap-12"><slot /></div>
+</section>

@@ -1,0 +1,24 @@
+---
+/**
+ * One labelled demo cell on the component showcase (plan §3.0).
+ *
+ * DEV-ONLY, deleted in Phase 10.3 along with the page it serves. Its labels
+ * are hardcoded English by the same exemption the tokens page carries: they
+ * describe component states to a developer and never reach a visitor.
+ */
+interface Props {
+  /** The state being shown, e.g. "hover" or "disabled · SR". */
+  label: string;
+  /** Set when the cell needs room to breathe (cards, headers). */
+  wide?: boolean;
+  /** Notes on what to look for — a keyboard step, a thing that should NOT happen. */
+  note?: string;
+}
+const { label, wide = false, note } = Astro.props;
+---
+
+<div class:list={['flex flex-col gap-2', wide && 'w-full']}>
+  <p class="font-mono text-mono-sm text-text-tertiary">{label}</p>
+  <div class="flex flex-wrap items-center gap-4"><slot /></div>
+  {note && <p class="max-w-prose text-sm text-text-secondary">{note}</p>}
+</div>

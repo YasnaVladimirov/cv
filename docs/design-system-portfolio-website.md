@@ -46,7 +46,10 @@
 The agent must not, under any circumstance in this codebase:
 
 1. **No gradients.** Anywhere. Not on backgrounds, buttons, borders, text, or backdrop shapes. Solid colors only. (Backdrop shapes for glass are solid + low opacity, not gradients.) Tailwind v4 cannot delete its gradient utilities, so this is enforced by the regex lint in §4.4 — that lint is the only thing standing between this rule and a silent violation.
-2. **No emojis as icons.** Use only Lucide icons (Section 7.14).
+2. **No emojis as icons.** Use only Lucide icons, imported through `src/lib/icons.ts` — a
+   single audited barrel, so the icon set is a list someone can read rather than an
+   import scattered across forty files. Lucide v1 renamed two icons this document
+   originally named: `alert-circle` is now `circle-alert`, and `filter` is now `funnel`.
 3. **No stock photography, illustrations, or generic hero imagery.** Only: the human's photo (if provided), testimonial avatars (with permission), and case-study screenshots.
 4. **No scroll-jacking, parallax, or scroll-linked animations** beyond `opacity`/`translateY` fade-in-once on first reveal.
 5. **No skeleton screens** anywhere except the Calendly loading placeholder (Section 7.20).
@@ -488,10 +491,12 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
   --container-container: 1200px;
   --container-prose: 65ch;
 
-  /* --- Blur — §3.6. Generates backdrop-blur-glass. --- */
+  /* --- Blur — §3.6, §6.2. Generates backdrop-blur-glass and blur-backdrop. --- */
   --blur-*: initial;
   --blur-glass: 20px;
   --blur-glass-strong: 24px;
+  --blur-backdrop: 80px;
+  --blur-backdrop-mobile: 60px;
 }
 
 /* ------------------------------------------------------------------ *
@@ -721,12 +726,12 @@ Soft, blurred, solid-color organic blobs of `--color-accent-backdrop` that sit b
 
 **Recipe**
 - 3–5 shapes per S1, positioned absolutely inside the page (never fixed).
-- Each shape: an SVG or CSS-drawn ellipse/circle, filled with `var(--color-accent-backdrop)`, with `filter: blur(80px)`.
-- Sizes: 320px–560px on the longest axis; vary per shape.
+- Each shape: an SVG or CSS-drawn ellipse/circle, filled with `var(--color-accent-backdrop)`, with `filter: blur(var(--blur-backdrop))` (80px).
+- Sizes: 320px–560px on the longest axis; vary per shape. These are the one place a raw px value is permitted in component code — every shape has a different size by definition, so there is nothing to tokenise; sizes are passed as props and validated against this range.
 - Positioned so that at least one glass panel sits above (or partially above) each shape.
 - `z-index: var(--z-backdrop)` (behind all content).
 - `pointer-events: none`, `aria-hidden="true"`.
-- On mobile, cap to 2 shapes and reduce blur to 60px (performance).
+- On mobile, cap to 2 shapes and reduce blur to `var(--blur-backdrop-mobile)` (60px) — the blur radius is the expensive part, and it is the shape count multiplied by it that costs frames.
 
 **Do not**
 - Animate shapes (no floating, no morphing).
@@ -918,7 +923,7 @@ Same as 7.7 with:
 1. Label — `text-sm`, weight 500, `text-primary`, `margin-bottom: 6px`.
 2. Optional helper text — `text-sm`, `text-secondary`, above the input if brief instructions needed.
 3. Input or textarea.
-4. Error message — `text-sm`, `text-error`, `margin-top: 6px`, includes `alert-circle` Lucide icon 14px inline; only rendered when validation fails.
+4. Error message — `text-sm`, `text-error`, `margin-top: 6px`, includes `circle-alert` Lucide icon 14px inline; only rendered when validation fails.
 
 Required fields have no visual marker (all three of name/email/message are required; company is the only optional field and is labeled "Company (optional)").
 
@@ -1095,7 +1100,7 @@ Same dimensions and glass treatment as Variant A.
 
 **Purpose**: When a skill is active as a timeline filter, this pill shows the current filter and allows clearing (per App Flow 4.5).
 
-**Anatomy**: `filter` Lucide icon 14px + "Showing: [skill]" text + close icon-button (7.4, smaller: 24×24).
+**Anatomy**: `funnel` Lucide icon 14px + "Showing: [skill]" text + close icon-button (7.4, smaller: 24×24).
 
 **Dimensions**: Height 32px, padding `space-1 space-3`, `radius-sm`, `accent-subtle-bg` background, 1px solid `accent`, `accent` text, `text-sm` weight 500.
 

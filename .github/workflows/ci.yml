@@ -56,6 +56,9 @@ jobs:
       - name: Verify content integrity
         run: pnpm verify:content
 
+      - name: Verify no invented values
+        run: pnpm verify:values
+
       - name: Build
         run: pnpm build
 

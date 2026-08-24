@@ -1,0 +1,30 @@
+---
+/**
+ * Component showcase — every component from Design System §7, every state,
+ * side by side (plan §3.0).
+ *
+ * DEV-ONLY. Not linked from any shipping page, carries noindex, excluded from
+ * the sitemap, and deleted in Phase 10.3. Its own chrome is hardcoded English
+ * by the same exemption the tokens page carries; the COMPONENTS on it are not
+ * exempt — every string they render goes through the dictionary, which is what
+ * makes the language toggle at the top a real test.
+ *
+ * A backdrop shape sits behind the page because glass over plain --color-bg
+ * has nothing to blur and looks broken (Design System §3.6).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Components — cv-site" noindex>
+  <main id="main-content" class="relative mx-auto max-w-container p-4 md:p-8">
+    <header class="mb-16">
+      <p class="font-mono text-mono-sm text-text-tertiary">--components</p>
+      <h1 class="text-4xl text-text-primary">Component library</h1>
+      <p class="mt-2 max-w-prose text-lg text-text-secondary">
+        Every component in Design System §7, in every state. Tab through the page: each interactive
+        element must show the focus ring. Switch language: every string must change, with no reload
+        and no scroll jump.
+      </p>
+    </header>
+  </main>
+</BaseLayout>

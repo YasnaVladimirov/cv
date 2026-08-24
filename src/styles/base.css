@@ -177,10 +177,12 @@
   --container-container: 1200px;
   --container-prose: 65ch;
 
-  /* --- Blur — §3.6. Generates backdrop-blur-glass. --- */
+  /* --- Blur — §3.6, §6.2. Generates backdrop-blur-glass and blur-backdrop. --- */
   --blur-*: initial;
   --blur-glass: 20px;
   --blur-glass-strong: 24px;
+  --blur-backdrop: 80px;
+  --blur-backdrop-mobile: 60px;
 }
 
 /* ------------------------------------------------------------------ *

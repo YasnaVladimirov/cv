@@ -20,6 +20,7 @@
     "verify:i18n": "node scripts/verify-i18n-parity.mjs",
     "verify:content": "node scripts/verify-content.mjs",
     "verify:gradients": "node scripts/verify-no-gradients.mjs",
+    "verify:values": "node scripts/verify-no-raw-values.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
