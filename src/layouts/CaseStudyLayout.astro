@@ -1,4 +1,27 @@
 ---
-// Extends BaseLayout for S2 and S3: Header variant B. No FAB, no backdrop
-// shapes — the case study body is text-dense. Built in Phase 4.2.
+// S2's shell. Header variant B, no FAB, no backdrop shapes.
+//
+// The omissions are the specification, not an oversight: a case study is a
+// text-dense read, and both the floating button and the blurred shapes behind
+// it compete with prose for attention (plan §4.2, App Flow §4.9).
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+
+interface Props {
+  title?: string;
+  titleKey?: string;
+  description?: string;
+  descriptionKey?: string;
+  /** [HUMAN] supplies the real Calendly URL in Phase 6. */
+  calendlyUrl?: string;
+}
+
+const { title, titleKey, description, descriptionKey, calendlyUrl } = Astro.props;
 ---
+
+<BaseLayout {title} {titleKey} {description} {descriptionKey}>
+  <Header slot="header" variant="case-study" calendlyUrl={calendlyUrl} />
+  <slot />
+  <Footer slot="footer" />
+</BaseLayout>

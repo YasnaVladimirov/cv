@@ -1,4 +1,52 @@
 ---
-// Extends BaseLayout for S1: Header variant A, BackdropShapes, StickyFAB.
-// Built in Phase 4.2.
+// S1's shell: BaseLayout plus the three things only the home page has —
+// the anchor-nav header, the backdrop shapes the glass panels blur, and the
+// sticky contact button.
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import BackdropShapes from '../components/layout/BackdropShapes.astro';
+import StickyFAB from '../components/interactive/StickyFAB';
+
+interface Props {
+  title?: string;
+  titleKey?: string;
+  description?: string;
+  descriptionKey?: string;
+  /** [HUMAN] supplies the real Calendly URL in Phase 6. */
+  calendlyUrl?: string;
+}
+
+const { title, titleKey, description, descriptionKey, calendlyUrl } = Astro.props;
 ---
+
+<BaseLayout {title} {titleKey} {description} {descriptionKey}>
+  <Header slot="header" variant="home" calendlyUrl={calendlyUrl} />
+
+  {
+    /*
+    The shapes are absolutely positioned against this wrapper, not against the
+    viewport: §6.2 requires them to scroll with the page. The content beside
+    them is raised to z-content because a positioned element with a z-index
+    paints above in-flow content that has none, so without this the shapes
+    would sit on top of the very panels they exist to be blurred through.
+  */
+  }
+  <div class="relative">
+    <BackdropShapes />
+    <div class="relative z-content">
+      <slot />
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+
+  {
+    /*
+    client:idle, not client:load: the button is deliberately invisible while
+    the hero is on screen, so there is nothing for it to do during the page's
+    first moments (§7.17).
+  */
+  }
+  <StickyFAB slot="fab" client:idle />
+</BaseLayout>
