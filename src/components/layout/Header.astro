@@ -1,0 +1,139 @@
+---
+/**
+ * The sticky header, in both variants (Design System §7.18, §7.19).
+ *
+ * One component rather than two files: the two variants differ only in what
+ * sits in the centre slot, and everything that makes a header hard — the glass
+ * treatment, the height pair, the safe zone, the CTA, the language toggle —
+ * is identical. Splitting it would mean maintaining that twice.
+ *
+ *   variant="home"       anchor nav (Work / Skills / Contact), scrollspy in Phase 5
+ *   variant="case-study" a back-link to /#work
+ *   variant="not-found"  centre deliberately empty (§7.19: a back-link from a
+ *                        404 points somewhere the visitor was never coming from)
+ *
+ * No hamburger at any width. With three anchors, a menu hides three links
+ * behind a tap; on mobile the nav simply is not rendered, and the sections it
+ * points at are a scroll away.
+ */
+import { t, DEFAULT_LANG } from '../../lib/i18n';
+import LanguageToggle from '../interactive/LanguageToggle';
+import Button from '../ui/Button.astro';
+import Link from '../ui/Link.astro';
+import T from '../ui/T.astro';
+import { ArrowRight } from '../../lib/icons';
+
+interface Props {
+  variant?: 'home' | 'case-study' | 'not-found';
+  /** [HUMAN] supplies the real Calendly URL in Phase 6. */
+  calendlyUrl?: string;
+  /** Showcase only. Phase 5 drives scrollspy from the DOM. */
+  activeSection?: 'work' | 'skills' | 'contact';
+}
+
+const { variant = 'home', calendlyUrl = '#contact', activeSection } = Astro.props;
+
+const NAV = [
+  { key: 'nav.work', href: '#work', id: 'work' },
+  { key: 'nav.skills', href: '#skills', id: 'skills' },
+  { key: 'nav.contact', href: '#contact', id: 'contact' },
+] as const;
+
+// Ghost-button geometry with no background of its own (§7.18).
+const NAV_LINK = 'inline-flex h-[36px] items-center px-4 text-sm font-medium no-underline';
+---
+
+<header class="glass z-sticky sticky top-0 h-[64px] w-full rounded-none md:h-[72px]">
+  <div
+    class="mx-auto flex h-full max-w-container items-center justify-between gap-4 px-4 sm:px-6 md:px-8"
+  >
+    {
+      /*
+      The name shrinks and truncates; everything to its right does not. At
+      320px with a long name — or a Serbian string running ~35% longer (§9.1) —
+      something has to give, and it must be the label rather than the language
+      toggle or the CTA, which are the only two controls in the header.
+    */
+    }
+    <a
+      href="/"
+      class="min-w-0 truncate text-base font-semibold text-text-primary no-underline"
+      aria-label={t('hero.name', DEFAULT_LANG)}
+      data-i18n-aria-label-en={t('hero.name', 'en')}
+      data-i18n-aria-label-sr={t('hero.name', 'sr')}
+    >
+      <T k="hero.name" />
+    </a>
+
+    {
+      variant === 'home' && (
+        <nav
+          class="hidden md:flex md:items-center md:gap-1"
+          aria-label={t('nav.work', DEFAULT_LANG)}
+        >
+          {NAV.map((item) => (
+            <a
+              href={item.href}
+              data-nav-link={item.id}
+              aria-current={activeSection === item.id ? 'true' : undefined}
+              class:list={[
+                NAV_LINK,
+                'transition-colors duration-fast ease-out',
+                activeSection === item.id
+                  ? 'text-text-primary underline decoration-accent decoration-1 underline-offset-[3px]'
+                  : 'text-text-secondary hover:text-text-primary',
+              ]}
+            >
+              <T k={item.key} />
+            </a>
+          ))}
+        </nav>
+      )
+    }
+
+    {
+      variant === 'case-study' && (
+        <span class="hidden md:contents">
+          <Link variant="standalone" href="/#work" labelKey="nav.backToWork" />
+        </span>
+      )
+    }
+
+    <div class="flex shrink-0 items-center gap-2">
+      <LanguageToggle client:load />
+
+      {
+        /*
+        Desktop gets the primary CTA; mobile gets a secondary "Contact", so the
+        row is never two competing primaries at 320px (§7.18).
+
+        Visibility lives on a wrapper, not on the Button's class prop. Button's
+        own recipe sets `inline-flex` and `hidden` sets the same CSS property —
+        which of the two wins is decided by their order in Tailwind's generated
+        stylesheet, not by the order they appear in the class attribute. Passing
+        `hidden` to a component that already sets a display value is a coin
+        flip; here it lost, and both CTAs rendered at 320px.
+      */
+      }
+      <span class="hidden md:contents">
+        <Button
+          variant="primary"
+          size="small"
+          labelKey="hero.cta.book"
+          href={calendlyUrl}
+          target={variant === 'case-study' ? '_blank' : undefined}
+          rel={variant === 'case-study' ? 'noopener' : undefined}
+        />
+      </span>
+      <span class="contents md:hidden">
+        <Button
+          variant="secondary"
+          size="small"
+          labelKey="nav.contact"
+          href="#contact"
+          icon={ArrowRight}
+        />
+      </span>
+    </div>
+  </div>
+</header>

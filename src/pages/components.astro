@@ -36,6 +36,7 @@ import CalendlyEmbed from '../components/interactive/CalendlyEmbed';
 import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
 import FilterPillDemo from '../components/dev/FilterPillDemo';
+import Header from '../components/layout/Header.astro';
 
 // Real fixture content, not hand-written demo data: the showcase has to prove
 // these components survive the shapes the schema actually allows — a null end
@@ -47,7 +48,7 @@ const caseStudies = (await getCollection('caseStudies'))
 ---
 
 <BaseLayout title="Components — cv-site" noindex>
-  <main id="main-content" class="relative mx-auto max-w-container p-4 md:p-8">
+  <main id="main-content" class="z-content relative mx-auto max-w-container p-4 md:p-8">
     <header class="mb-16">
       <p class="font-mono text-mono-sm text-text-tertiary">--components</p>
       <h1 class="text-4xl text-text-primary">Component library</h1>
@@ -439,6 +440,41 @@ const caseStudies = (await getCollection('caseStudies'))
         <div class="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
           <CalendlyEmbed client:load directUrl="https://calendly.com" />
           <CalendlyEmbed client:load forceState="failed" directUrl="https://calendly.com" />
+        </div>
+      </Case>
+    </Section>
+
+    <Section id="headers" spec="§7.18–7.19" title="Header variants">
+      <Case
+        label="variant A — home, with the Work anchor active"
+        wide
+        note="Sticky, glass, 64px on mobile and 72px from md. The centre nav is desktop-only and there is no hamburger at any width: with three anchors a menu hides three links behind a tap. Narrow the window past 768px and the primary CTA is replaced by a secondary Contact, so the row never shows two competing primaries at 320px."
+      >
+        <div class="w-full overflow-hidden rounded-md border border-border-subtle">
+          <Header variant="home" activeSection="work" />
+          <div class="h-32 bg-bg"></div>
+        </div>
+      </Case>
+
+      <Case
+        label="variant B — case study, with a back-link"
+        wide
+        note="Same shell, different centre. Its CTA opens Calendly in a new tab rather than scrolling to a contact section this page does not have."
+      >
+        <div class="w-full overflow-hidden rounded-md border border-border-subtle">
+          <Header variant="case-study" calendlyUrl="https://calendly.com" />
+          <div class="h-32 bg-bg"></div>
+        </div>
+      </Case>
+
+      <Case
+        label="variant B — 404, centre deliberately empty"
+        wide
+        note="No back-link. §7.19 leaves it out because a 404 has no work page the visitor was coming from, and pointing back to one implies they took a wrong turn from somewhere they never were."
+      >
+        <div class="w-full overflow-hidden rounded-md border border-border-subtle">
+          <Header variant="not-found" />
+          <div class="h-32 bg-bg"></div>
         </div>
       </Case>
     </Section>
