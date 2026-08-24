@@ -231,8 +231,8 @@
    Never nest glass in glass. Never animate backdrop-filter. */
 @utility glass {
   background: var(--color-surface-glass);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border: 1px solid var(--color-border-glass);
   border-right-color: var(--color-border-subtle);
   border-bottom-color: var(--color-border-subtle);
@@ -242,8 +242,8 @@
 
 @utility glass-strong {
   background: var(--color-surface-glass-strong);
-  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate-strong));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate-strong));
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate-strong));
   border: 1px solid var(--color-border-glass);
   border-right-color: var(--color-border-subtle);
   border-bottom-color: var(--color-border-subtle);

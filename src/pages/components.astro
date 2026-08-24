@@ -17,6 +17,8 @@ import Case from '../components/dev/Case.astro';
 import Section from '../components/dev/Section.astro';
 import SectionEyebrow from '../components/ui/SectionEyebrow.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
+import Button from '../components/ui/Button.astro';
+import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
 ---
 
 <BaseLayout title="Components — cv-site" noindex>
@@ -91,6 +93,67 @@ import SectionHeading from '../components/ui/SectionHeading.astro';
         note="Announced to screen readers as nothing: the eyebrow is aria-hidden in every use, because it restates the text beside it."
       >
         <SectionEyebrow k="caseStudy.eyebrow.outcome" />
+      </Case>
+    </Section>
+
+    <Section id="buttons" spec="§7.1–7.4" title="Button">
+      <Case
+        label="primary — default · with trailing icon · disabled"
+        note="Hover, press and Tab through each one. Primary is the only variant that shifts by 1px on press. A disabled button must not react to hover at all — plain hover: still applies to :disabled in CSS, so every hover rule here is behind enabled:."
+      >
+        <Button variant="primary" labelKey="hero.cta.book" />
+        <Button variant="primary" labelKey="hero.cta.resume" icon={ArrowRight} />
+        <Button variant="primary" labelKey="contact.form.submit" disabled />
+      </Case>
+
+      <Case label="secondary — default · with icon · disabled">
+        <Button variant="secondary" labelKey="hero.cta.book" />
+        <Button variant="secondary" labelKey="nav.backToWork" icon={ArrowRight} />
+        <Button variant="secondary" labelKey="hero.cta.resume" disabled />
+      </Case>
+
+      <Case label="ghost — default · disabled">
+        <Button variant="ghost" labelKey="timeline.filter.clear" />
+        <Button variant="ghost" labelKey="timeline.filter.clear" disabled />
+      </Case>
+
+      <Case
+        label="icon-only — 32×32, aria-label required"
+        note="The component throws at build time if ariaLabelKey is missing: an icon alone has no accessible name (§7.4), and that is not something to discover in a screen-reader pass."
+      >
+        <Button variant="icon" icon={X} ariaLabelKey="toast.resumeDownload.dismiss" />
+        <Button variant="icon" icon={X} ariaLabelKey="toast.resumeDownload.dismiss" disabled />
+      </Case>
+
+      <Case
+        label="small — the header CTA (§7.18)"
+        note="36px tall, text-sm. Ghost is 36px at both sizes; the spec gives it one box."
+      >
+        <Button variant="primary" size="small" labelKey="hero.cta.book" />
+        <Button variant="secondary" size="small" labelKey="nav.contact" />
+      </Case>
+
+      <Case
+        label="as a link — href renders an anchor, never a button with role=button"
+        note="A thing that navigates is an anchor; §7.1 prohibits patching the wrong element with role=button. The third one carries a Serbian href: switch language and its target moves from /cv.pdf to /cv-sr.pdf. CSS cannot reach an attribute, so that swap is the data-i18n-href pair, not the dual-render."
+      >
+        <Button variant="secondary" labelKey="nav.work" href="#buttons" />
+        <Button
+          variant="ghost"
+          labelKey="footer.github"
+          href="https://github.com"
+          target="_blank"
+          rel="noopener"
+          icon={ArrowUpRight}
+        />
+        <Button
+          variant="primary"
+          labelKey="hero.cta.resume"
+          href="/cv.pdf"
+          hrefSr="/cv-sr.pdf"
+          download
+          icon={ArrowRight}
+        />
       </Case>
     </Section>
   </main>

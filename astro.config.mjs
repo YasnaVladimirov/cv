@@ -26,5 +26,15 @@ export default defineConfig({
   // Design System 4.3.
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // The Design System 4.5 browser floor, stated explicitly because the
+      // CSS minifier needs it. With no target, esbuild assumes browsers new
+      // enough that -webkit-backdrop-filter is redundant and deletes it,
+      // leaving one declaration where the glass recipe needs both. Verified:
+      // without this line the emitted .glass rule carries a single form, and
+      // whichever one is lost takes the blur with it on a supported browser
+      // (Design System 3.6). scripts/verify-css-output.mjs guards the result.
+      target: ['safari16.4', 'chrome111', 'firefox128'],
+    },
   },
 });

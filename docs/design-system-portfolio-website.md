@@ -210,8 +210,8 @@ The signature element. Precise recipe — do not deviate.
 ```css
 .glass {
   background: var(--color-surface-glass);           /* rgba(255,255,255,0.55) */
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);   /* prefixed FIRST — see below */
   backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
   border: 1px solid var(--color-border-glass);      /* rgba(255,255,255,0.6) - top+left highlight */
   border-right-color: var(--color-border-subtle);   /* rgba(0,0,0,0.06) - subtle bottom+right */
   border-bottom-color: var(--color-border-subtle);
@@ -229,6 +229,17 @@ The signature element. Precise recipe — do not deviate.
 
 **Strong glass panel** (form containers, dense text)
 - Same as above but `background: var(--color-surface-glass-strong)` and `backdrop-filter: blur(24px) saturate(1.4)`.
+
+**The prefix pair is load-bearing, and a minifier will eat it** (found in Phase 3.2). Astro's default CSS minifier is esbuild, which with no declared target assumes browsers new enough that `-webkit-backdrop-filter` is redundant, and deletes one of the two declarations — whichever comes first. The build stays green and the emitted rule carries a single form. Whichever form is lost, a supported browser loses the blur:
+
+- Lose the unprefixed one, and Firefox has no blur (it has never supported the `-webkit-` alias).
+- Lose the prefixed one, and Safari 16.4–17 has no blur.
+
+The `@supports not (backdrop-filter)` fallback does **not** rescue either case: the browser supports the property, so the fallback correctly does not apply — it just never received the declaration it understands. Text then sits on a 0.55-alpha white panel over an unblurred background, which is precisely the contrast failure §10.1 exists to prevent.
+
+Two things keep it fixed, and both are required:
+1. `astro.config.mjs` declares `build.target` as the §4.5 browser floor, so esbuild knows the prefix is still needed.
+2. `scripts/verify-css-output.mjs` asserts both forms survive into `dist/`, because this failure is invisible in source and invisible in review.
 
 **Glass panel rules**
 - Use glass **only for containers of content**, never for buttons, tags, or inline elements.
@@ -547,8 +558,8 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
    Never nest glass in glass. Never animate backdrop-filter. */
 @utility glass {
   background: var(--color-surface-glass);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border: 1px solid var(--color-border-glass);
   border-right-color: var(--color-border-subtle);
   border-bottom-color: var(--color-border-subtle);
@@ -558,8 +569,8 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
 
 @utility glass-strong {
   background: var(--color-surface-glass-strong);
-  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate-strong));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate-strong));
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate-strong));
   border: 1px solid var(--color-border-glass);
   border-right-color: var(--color-border-subtle);
   border-bottom-color: var(--color-border-subtle);

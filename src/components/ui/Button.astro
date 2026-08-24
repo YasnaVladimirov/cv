@@ -1,0 +1,115 @@
+---
+/**
+ * Button — all four variants (Design System §7.1–7.4).
+ *
+ * Element choice is not a style prop: a thing that navigates is an `<a>`, a
+ * thing that acts is a `<button>`, and §7.1 explicitly prohibits `role="button"`
+ * as a patch over the wrong one. Pass `href` and you get a link.
+ *
+ * `disabled` always renders a `<button>`, even when `href` is set. There is no
+ * disabled link in HTML — `aria-disabled` on an `<a href>` still navigates on
+ * click and on Enter — so a "disabled link" would be a control that looks dead
+ * and works anyway. If you need one, the action is not a navigation.
+ *
+ * The loading state (§7.1) lives only on the React button: it appears mid-submit
+ * in the contact form, which is the one place a button changes after render.
+ */
+import {
+  buttonClasses,
+  ICON_SIZE,
+  type ButtonVariant,
+  type ButtonSize,
+} from '../../lib/button-classes';
+import type { Icon } from '../../lib/icons';
+import { t, DEFAULT_LANG } from '../../lib/i18n';
+import T from './T.astro';
+
+interface Props {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  /** Dictionary key for the label. Required for every variant except `icon`. */
+  labelKey?: string;
+  /** Renders an <a>. Omit for a <button>. */
+  href?: string;
+  /** Serbian href, when the target differs — the resume PDF. Swapped at runtime. */
+  hrefSr?: string;
+  /** Lucide icon from src/lib/icons.ts. */
+  icon?: Icon;
+  iconPosition?: 'leading' | 'trailing';
+  disabled?: boolean;
+  /**
+   * Required for `variant="icon"` (§7.4): an icon alone carries no accessible
+   * name. Dictionary key, not a literal.
+   */
+  ariaLabelKey?: string;
+  type?: 'button' | 'submit';
+  target?: string;
+  rel?: string;
+  download?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'default',
+  labelKey,
+  href,
+  hrefSr,
+  icon: IconComponent,
+  iconPosition = 'trailing',
+  disabled = false,
+  ariaLabelKey,
+  type = 'button',
+  target,
+  rel,
+  download,
+  id,
+  class: className,
+} = Astro.props;
+
+if (variant === 'icon' && !ariaLabelKey) {
+  throw new Error('Button: variant="icon" requires ariaLabelKey — §7.4, an icon has no name.');
+}
+if (variant !== 'icon' && !labelKey) {
+  throw new Error('Button: labelKey is required for text variants.');
+}
+
+const classes = [buttonClasses(variant, size), className];
+
+// aria-label is an attribute, so CSS cannot swap it. The data-i18n pair is what
+// applyAttributeTranslations() reads on every language change (src/lib/i18n.ts).
+const ariaAttrs = ariaLabelKey
+  ? {
+      'aria-label': t(ariaLabelKey, DEFAULT_LANG),
+      'data-i18n-aria-label-en': t(ariaLabelKey, 'en'),
+      'data-i18n-aria-label-sr': t(ariaLabelKey, 'sr'),
+    }
+  : {};
+
+const hrefAttrs =
+  hrefSr !== undefined ? { 'data-i18n-href-en': href, 'data-i18n-href-sr': hrefSr } : {};
+
+const renderAsLink = href !== undefined && !disabled;
+
+// One element, chosen at render. Writing the <a> and <button> branches out
+// separately meant maintaining the icon/label body twice, and they drift.
+const Tag = renderAsLink ? 'a' : 'button';
+const elementAttrs = renderAsLink
+  ? { href, target, rel, download, ...hrefAttrs }
+  : { type, disabled, 'aria-disabled': disabled ? ('true' as const) : undefined };
+---
+
+<Tag id={id} class:list={classes} {...elementAttrs} {...ariaAttrs}>
+  {
+    IconComponent && iconPosition === 'leading' && (
+      <IconComponent size={ICON_SIZE} aria-hidden="true" />
+    )
+  }
+  {labelKey && <T k={labelKey} />}
+  {
+    IconComponent && iconPosition === 'trailing' && (
+      <IconComponent size={ICON_SIZE} aria-hidden="true" />
+    )
+  }
+</Tag>
