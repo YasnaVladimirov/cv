@@ -25,7 +25,7 @@
  *
  * Run: node scripts/verify-no-raw-values.mjs
  */
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 
 const SPEC = 'docs/design-system-portfolio-website.md';
@@ -167,6 +167,41 @@ for (const file of ROOTS.flatMap(walk)) {
       }
     }
   });
+}
+
+/**
+ * §6.2 gives backdrop-shape sizes as a RANGE (320–560px on the longest axis,
+ * varying per shape) rather than a list, so the check above cannot apply: the
+ * sizes are built as `${size}px` from bare numbers and carry no px literal to
+ * match. Without this, the file passes for the wrong reason.
+ *
+ * The range is the rule the document actually states, so it is the rule
+ * enforced here.
+ */
+const SHAPES_FILE = 'src/components/layout/BackdropShapes.astro';
+const [SHAPE_MIN, SHAPE_MAX] = [320, 560];
+
+if (existsSync(SHAPES_FILE)) {
+  const src = stripComments(readFileSync(SHAPES_FILE, 'utf8'));
+  const sizes = [...src.matchAll(/\bsize:\s*(\d+)/g)].map((m) => Number(m[1]));
+  if (sizes.length === 0) {
+    fail.push(`${SHAPES_FILE}: no shape sizes found — has the shape shape changed?`);
+  }
+  for (const size of sizes) {
+    if (size < SHAPE_MIN || size > SHAPE_MAX) {
+      fail.push(
+        `${SHAPES_FILE}: shape size ${size}px is outside the §6.2 range ` +
+          `(${SHAPE_MIN}–${SHAPE_MAX}px on the longest axis).`,
+      );
+    }
+  }
+  const count = (src.match(/\bsize:\s*\d+/g) ?? []).length;
+  if (count > 5) {
+    fail.push(`${SHAPES_FILE}: ${count} default shapes — §6.2 caps any page at 5.`);
+  }
+  if (count < 3) {
+    fail.push(`${SHAPES_FILE}: ${count} default shapes — §6.2 requires at least 3.`);
+  }
 }
 
 if (fail.length) {

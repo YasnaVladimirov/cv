@@ -1,0 +1,104 @@
+---
+/**
+ * The blurred shapes that sit behind glass (Design System §6.2).
+ *
+ * These are not decoration. A glass panel over plain `--color-bg` blurs
+ * nothing and reads as a slightly grey rectangle — §3.6 forbids it outright.
+ * Every glass surface on a page needs one of these somewhere underneath, and
+ * that is what this component is for.
+ *
+ * Absolutely positioned inside the page, never fixed: fixed shapes would slide
+ * under the glass as the page scrolls, which is the parallax §2 prohibits.
+ * Never animated, for the same reason.
+ *
+ * Mobile drops to two shapes and a smaller blur. Blur radius is the expensive
+ * part of this effect and it is the count multiplied by the radius that costs
+ * frames, so both come down together.
+ */
+interface Shape {
+  /** Percentages, so shapes scale with the section rather than drifting off it. */
+  top: string;
+  left?: string;
+  right?: string;
+  /** Longest axis, 320–560px per §6.2. */
+  size: number;
+  /** Kept on mobile, where §6.2 caps the count at two. */
+  mobile?: boolean;
+}
+
+interface Props {
+  shapes?: Shape[];
+  class?: string;
+}
+
+/**
+ * Four shapes: §6.2 allows three to five and caps any page at five. Sizes vary
+ * per shape on purpose — a set of identical circles reads as a pattern, which
+ * is not what a backdrop is for.
+ */
+const DEFAULT_SHAPES: Shape[] = [
+  { top: '4%', left: '-8%', size: 480, mobile: true },
+  { top: '28%', right: '-6%', size: 560 },
+  { top: '58%', left: '18%', size: 340, mobile: true },
+  { top: '82%', right: '12%', size: 420 },
+];
+
+const { shapes = DEFAULT_SHAPES, class: className } = Astro.props;
+---
+
+{/* aria-hidden and pointer-events:none — decorative, and never in the way. */}
+<div class:list={['backdrop-shapes z-backdrop', className]} aria-hidden="true">
+  {
+    shapes.map((shape) => (
+      <span
+        class:list={['backdrop-shape', !shape.mobile && 'backdrop-shape--desktop']}
+        style={{
+          top: shape.top,
+          left: shape.left,
+          right: shape.right,
+          width: `${shape.size}px`,
+          height: `${shape.size}px`,
+        }}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .backdrop-shapes {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .backdrop-shape {
+    position: absolute;
+    display: block;
+    border-radius: var(--radius-full);
+    background: var(--color-accent-backdrop);
+    filter: blur(var(--blur-backdrop-mobile));
+  }
+
+  /* Two shapes and the smaller blur below md; all four and the full blur above. */
+  .backdrop-shape--desktop {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .backdrop-shape {
+      filter: blur(var(--blur-backdrop));
+    }
+    .backdrop-shape--desktop {
+      display: block;
+    }
+  }
+
+  /* A blurred translucent wash is exactly what this preference is about. The
+     shapes carry no information, so they are removed rather than made solid. */
+  @media (prefers-reduced-transparency: reduce) {
+    .backdrop-shapes {
+      display: none;
+    }
+  }
+</style>

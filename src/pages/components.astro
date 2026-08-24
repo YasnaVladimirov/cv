@@ -39,6 +39,7 @@ import FilterPillDemo from '../components/dev/FilterPillDemo';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import SkipToContent from '../components/layout/SkipToContent.astro';
+import BackdropShapes from '../components/layout/BackdropShapes.astro';
 
 // Real fixture content, not hand-written demo data: the showcase has to prove
 // these components survive the shapes the schema actually allows — a null end
@@ -51,6 +52,7 @@ const caseStudies = (await getCollection('caseStudies'))
 
 <BaseLayout title="Components — cv-site" noindex>
   <SkipToContent />
+  <BackdropShapes />
 
   <main id="main-content" class="z-content relative mx-auto max-w-container p-4 md:p-8">
     <header class="mb-16">
@@ -491,6 +493,39 @@ const caseStudies = (await getCollection('caseStudies'))
         <p class="text-sm text-text-secondary">
           Already mounted above &lt;main&gt;. Press Tab from the top of the page.
         </p>
+      </Case>
+    </Section>
+
+    <Section id="backdrop" spec="§6.2" title="Backdrop shapes">
+      <Case
+        label="already behind this whole page"
+        wide
+        note="Scroll back to the case-study cards and the toast: the blur has something to work with now, which it did not before this step. That is the point — §3.6 forbids glass over plain background, because blur on nothing looks like a slightly grey rectangle. Four shapes here; two of them are hidden below md, along with a smaller blur radius, since it is the count multiplied by the radius that costs frames."
+      >
+        <div
+          class="relative h-[420px] w-full overflow-hidden rounded-lg border border-border-subtle"
+        >
+          <BackdropShapes />
+          <div class="glass z-content relative m-8 p-8">
+            <p class="text-base text-text-primary">
+              A glass panel with shapes behind it. Compare with the same panel below.
+            </p>
+          </div>
+        </div>
+      </Case>
+
+      <Case
+        label="the same panel with nothing behind it — what §3.6 forbids"
+        wide
+        note="No shapes. The blur has nothing to sample, so the panel reads as flat translucency. This is the comparison, not a supported state."
+      >
+        <div
+          class="relative h-[420px] w-full overflow-hidden rounded-lg border border-border-subtle bg-bg"
+        >
+          <div class="glass relative m-8 p-8">
+            <p class="text-base text-text-primary">The same panel over plain --color-bg.</p>
+          </div>
+        </div>
       </Case>
     </Section>
   </main>
