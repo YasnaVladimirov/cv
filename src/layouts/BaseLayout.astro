@@ -1,36 +1,41 @@
 ---
-// Base document shell.
+// Base document shell — the one <html> in the project.
 //
-// Phase 1-2 scope: <head> skeleton, the token stylesheet, and the pre-paint
-// language script. Phase 4.1 completes it — skip link, <main id="main-content">,
-// header/footer/fab slots, and the global Toast mount.
+// Everything structural that is true of every page lives here: the pre-paint
+// language script, the token stylesheet, the skip link, the single <main>, and
+// the toast host. Pages differ only by what they put in the three slots.
 //
 // base.css is imported here and nowhere else. Importing it per-component
 // would duplicate the @theme block in every chunk.
 import '../styles/base.css';
 import applyLanguage from '../scripts/apply-language.js?raw';
 import { t, DEFAULT_LANG, HTML_LANG } from '../lib/i18n';
+import SkipToContent from '../components/layout/SkipToContent.astro';
+import ToastHost from '../components/interactive/Toast';
 
 interface Props {
   /** Literal title. Omit and titleKey is used instead. */
   title?: string;
-  /** Dictionary key for the title. Metadata is English-only (PRD 5.3). */
+  /** Dictionary key for the title. Metadata is English-only (PRD §5.3). */
   titleKey?: string;
   description?: string;
   descriptionKey?: string;
   /** Keeps dev-only pages (tokens, components) out of search results. */
   noindex?: boolean;
+  /** Extra classes on <main>. Case-study pages narrow their measure here. */
+  mainClass?: string;
 }
 
-const { title, titleKey, description, descriptionKey, noindex = false } = Astro.props;
+const { title, titleKey, description, descriptionKey, noindex = false, mainClass } = Astro.props;
 
 // Metadata is deliberately English-only: with one URL per page there is no
 // Serbian URL for a crawler to index, so hreflang and translated meta would
-// both be lies (PRD 5.3, FR-6).
+// both be lies (PRD §5.3, FR-6).
 const resolvedTitle =
   title ?? (titleKey ? t(titleKey, DEFAULT_LANG) : t('meta.default.title', DEFAULT_LANG));
 const resolvedDescription =
-  description ?? (descriptionKey ? t(descriptionKey, DEFAULT_LANG) : undefined);
+  description ??
+  (descriptionKey ? t(descriptionKey, DEFAULT_LANG) : t('meta.default.description', DEFAULT_LANG));
 ---
 
 <html lang={HTML_LANG[DEFAULT_LANG]}>
@@ -53,6 +58,33 @@ const resolvedDescription =
     {noindex && <meta name="robots" content="noindex, nofollow" />}
   </head>
   <body>
-    <slot />
+    <SkipToContent />
+
+    <slot name="header" />
+
+    {
+      /*
+      One <main> per document, and its id is what the skip link targets
+      (§7.24). Pages pass their sections as the default slot rather than
+      supplying their own <main>, so that id can never go missing or be
+      duplicated.
+    */
+    }
+    <main id="main-content" class:list={['relative z-content', mainClass]}>
+      <slot />
+    </main>
+
+    <slot name="footer" />
+    <slot name="fab" />
+
+    {
+      /*
+      The toast host is global rather than per-page: the resume CTA that fires
+      it appears in the hero, in the 404, and in the footer, and a toast that
+      belonged to one section would be unmounted by the time it mattered.
+      client:idle — nothing can be toasted before the page is interactive.
+    */
+    }
+    <ToastHost client:idle />
   </body>
 </html>
