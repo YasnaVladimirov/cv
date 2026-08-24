@@ -30,6 +30,7 @@ import { getCollection } from 'astro:content';
 import fixtureAvatar from '../content/case-studies/fixture-1.png';
 import ToastHost from '../components/interactive/Toast';
 import LanguageToggle from '../components/interactive/LanguageToggle';
+import StickyFAB from '../components/interactive/StickyFAB';
 import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
 
@@ -373,6 +374,35 @@ const caseStudies = (await getCollection('caseStudies'))
         note="One button, not a dropdown. Both labels stay visible so the control never changes width under the pointer. aria-label names the action, not the state, because aria-pressed already carries the state."
       >
         <LanguageToggle client:load />
+      </Case>
+    </Section>
+
+    <Section id="fab" spec="§7.17" title="Sticky contact FAB">
+      <Case
+        label="hidden while #hero or #contact is in view, and while typing"
+        wide
+        note="Scroll: the button appears once the fake hero leaves and disappears when the fake contact block arrives. Then click into the field below and it hides — on a phone a 48px button pinned 16px from the bottom sits exactly where the keyboard pushes the focused input."
+      >
+        <div class="w-full">
+          <div id="hero" class="mb-4 rounded-md border border-border-subtle bg-bg-elevated p-8">
+            <p class="text-sm text-text-secondary">#hero — FAB hidden while this is on screen</p>
+          </div>
+          <div class="my-8 flex flex-col gap-4">
+            <p class="text-sm text-text-secondary">
+              Scroll region. The FAB is visible through here.
+            </p>
+            <input
+              type="text"
+              aria-label="Focus me to hide the FAB"
+              placeholder="Focus me — the FAB should hide"
+              class="h-[44px] w-full max-w-prose rounded-sm border border-border bg-bg-elevated px-3 text-base"
+            />
+          </div>
+          <div id="contact" class="mt-4 rounded-md border border-border-subtle bg-bg-elevated p-8">
+            <p class="text-sm text-text-secondary">#contact — FAB hidden while this is on screen</p>
+          </div>
+        </div>
+        <StickyFAB client:load />
       </Case>
     </Section>
   </main>
