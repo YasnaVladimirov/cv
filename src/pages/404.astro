@@ -1,15 +1,68 @@
 ---
-// S3 — 404 "mini-pitch": a conversion surface, not an apology.
-// Built in Phase 4.6 per Design System 7.22.
+/**
+ * S3 — the 404 (App Flow §4.10, Design System §7.22).
+ *
+ * A mini-pitch, not an apology: a recruiter who followed a stale link is
+ * still a recruiter, so the page carries the same three actions the hero
+ * does. Header variant B with the "Back to work" link omitted — §7.19 —
+ * because a back-link on a 404 points at somewhere the visitor was never
+ * coming from.
+ *
+ * BaseLayout directly rather than CaseStudyLayout: this page centres its
+ * content in the viewport, which the case-study shell does not do.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import Button from '../components/ui/Button.astro';
+import { t } from '../lib/i18n';
+
+const RESUME_EN = t('resume.file', 'en');
+const RESUME_SR = t('resume.file', 'sr');
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Not found</title>
-  </head>
-  <body>
-    <main><h1>Not found</h1></main>
-  </body>
-</html>
+<BaseLayout titleKey="notFound.meta.title" descriptionKey="notFound.meta.description">
+  <Header slot="header" variant="not-found" />
+
+  {
+    /*
+    Viewport height minus the sticky header, so the block sits in the optical
+    centre of what is left rather than the centre of the document (§7.22).
+  */
+  }
+  <div
+    class="mx-auto flex min-h-[calc(100dvh-64px)] max-w-container flex-col justify-center px-4 py-24 sm:px-6 md:min-h-[calc(100dvh-72px)] md:px-8"
+  >
+    <div class="max-w-[480px]">
+      {
+        /*
+        level={1}: this is the page's only heading, so the section heading
+        component renders it as the h1 rather than adding a second one.
+      */
+      }
+      <SectionHeading
+        eyebrowKey="notFound.eyebrow"
+        titleKey="notFound.heading"
+        subtitleKey="notFound.subtext"
+        level={1}
+        headingClass="text-4xl"
+      />
+
+      <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+        <Button variant="primary" labelKey="notFound.cta.home" href="/" />
+        <Button
+          variant="secondary"
+          labelKey="notFound.cta.resume"
+          href={RESUME_EN}
+          hrefSr={RESUME_SR}
+          download
+          id="not-found-resume"
+        />
+        <Button variant="ghost" labelKey="notFound.cta.contact" href="/#contact" />
+      </div>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</BaseLayout>

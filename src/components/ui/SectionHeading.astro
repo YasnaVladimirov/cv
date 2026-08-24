@@ -23,10 +23,26 @@ interface Props {
   level?: 1 | 2 | 3;
   /** Anchor target for nav and scrollspy — set on the section, not here. */
   id?: string;
+  /**
+   * REPLACES the heading's size classes; it does not add to them. Appending
+   * `text-4xl` to `text-2xl md:text-3xl` would leave two rules setting the
+   * same property, and which one wins is decided by Tailwind's stylesheet
+   * order rather than by the order they are written — here `md:text-3xl`
+   * would quietly undo the override above 768px.
+   */
+  headingClass?: string;
   class?: string;
 }
 
-const { eyebrowKey, titleKey, subtitleKey, level = 2, id, class: className } = Astro.props;
+const {
+  eyebrowKey,
+  titleKey,
+  subtitleKey,
+  level = 2,
+  id,
+  headingClass = 'text-2xl md:text-3xl',
+  class: className,
+} = Astro.props;
 
 const Heading = `h${level}` as 'h1' | 'h2' | 'h3';
 const showSubtitle = subtitleKey !== undefined && hasText(subtitleKey);
@@ -34,7 +50,7 @@ const showSubtitle = subtitleKey !== undefined && hasText(subtitleKey);
 
 <div class:list={['mb-8', className]}>
   <SectionEyebrow k={eyebrowKey} class="mb-2" />
-  <Heading id={id} class="text-2xl text-text-primary md:text-3xl">
+  <Heading id={id} class:list={['text-text-primary', headingClass]}>
     <T k={titleKey} />
   </Heading>
   {
