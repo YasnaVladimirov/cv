@@ -1,0 +1,47 @@
+---
+/**
+ * Eyebrow + heading + optional subhead (Design System §7.15).
+ *
+ * The heading level is a prop rather than fixed at h2 because the same block
+ * opens the 404 page, where it is the h1 (§7.22). Sequential heading levels
+ * are an accessibility mandate (§10.9), so the level has to follow the page's
+ * outline, not the component.
+ *
+ * The subhead is skipped when the dictionary value is empty in either
+ * language — several sections ship with `"subhead": ""` on purpose, and an
+ * empty <p> would still contribute its top margin and a line box.
+ */
+import { hasText } from '../../lib/i18n';
+import SectionEyebrow from './SectionEyebrow.astro';
+import T from './T.astro';
+
+interface Props {
+  eyebrowKey: string;
+  titleKey: string;
+  subtitleKey?: string;
+  /** Follows the page outline. 2 everywhere except the 404 hero. */
+  level?: 1 | 2 | 3;
+  /** Anchor target for nav and scrollspy — set on the section, not here. */
+  id?: string;
+  class?: string;
+}
+
+const { eyebrowKey, titleKey, subtitleKey, level = 2, id, class: className } = Astro.props;
+
+const Heading = `h${level}` as 'h1' | 'h2' | 'h3';
+const showSubtitle = subtitleKey !== undefined && hasText(subtitleKey);
+---
+
+<div class:list={['mb-8', className]}>
+  <SectionEyebrow k={eyebrowKey} class="mb-2" />
+  <Heading id={id} class="text-2xl text-text-primary md:text-3xl">
+    <T k={titleKey} />
+  </Heading>
+  {
+    showSubtitle && (
+      <p class="mt-2 max-w-prose text-lg text-text-secondary">
+        <T k={subtitleKey!} />
+      </p>
+    )
+  }
+</div>

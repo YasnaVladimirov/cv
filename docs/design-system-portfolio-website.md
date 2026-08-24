@@ -3,10 +3,12 @@
 
 | | |
 |---|---|
-| **Document status** | v1.2 |
+| **Document status** | v1.3 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Implementation Plan v1.2 |
 
 ### Changelog
+
+**v1.3** (2026-08-24) — Corrections found while building Phase 3, all of the same kind: values the document named that do not exist in the implemented theme. §5.5 anchor scroll-margin (`scroll-mt-20` is not a declared spacing step, and the desktop figure did not match its own arithmetic). §2 prohibition 2 (Lucide v1 renamed `alert-circle` → `circle-alert` and `filter` → `funnel`) and the two component specs that named them. §6.2 backdrop blur is now the `--blur-backdrop` / `--blur-backdrop-mobile` tokens rather than raw px, and §4.2 declares them. Every token value is otherwise unchanged.
 
 **v1.2** (2026-08-24) — Stack moved to latest: **Astro 7 + Tailwind CSS v4**. Human decision. Section 4 is rewritten end to end; Sections 1–3 and 5–12 are unchanged, because every token value is identical — only the mechanism that declares them moved from JS to CSS.
 - There is no `tailwind.config.mjs` any more. The theme is an `@theme` block in `src/styles/base.css` (§4.2).
@@ -709,7 +711,15 @@ Every top-level section on S1 uses:
 
 ### 5.5 Header safe zone
 
-Sticky header height: 64px mobile, 72px desktop. Every anchor target must have `scroll-margin-top` equal to header height + 16px (`scroll-mt-20 md:scroll-mt-24`). Content must never land under the header.
+Sticky header height: 64px mobile, 72px desktop. Every anchor target must have `scroll-margin-top` equal to header height + 16px — **80px mobile, 88px desktop**:
+
+```
+scroll-mt-[80px] md:scroll-mt-[88px]
+```
+
+Content must never land under the header.
+
+**Correction (v1.3).** This rule previously read `scroll-mt-20 md:scroll-mt-24`. Both parts were wrong. `scroll-mt-20` needs a `--spacing-20`, and §3.3 declares eleven steps that do not include 20 — with `--spacing: initial`, a utility naming an undeclared step emits no rule at all, so the anchor would have had no scroll margin and no error would have been raised. And `scroll-mt-24` is 96px, not the 88px the stated arithmetic gives. Arbitrary values are used instead because 80 and 88 are component dimensions, not spacing steps, and adding them to the spacing scale would make `p-20` and `gap-22` expressible everywhere else.
 
 ---
 

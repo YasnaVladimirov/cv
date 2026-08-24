@@ -439,6 +439,7 @@ Commit: `phase-2.5: bilingual mdx strategy with build-time enforcement`
 
 ### 3.0 — General component build rules
 - Build every component using ONLY tokens from Phase 1 and translation keys from Phase 2. No hardcoded values.
+- **Component dimensions use arbitrary values; spacing uses the scale.** The Design System specifies control heights in px (44px button, 36px ghost, 32px icon button, 24px tag) and §3.3 declares eleven spacing steps that do not include them. Write those as `h-[44px]`. Do **not** reach for the nearest numeric utility: `--spacing: initial` deletes v4's dynamic scale, so `h-9` and `p-5` emit **no rule at all** — no error, no warning, green build, and the element silently has no height. Verified in `dist/`: `h-9` produces nothing, `h-[36px]` produces `height:36px`. `scripts/verify-no-raw-values.mjs` fails the build on both an undeclared spacing step and a px literal the Design System does not name.
 - For each component: build the component file, then add it to `src/pages/components.astro` (a dev-only showcase page mirroring `tokens`) with every state rendered side-by-side. Same treatment as the tokens page: `noindex`, excluded from the sitemap, unlinked, and deleted at launch.
 - Verify each component visually on the deploy preview before moving to the next.
 - Static `.astro` components by default. React island only when interactivity is needed (marked below).

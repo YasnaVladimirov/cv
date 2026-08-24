@@ -13,6 +13,10 @@
  * has nothing to blur and looks broken (Design System §3.6).
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Case from '../components/dev/Case.astro';
+import Section from '../components/dev/Section.astro';
+import SectionEyebrow from '../components/ui/SectionEyebrow.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
 ---
 
 <BaseLayout title="Components — cv-site" noindex>
@@ -25,6 +29,69 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         element must show the focus ring. Switch language: every string must change, with no reload
         and no scroll jump.
       </p>
+
+      {
+        /*
+        Stand-in for the real LanguageToggle, which arrives in step 3.12. Without
+        it, steps 3.1-3.11 could only be reviewed in English, and half the point
+        of this page is catching where a ~35% longer SR string overflows a
+        component. It sets <html lang> and nothing else, which is exactly what the
+        language CSS keys on. Replaced by the real component in 3.12.
+      */
+      }
+      <button
+        id="dev-lang"
+        type="button"
+        class="mt-4 h-[36px] rounded-md border border-border bg-bg-elevated px-4 font-mono text-mono-sm text-text-primary"
+      >
+        dev: toggle language
+      </button>
+      <script is:inline>
+        document.getElementById('dev-lang').addEventListener('click', () => {
+          const root = document.documentElement;
+          root.lang = root.lang.startsWith('sr') ? 'en' : 'sr-Latn';
+        });
+      </script>
     </header>
+
+    <Section id="headings" spec="§6.3, §7.15" title="Section eyebrow + heading">
+      <Case label="with subhead — the #skills block">
+        <SectionHeading
+          eyebrowKey="sections.skills.eyebrow"
+          titleKey="sections.skills.heading"
+          subtitleKey="sections.skills.subhead"
+        />
+      </Case>
+
+      <Case
+        label="no subhead — the dictionary value is an empty string"
+        note="The subhead element must be absent, not empty. An empty <p> keeps its 8px top margin and a full line box, so the gap below the heading would silently differ between sections."
+      >
+        <SectionHeading
+          eyebrowKey="sections.work.eyebrow"
+          titleKey="sections.work.heading"
+          subtitleKey="sections.work.subhead"
+        />
+      </Case>
+
+      <Case
+        label="level 1 — the 404 page"
+        note="Same block rendered as h1. Heading level follows the page outline, not the component (§10.9)."
+      >
+        <SectionHeading
+          eyebrowKey="notFound.eyebrow"
+          titleKey="notFound.heading"
+          subtitleKey="notFound.subtext"
+          level={1}
+        />
+      </Case>
+
+      <Case
+        label="eyebrow alone — as used on a case-study card"
+        note="Announced to screen readers as nothing: the eyebrow is aria-hidden in every use, because it restates the text beside it."
+      >
+        <SectionEyebrow k="caseStudy.eyebrow.outcome" />
+      </Case>
+    </Section>
   </main>
 </BaseLayout>

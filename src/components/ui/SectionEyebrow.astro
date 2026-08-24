@@ -1,0 +1,27 @@
+---
+/**
+ * The `--kebab-case` mono label above a section heading (Design System §6.3).
+ *
+ * The `--` prefix is literal and lives in the dictionary value, not here, so a
+ * translator sees the whole string they are translating. SR keeps kebab-case:
+ * `--iskustvo`, not `--Iskustvo`.
+ *
+ * aria-hidden because in every use the eyebrow restates the heading directly
+ * below it. A screen reader would otherwise announce "dash dash experience"
+ * and then "heading level two, Experience" — the same word twice, once as
+ * punctuation noise. Nothing is lost; the information is in the heading.
+ */
+import T from './T.astro';
+
+interface Props {
+  /** Dictionary key, e.g. "sections.work.eyebrow". Value includes the `--`. */
+  k: string;
+  class?: string;
+}
+
+const { k, class: className } = Astro.props;
+---
+
+<p class:list={['font-mono text-mono-sm text-text-tertiary', className]} aria-hidden="true">
+  <T k={k} />
+</p>

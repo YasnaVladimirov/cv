@@ -90,6 +90,26 @@ export function t(key: string, lang: Lang, vars?: Record<string, string | number
     : node;
 }
 
+/**
+ * True when a key resolves to a real, non-empty string in EVERY language.
+ *
+ * Optional content — a section subhead, the availability line — is expressed
+ * as an empty string in the dictionary rather than a missing key, so parity
+ * holds. Components need to skip the whole element in that case: an empty
+ * <p> still contributes its margin and a line box.
+ *
+ * All languages are checked because the dual-render model puts both in the
+ * HTML, so a string present in one and empty in the other would render as a
+ * gap that appears and disappears with the toggle. verify-i18n-parity.mjs
+ * already fails the build on that, and this is the runtime half of the pair.
+ */
+export function hasText(key: string): boolean {
+  return LANGS.every((lang) => {
+    const value = t(key, lang);
+    return value !== '' && value !== key;
+  });
+}
+
 /** Non-string dictionary values — feature flags such as hero.availability.enabled. */
 export function flag(key: string, lang: Lang = DEFAULT_LANG): boolean {
   const parts = key.split('.');
