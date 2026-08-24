@@ -31,6 +31,7 @@ import fixtureAvatar from '../content/case-studies/fixture-1.png';
 import ToastHost from '../components/interactive/Toast';
 import LanguageToggle from '../components/interactive/LanguageToggle';
 import StickyFAB from '../components/interactive/StickyFAB';
+import ContactForm from '../components/interactive/ContactForm';
 import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
 import FilterPillDemo from '../components/dev/FilterPillDemo';
@@ -413,6 +414,18 @@ const caseStudies = (await getCollection('caseStudies'))
         note="Sticky within #work only, never to the viewport: the pill answers why the list is short, so it should not follow the reader past the list it is describing. Its close button names the skill — read out of context, Clear filter leaves a screen reader user to remember which one."
       >
         <FilterPillDemo client:load />
+      </Case>
+    </Section>
+
+    <Section id="contact-form" spec="§7.9, App Flow §4.7" title="Contact form">
+      <Case
+        label="submit empty — validation runs on submit, never on blur"
+        wide
+        note="Press Send with everything empty. Errors appear, focus moves to the summary so it is announced, and the first broken field is one Tab away. Now fix them one at a time: nothing re-validates until you submit again, because telling someone their email is wrong while they are still typing it is how a short form turns hostile. Add ?form=error to the URL for the endpoint-failure state, which hands back a mailto rather than apologising."
+      >
+        <div class="w-full max-w-prose">
+          <ContactForm client:load email="hello@example.com" />
+        </div>
       </Case>
     </Section>
   </main>
