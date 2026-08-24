@@ -50,6 +50,9 @@ jobs:
       - name: Verify fonts
         run: pnpm verify:fonts
 
+      - name: Verify i18n parity
+        run: pnpm verify:i18n
+
       - name: Build
         run: pnpm build
 

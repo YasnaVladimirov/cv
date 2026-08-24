@@ -1,1 +1,174 @@
-{}
+{
+  "meta": {
+    "default": {
+      "title": "TODO(human): Name — Frontend Engineer",
+      "description": "TODO(human): one-sentence value proposition, under 155 characters."
+    }
+  },
+  "nav": {
+    "work": "Work",
+    "skills": "Skills",
+    "contact": "Contact",
+    "backToWork": "Back to work",
+    "skipToContent": "Skip to content",
+    "toTop": "Back to top"
+  },
+  "hero": {
+    "name": "TODO(human): Full Name",
+    "title": "TODO(human): Frontend Engineer — React/TypeScript",
+    "valueProp": "TODO(human): one or two sentences, outcome-focused. Written, not translated.",
+    "availability": {
+      "enabled": false,
+      "text": "TODO(human): Open to opportunities · Location / Remote"
+    },
+    "cta": {
+      "resume": "Download resume",
+      "book": "Book a chat"
+    }
+  },
+  "proof": {
+    "enabled": false,
+    "heading": "Worked with"
+  },
+  "sections": {
+    "work": {
+      "eyebrow": "--experience",
+      "heading": "Experience",
+      "subhead": ""
+    },
+    "caseStudies": {
+      "eyebrow": "--case-studies",
+      "heading": "Featured work",
+      "subhead": ""
+    },
+    "skills": {
+      "eyebrow": "--skills",
+      "heading": "Skills",
+      "subhead": "Click a skill to see where I used it."
+    },
+    "testimonials": {
+      "eyebrow": "--testimonials",
+      "heading": "What people say",
+      "subhead": ""
+    },
+    "contact": {
+      "eyebrow": "--contact",
+      "heading": "Get in touch",
+      "subhead": "Book a slot, send a message, or email me directly."
+    }
+  },
+  "timeline": {
+    "present": "Present",
+    "readCaseStudy": "Read case study",
+    "filter": {
+      "showing": "Showing: {skill}",
+      "clear": "Clear filter",
+      "clearAria": "Clear the {skill} filter"
+    }
+  },
+  "caseStudy": {
+    "eyebrow": {
+      "context": "--context",
+      "problem": "--problem",
+      "role": "--my-role",
+      "approach": "--approach",
+      "outcome": "--outcome",
+      "stack": "--stack",
+      "reflection": "--what-id-do-differently"
+    },
+    "cta": {
+      "heading": "Want to talk about work like this?",
+      "book": "Book a chat"
+    },
+    "nav": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "translationPending": "This case study is available in English only for now.",
+    "readInEnglish": "Read it in English"
+  },
+  "contact": {
+    "email": "TODO(human): hello@example.com",
+    "emailPrompt": "Prefer plain email?",
+    "emailLink": "Email me directly",
+    "privacyNote": "Your message goes straight to my inbox — no lists, no tracking.",
+    "calendar": {
+      "loading": "Loading calendar…",
+      "blocked": "Calendar blocked by your browser?",
+      "openDirect": "Open it directly"
+    },
+    "form": {
+      "label": {
+        "name": "Name",
+        "email": "Email",
+        "company": "Company (optional)",
+        "message": "Message"
+      },
+      "placeholder": {
+        "name": "Jane Doe",
+        "email": "jane@company.com",
+        "company": "Acme Corp",
+        "message": "What would you like to talk about?"
+      },
+      "submit": "Send message",
+      "submitting": "Sending…",
+      "error": {
+        "nameRequired": "Enter your name",
+        "emailRequired": "Enter your email address",
+        "emailInvalid": "Enter a valid email address",
+        "messageRequired": "Enter a message",
+        "summary": "Fix the highlighted fields and try again",
+        "endpoint": "Something broke on my end — email me directly instead:"
+      },
+      "success": {
+        "heading": "Message sent.",
+        "body": "I'll reply within 24 hours.",
+        "alternative": "Prefer to skip the wait? Book a slot above."
+      }
+    }
+  },
+  "toast": {
+    "resumeDownload": {
+      "message": "Resume downloading — talk soon?",
+      "link": "Get in touch",
+      "dismiss": "Dismiss"
+    }
+  },
+  "notFound": {
+    "eyebrow": "--404",
+    "heading": "That page doesn't exist — but I do.",
+    "subtext": "TODO(human): one-line pitch, written not translated.",
+    "cta": {
+      "home": "Back home",
+      "resume": "Download resume",
+      "contact": "Get in touch"
+    },
+    "meta": {
+      "title": "Page not found",
+      "description": "That page doesn't exist. Here's how to reach me instead."
+    }
+  },
+  "footer": {
+    "tagline": "TODO(human): one-line tagline.",
+    "links": "Links",
+    "elsewhere": "Elsewhere",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "builtWith": "Built with Astro."
+  },
+  "language": {
+    "en": "EN",
+    "sr": "SR",
+    "switchToSerbian": "Switch to Serbian",
+    "switchToEnglish": "Switch to English"
+  },
+  "resume": {
+    "file": "/cv.pdf",
+    "filename": "TODO(human): firstname-lastname-frontend-engineer.pdf"
+  },
+  "social": {
+    "githubUrl": "TODO(human): https://github.com/username",
+    "linkedinUrl": "TODO(human): https://linkedin.com/in/username"
+  }
+}

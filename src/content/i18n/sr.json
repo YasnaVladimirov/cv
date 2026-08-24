@@ -1,1 +1,174 @@
-{}
+{
+  "meta": {
+    "default": {
+      "title": "TODO(human): Ime — Frontend inženjer",
+      "description": "TODO(human): jedna rečenica o tome šta nudiš, do 155 znakova."
+    }
+  },
+  "nav": {
+    "work": "Iskustvo",
+    "skills": "Veštine",
+    "contact": "Kontakt",
+    "backToWork": "Nazad na iskustvo",
+    "skipToContent": "Preskoči na sadržaj",
+    "toTop": "Nazad na vrh"
+  },
+  "hero": {
+    "name": "TODO(human): Ime i prezime",
+    "title": "TODO(human): Frontend inženjer — React/TypeScript",
+    "valueProp": "TODO(human): jedna ili dve rečenice, sa naglaskom na rezultat. Napisano, ne prevedeno.",
+    "availability": {
+      "enabled": false,
+      "text": "TODO(human): Otvoren za ponude · Lokacija / Na daljinu"
+    },
+    "cta": {
+      "resume": "Preuzmi CV",
+      "book": "Zakaži razgovor"
+    }
+  },
+  "proof": {
+    "enabled": false,
+    "heading": "Radio sam sa"
+  },
+  "sections": {
+    "work": {
+      "eyebrow": "--iskustvo",
+      "heading": "Iskustvo",
+      "subhead": ""
+    },
+    "caseStudies": {
+      "eyebrow": "--studije-slucaja",
+      "heading": "Izdvojeni radovi",
+      "subhead": ""
+    },
+    "skills": {
+      "eyebrow": "--vestine",
+      "heading": "Veštine",
+      "subhead": "Klikni na veštinu da vidiš gde sam je koristio."
+    },
+    "testimonials": {
+      "eyebrow": "--preporuke",
+      "heading": "Šta drugi kažu",
+      "subhead": ""
+    },
+    "contact": {
+      "eyebrow": "--kontakt",
+      "heading": "Javi se",
+      "subhead": "Zakaži termin, pošalji poruku ili mi piši direktno."
+    }
+  },
+  "timeline": {
+    "present": "Sada",
+    "readCaseStudy": "Pročitaj studiju slučaja",
+    "filter": {
+      "showing": "Prikazano: {skill}",
+      "clear": "Poništi filter",
+      "clearAria": "Poništi filter {skill}"
+    }
+  },
+  "caseStudy": {
+    "eyebrow": {
+      "context": "--kontekst",
+      "problem": "--problem",
+      "role": "--moja-uloga",
+      "approach": "--pristup",
+      "outcome": "--rezultat",
+      "stack": "--tehnologije",
+      "reflection": "--sta-bih-uradio-drugacije"
+    },
+    "cta": {
+      "heading": "Želiš da razgovaramo o ovakvom radu?",
+      "book": "Zakaži razgovor"
+    },
+    "nav": {
+      "previous": "Prethodna",
+      "next": "Sledeća"
+    },
+    "translationPending": "Ova studija slučaja za sada postoji samo na engleskom.",
+    "readInEnglish": "Pročitaj na engleskom"
+  },
+  "contact": {
+    "email": "TODO(human): hello@example.com",
+    "emailPrompt": "Više voliš običan mejl?",
+    "emailLink": "Piši mi direktno",
+    "privacyNote": "Tvoja poruka ide pravo u moje sanduče — bez lista, bez praćenja.",
+    "calendar": {
+      "loading": "Učitavanje kalendara…",
+      "blocked": "Pregledač blokira kalendar?",
+      "openDirect": "Otvori ga direktno"
+    },
+    "form": {
+      "label": {
+        "name": "Ime",
+        "email": "Mejl",
+        "company": "Firma (nije obavezno)",
+        "message": "Poruka"
+      },
+      "placeholder": {
+        "name": "Jovana Jovanović",
+        "email": "jovana@firma.rs",
+        "company": "Acme Corp",
+        "message": "O čemu bi želeo/la da razgovaramo?"
+      },
+      "submit": "Pošalji poruku",
+      "submitting": "Šaljem…",
+      "error": {
+        "nameRequired": "Unesi svoje ime",
+        "emailRequired": "Unesi svoju mejl adresu",
+        "emailInvalid": "Unesi ispravnu mejl adresu",
+        "messageRequired": "Unesi poruku",
+        "summary": "Ispravi označena polja i pokušaj ponovo",
+        "endpoint": "Nešto je puklo na mojoj strani — piši mi direktno:"
+      },
+      "success": {
+        "heading": "Poruka je poslata.",
+        "body": "Odgovoriću u roku od 24 sata.",
+        "alternative": "Ne želiš da čekaš? Zakaži termin iznad."
+      }
+    }
+  },
+  "toast": {
+    "resumeDownload": {
+      "message": "CV se preuzima — čujemo se uskoro?",
+      "link": "Javi se",
+      "dismiss": "Zatvori"
+    }
+  },
+  "notFound": {
+    "eyebrow": "--404",
+    "heading": "Ta stranica ne postoji — ali ja postojim.",
+    "subtext": "TODO(human): jedna rečenica, napisana a ne prevedena.",
+    "cta": {
+      "home": "Nazad na početnu",
+      "resume": "Preuzmi CV",
+      "contact": "Javi se"
+    },
+    "meta": {
+      "title": "Stranica nije pronađena",
+      "description": "Ta stranica ne postoji. Evo kako možeš da me kontaktiraš."
+    }
+  },
+  "footer": {
+    "tagline": "TODO(human): jedna rečenica.",
+    "links": "Linkovi",
+    "elsewhere": "Drugde",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "email": "Mejl",
+    "builtWith": "Napravljeno u Astru."
+  },
+  "language": {
+    "en": "EN",
+    "sr": "SR",
+    "switchToSerbian": "Prebaci na srpski",
+    "switchToEnglish": "Prebaci na engleski"
+  },
+  "resume": {
+    "file": "/cv-sr.pdf",
+    "filename": "TODO(human): ime-prezime-frontend-inzenjer.pdf"
+  },
+  "social": {
+    "githubUrl": "TODO(human): https://github.com/username",
+    "linkedinUrl": "TODO(human): https://linkedin.com/in/username"
+  }
+}
