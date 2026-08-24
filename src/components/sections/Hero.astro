@@ -25,12 +25,24 @@ const RESUME_SR = t('resume.file', 'sr');
 ---
 
 <Section id="hero">
+  {
+    /*
+    break-words on both display lines: at 320px a single long token — a
+    hyphenless surname, or the "React/TypeScript" in the title line — is wider
+    than the 288px of content box available at 48px and 36px type, and takes
+    the whole document into horizontal scroll with it. Measured in the §4.7
+    audit at 355px against a 320px viewport. max-w-full is the other half of
+    the fix: `items-start` sizes every child to its max-content width, and
+    max-content is measured as if the word could not break, so break-words
+    alone never gets the chance to act.
+  */
+  }
   <div class="flex max-w-prose flex-col items-start gap-6">
-    <h1 class="text-5xl text-text-primary lg:text-6xl">
+    <h1 class="max-w-full text-5xl break-words text-text-primary lg:text-6xl">
       <T k="hero.name" />
     </h1>
 
-    <p class="text-4xl text-text-secondary">
+    <p class="max-w-full text-4xl break-words text-text-secondary">
       <T k="hero.title" />
     </p>
 

@@ -55,7 +55,7 @@ const calendlyUrl = '#';
   <article id={study.id} class="mx-auto max-w-container px-4 py-24 sm:px-6 md:px-8 md:py-32">
     <header class="max-w-prose">
       <SectionEyebrow k="caseStudy.eyebrow.card" class="mb-2" />
-      <h1 class="text-4xl text-text-primary">
+      <h1 class="text-4xl break-words text-text-primary">
         <TContent en={study.data.title_en} sr={study.data.title_sr} />
       </h1>
       <p class="mt-4 text-lg text-text-secondary">
@@ -184,7 +184,12 @@ const calendlyUrl = '#';
   .case-study-body :global(ol) {
     margin-top: var(--spacing-4);
     padding-left: var(--spacing-6);
-    list-style: disc;
+    /* Longhand, not the `list-style` shorthand: the CSS minifier rewrites
+       `list-style: disc` to `list-style: outside`, betting that `disc` is the
+       initial value anyway. It is — but Tailwind's preflight sets
+       `list-style: none` on every ul, so the shorthand has to reinstate the
+       type explicitly and a rewritten shorthand only happens to work. */
+    list-style-type: disc;
   }
 
   .case-study-body :global(li) {

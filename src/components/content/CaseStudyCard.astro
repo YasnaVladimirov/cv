@@ -113,8 +113,16 @@ const aspect = isSpotlight ? 'aspect-[4/3]' : 'aspect-[16/10]';
     </p>
 
     {
+      /*
+      flex-wrap is load-bearing, not defensive: in the three-card grid each
+      card is about 300px wide, and three 40px metrics in one row overflow it
+      by 15px — the third label is clipped and the card scrolls sideways.
+      Found in the §4.7 rhythm audit.
+    */
+    }
+    {
       metrics.length > 0 && (
-        <div class="mt-2 flex flex-col gap-4 sm:flex-row sm:gap-8">
+        <div class="mt-2 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-4">
           {metrics.slice(0, 3).map((metric) => (
             <MetricCallout
               value={metric.value}
