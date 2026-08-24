@@ -1,0 +1,20 @@
+{
+  "order": 3,
+  "company": "FIXTURE Globex",
+  "role_en": "FIXTURE Frontend Engineer",
+  "role_sr": "FIXTURE Frontend inženjer",
+  "start": "2022-01",
+  "end": "2024-02",
+  "location_en": "FIXTURE Belgrade, Serbia",
+  "location_sr": "FIXTURE Beograd, Srbija",
+  "bullets_en": [
+    "FIXTURE — Dropped p95 checkout latency from 4.1s to 1.8s, lifting conversion 6%.",
+    "FIXTURE — Owned the checkout surface for eight releases with no rollback."
+  ],
+  "bullets_sr": [
+    "FIXTURE — Smanjio p95 kašnjenje naplate sa 4,1 s na 1,8 s, uz rast konverzije od 6%.",
+    "FIXTURE — Vodio površinu naplate kroz osam izdanja bez vraćanja unazad."
+  ],
+  "stack": ["FIXTURE-Next.js", "FIXTURE-TypeScript", "FIXTURE-Playwright"],
+  "case_study": "fixture-2"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "languages",
+    "name_en": "Languages",
+    "name_sr": "Jezici",
+    "order": 1,
+    "skills": [
+      {
+        "name": "FIXTURE-TypeScript",
+        "timeline_matches": ["01-acme", "02-globex", "03-initech"]
+      },
+      {
+        "name": "FIXTURE-JavaScript",
+        "timeline_matches": ["04-hooli"]
+      },
+      {
+        "name": "FIXTURE-HTML",
+        "timeline_matches": ["01-acme", "02-globex", "03-initech", "04-hooli"]
+      },
+      {
+        "name": "FIXTURE-CSS",
+        "timeline_matches": ["01-acme", "02-globex", "03-initech", "04-hooli"]
+      }
+    ]
+  },
+  {
+    "id": "frameworks",
+    "name_en": "Frameworks & libraries",
+    "name_sr": "Radni okviri i biblioteke",
+    "order": 2,
+    "skills": [
+      {
+        "name": "FIXTURE-React",
+        "timeline_matches": ["01-acme"]
+      },
+      {
+        "name": "FIXTURE-Next.js",
+        "timeline_matches": ["02-globex"]
+      },
+      {
+        "name": "FIXTURE-Astro",
+        "timeline_matches": ["03-initech"]
+      },
+      {
+        "name": "FIXTURE-Svelte",
+        "timeline_matches": []
+      }
+    ]
+  },
+  {
+    "id": "styling",
+    "name_en": "Styling",
+    "name_sr": "Stilizovanje",
+    "order": 3,
+    "skills": [
+      {
+        "name": "FIXTURE-Tailwind",
+        "timeline_matches": ["01-acme", "03-initech"]
+      },
+      {
+        "name": "FIXTURE-Sass",
+        "timeline_matches": ["04-hooli"]
+      },
+      {
+        "name": "FIXTURE-CSS-Modules",
+        "timeline_matches": []
+      }
+    ]
+  },
+  {
+    "id": "testing",
+    "name_en": "Testing",
+    "name_sr": "Testiranje",
+    "order": 4,
+    "skills": [
+      {
+        "name": "FIXTURE-Vitest",
+        "timeline_matches": ["01-acme"]
+      },
+      {
+        "name": "FIXTURE-Playwright",
+        "timeline_matches": ["02-globex"]
+      },
+      {
+        "name": "FIXTURE-Storybook",
+        "timeline_matches": ["03-initech"]
+      }
+    ]
+  },
+  {
+    "id": "tooling",
+    "name_en": "Tooling & infra",
+    "name_sr": "Alati i infrastruktura",
+    "order": 5,
+    "skills": [
+      {
+        "name": "FIXTURE-Webpack",
+        "timeline_matches": ["04-hooli"]
+      },
+      {
+        "name": "FIXTURE-Vite",
+        "timeline_matches": ["01-acme", "03-initech"]
+      },
+      {
+        "name": "FIXTURE-GitHub-Actions",
+        "timeline_matches": ["01-acme", "02-globex", "03-initech"]
+      },
+      {
+        "name": "FIXTURE-Docker",
+        "timeline_matches": []
+      }
+    ]
+  },
+  {
+    "id": "practices",
+    "name_en": "Practices",
+    "name_sr": "Prakse",
+    "order": 6,
+    "skills": [
+      {
+        "name": "FIXTURE-Accessibility",
+        "timeline_matches": ["03-initech"]
+      },
+      {
+        "name": "FIXTURE-Performance",
+        "timeline_matches": ["01-acme", "02-globex", "04-hooli"]
+      },
+      {
+        "name": "FIXTURE-Code-Review",
+        "timeline_matches": ["01-acme", "02-globex", "03-initech", "04-hooli"]
+      }
+    ]
+  }
+]

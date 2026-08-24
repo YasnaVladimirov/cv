@@ -1,0 +1,22 @@
+{
+  "order": 2,
+  "company": "FIXTURE Initech",
+  "role_en": "FIXTURE Frontend Developer",
+  "role_sr": "FIXTURE Frontend programer",
+  "start": "2020-06",
+  "end": "2021-12",
+  "location_en": "FIXTURE Novi Sad, Serbia",
+  "location_sr": "FIXTURE Novi Sad, Srbija",
+  "bullets_en": [
+    "FIXTURE — Shipped a token-driven design system adopted by 7 product teams.",
+    "FIXTURE — Reduced the CSS bundle 31% by removing duplicated component styles.",
+    "FIXTURE — Ran the accessibility audit that took the marketing site to WCAG 2.1 AA."
+  ],
+  "bullets_sr": [
+    "FIXTURE — Isporučio sistem dizajna koji koristi 7 proizvodnih timova.",
+    "FIXTURE — Smanjio CSS paket za 31% uklanjanjem dupliranih stilova.",
+    "FIXTURE — Sproveo proveru pristupačnosti do nivoa WCAG 2.1 AA."
+  ],
+  "stack": ["FIXTURE-Astro", "FIXTURE-Tailwind", "FIXTURE-Storybook", "FIXTURE-TypeScript"],
+  "case_study": "fixture-3"
+}

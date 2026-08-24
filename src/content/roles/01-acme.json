@@ -1,0 +1,22 @@
+{
+  "order": 4,
+  "company": "FIXTURE Acme Corp",
+  "role_en": "FIXTURE Senior Frontend Engineer",
+  "role_sr": "FIXTURE Viši frontend inženjer",
+  "start": "2024-03",
+  "end": null,
+  "location_en": "FIXTURE Remote",
+  "location_sr": "FIXTURE Na daljinu",
+  "bullets_en": [
+    "FIXTURE — Cut widget render time 42% by consolidating three state libraries into one.",
+    "FIXTURE — Led the migration end to end across two quarters with one other engineer.",
+    "FIXTURE — Introduced characterisation tests that caught 14 regressions before release."
+  ],
+  "bullets_sr": [
+    "FIXTURE — Skratio vreme iscrtavanja vidžeta za 42% objedinjavanjem tri biblioteke u jednu.",
+    "FIXTURE — Vodio migraciju od početka do kraja tokom dva kvartala.",
+    "FIXTURE — Uveo testove koji su otkrili 14 regresija pre izdanja."
+  ],
+  "stack": ["FIXTURE-React", "FIXTURE-TypeScript", "FIXTURE-Vitest", "FIXTURE-Tailwind"],
+  "case_study": "fixture-1"
+}

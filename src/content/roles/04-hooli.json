@@ -1,0 +1,19 @@
+{
+  "order": 1,
+  "company": "FIXTURE Hooli",
+  "role_en": "FIXTURE Junior Web Developer",
+  "role_sr": "FIXTURE Mlađi veb programer",
+  "start": "2019-02",
+  "end": "2020-05",
+  "location_en": "FIXTURE Belgrade, Serbia",
+  "location_sr": "FIXTURE Beograd, Srbija",
+  "bullets_en": [
+    "FIXTURE — Built and maintained 11 marketing landing pages with no CMS.",
+    "FIXTURE — Automated the image pipeline, cutting average page weight 38%."
+  ],
+  "bullets_sr": [
+    "FIXTURE — Izradio i održavao 11 marketinških stranica bez CMS-a.",
+    "FIXTURE — Automatizovao obradu slika i smanjio prosečnu težinu stranice za 38%."
+  ],
+  "stack": ["FIXTURE-JavaScript", "FIXTURE-Sass", "FIXTURE-Webpack"]
+}
