@@ -1,9 +1,27 @@
 ---
-// Phase 0/1 placeholder. Replaced by the real home page (S1) in Phase 4.3.
-import BaseLayout from '../layouts/BaseLayout.astro';
+// S1 — the home page. Section order is App Flow §4.1 and is the argument the
+// page makes: borrowed credibility, then evidence, then claims, then contact.
+//
+// Sections that depend on content count (proof strip, case studies,
+// testimonials) decide for themselves whether to render at all, so changing
+// what ships is a content edit rather than an edit here.
+import HomeLayout from '../layouts/HomeLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import ProofStrip from '../components/sections/ProofStrip.astro';
+import Timeline from '../components/sections/Timeline.astro';
+import CaseStudies from '../components/sections/CaseStudies.astro';
 ---
 
-<BaseLayout title="cv-site — phase 1">
-  <h1>Phase 1 — design foundation</h1>
-  <p>Tokens are wired. Real content lands in Phase 4.</p>
-</BaseLayout>
+<HomeLayout titleKey="meta.default.title" descriptionKey="meta.default.description">
+  <Hero />
+  {
+    /*
+    TODO(human): Phase 9 — drop the cleared logo files into public/logos/,
+    pass them here, and flip `proof.enabled` to true in both dictionaries.
+    Until then the strip renders nothing (App Flow §6: omit, never empty).
+  */
+  }
+  <ProofStrip />
+  <Timeline />
+  <CaseStudies />
+</HomeLayout>

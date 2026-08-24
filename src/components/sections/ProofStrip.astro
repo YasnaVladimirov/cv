@@ -1,0 +1,62 @@
+---
+/**
+ * The company logo strip directly under the hero (PRD FR-4, App Flow §6).
+ *
+ * Renders nothing unless BOTH the `proof.enabled` flag is true and logos were
+ * actually supplied. Borrowed credibility with no logos in it is an empty
+ * frame, and App Flow §6 says the strip is omitted entirely rather than shown
+ * empty. It is the flag, not code surgery, that turns it on.
+ *
+ * No eyebrow — §6.3 exempts the proof strip along with the hero.
+ */
+import { flag } from '../../lib/i18n';
+import T from '../ui/T.astro';
+
+interface Logo {
+  /** Path under public/logos/. */
+  src: string;
+  alt_en: string;
+  alt_sr: string;
+}
+
+interface Props {
+  logos?: Logo[];
+}
+
+const { logos = [] } = Astro.props;
+const show = flag('proof.enabled') && logos.length > 0;
+---
+
+{
+  show && (
+    <section aria-labelledby="proof-heading" class="pb-24 md:pb-32">
+      <div class="mx-auto max-w-container px-4 sm:px-6 md:px-8">
+        <h2 id="proof-heading" class="mb-6 text-sm text-text-tertiary">
+          <T k="proof.heading" />
+        </h2>
+        <ul class="flex flex-wrap items-center gap-8">
+          {logos.map((logo) => (
+            <li>
+              {/*
+                The alt text is translated, the mark is not. An <img> alt is an
+                attribute, so it carries the data-i18n pair rather than two
+                rendered copies; the visible fallback text is the EN string.
+              */}
+              <img
+                src={logo.src}
+                alt={logo.alt_en}
+                data-i18n-alt-en={logo.alt_en}
+                data-i18n-alt-sr={logo.alt_sr}
+                height="24"
+                width="96"
+                loading="lazy"
+                decoding="async"
+                class="h-[24px] w-auto opacity-70"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

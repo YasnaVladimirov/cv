@@ -1,0 +1,67 @@
+---
+/**
+ * S1's opening screen (PRD FR-1, App Flow §4.2).
+ *
+ * No eyebrow — §6.3 exempts the hero, which opens on the name.
+ *
+ * Both CTAs are plain anchors, so the whole hero works with JavaScript off.
+ * The resume link carries the `data-i18n-href` pair, which is the only way an
+ * attribute can be swapped by the language toggle: CSS reaches text, not
+ * hrefs. Phase 5.3 adds the download toast on top of a link that already works.
+ */
+import Section from './Section.astro';
+import Button from '../ui/Button.astro';
+import AvailabilityBadge from '../ui/AvailabilityBadge.astro';
+import T from '../ui/T.astro';
+import { t } from '../../lib/i18n';
+import { Calendar } from '../../lib/icons';
+
+// TODO(human): Phase 9 — replace public/cv.pdf and public/cv-sr.pdf with the
+// real documents. The filename the visitor saves is the file's own name, so
+// name them per PRD FR-1 (firstname-lastname-frontend-engineer.pdf) rather
+// than setting a download attribute value here.
+const RESUME_EN = t('resume.file', 'en');
+const RESUME_SR = t('resume.file', 'sr');
+---
+
+<Section id="hero">
+  <div class="flex max-w-prose flex-col items-start gap-6">
+    <h1 class="text-5xl text-text-primary lg:text-6xl">
+      <T k="hero.name" />
+    </h1>
+
+    <p class="text-4xl text-text-secondary">
+      <T k="hero.title" />
+    </p>
+
+    <p class="text-lg text-text-secondary">
+      <T k="hero.valueProp" />
+    </p>
+
+    <AvailabilityBadge />
+
+    {
+      /*
+      Stacked below sm so both targets keep their full width and their 44px
+      height at 320px (FR-1 edge case); side by side from sm up.
+    */
+    }
+    <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center">
+      <Button
+        variant="primary"
+        labelKey="hero.cta.resume"
+        href={RESUME_EN}
+        hrefSr={RESUME_SR}
+        download
+        id="hero-resume"
+      />
+      <Button
+        variant="secondary"
+        labelKey="hero.cta.book"
+        href="#contact"
+        icon={Calendar}
+        iconPosition="leading"
+      />
+    </div>
+  </div>
+</Section>

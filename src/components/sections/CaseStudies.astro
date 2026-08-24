@@ -1,0 +1,60 @@
+---
+/**
+ * The featured-work section (#case-studies) — App Flow §4.3.
+ *
+ * The layout is a function of how many case studies are published, because
+ * the launch state may well be one. One card is a deliberate spotlight, not a
+ * grid missing two members; zero removes the section entirely rather than
+ * leaving a heading over nothing. Publishing a fourth study is a content
+ * change, and the fallback keeps the three-card grid rather than inventing a
+ * layout this document does not specify.
+ */
+import { getCollection } from 'astro:content';
+import Section from './Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import CaseStudyCard from '../content/CaseStudyCard.astro';
+
+const studies = (await getCollection('caseStudies', ({ data }) => data.published)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const layout = studies.length === 1 ? 'spotlight' : studies.length === 2 ? 'pair' : 'grid';
+
+// §5.3. A single card is full width, so it needs no grid at all.
+const GRID = {
+  spotlight: '',
+  pair: 'grid grid-cols-1 gap-6 md:grid-cols-2',
+  grid: 'grid grid-cols-1 gap-6 md:grid-cols-3',
+} as const;
+---
+
+{
+  studies.length > 0 && (
+    <Section id="case-studies" labelledby="case-studies-heading">
+      <SectionHeading
+        eyebrowKey="sections.caseStudies.eyebrow"
+        titleKey="sections.caseStudies.heading"
+        subtitleKey="sections.caseStudies.subhead"
+        id="case-studies-heading"
+      />
+
+      <div class={GRID[layout]}>
+        {studies.map((study) => (
+          <CaseStudyCard
+            href={`/work/${study.id}`}
+            title_en={study.data.title_en}
+            title_sr={study.data.title_sr}
+            outcome_en={study.data.outcome_en}
+            outcome_sr={study.data.outcome_sr}
+            metrics={study.data.metrics}
+            stack={study.data.stack}
+            image={study.data.hero_image}
+            imageAlt_en={study.data.hero_image_alt_en}
+            imageAlt_sr={study.data.hero_image_alt_sr}
+            layout={layout}
+          />
+        ))}
+      </div>
+    </Section>
+  )
+}

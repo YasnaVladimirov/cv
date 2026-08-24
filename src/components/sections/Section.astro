@@ -1,0 +1,32 @@
+---
+/**
+ * One top-level band of S1.
+ *
+ * Exists so the section rhythm is declared once. Design System §5.4 sets it at
+ * `py-24 md:py-32`, and §5.5 sets every anchor target's scroll margin to the
+ * header height plus 16px. Both are easy to forget on the fifth section and
+ * invisible when wrong — nothing fails, the page just loses its rhythm and
+ * headings hide under the sticky header.
+ */
+interface Props {
+  /** Anchor target. Also what the Phase 5 scrollspy observes. */
+  id?: string;
+  /** Applied to the <section>. */
+  class?: string;
+  /** Applied to the inner container — `max-w-prose` for reading measures. */
+  containerClass?: string;
+  labelledby?: string;
+}
+
+const { id, class: className, containerClass, labelledby } = Astro.props;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={['scroll-mt-[80px] py-24 md:scroll-mt-[88px] md:py-32', className]}
+>
+  <div class:list={['mx-auto max-w-container px-4 sm:px-6 md:px-8', containerClass]}>
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,48 @@
+---
+/**
+ * The work timeline (#work) — PRD FR-2, App Flow §4.5.
+ *
+ * Every entry is rendered, expanded, in the initial HTML. No accordion, no
+ * "load more": a hiring manager using Ctrl+F must find every bullet, and a
+ * crawler must see all of them.
+ *
+ * The filter is Phase 5.2 and is pure enhancement on top of this markup —
+ * each entry carries its collection id so the filter can address it, and the
+ * pill has a mount point waiting above the list.
+ */
+import { getCollection } from 'astro:content';
+import Section from './Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import TimelineEntry from '../content/TimelineEntry.astro';
+
+const roles = (await getCollection('roles')).sort((a, b) => b.data.order - a.data.order);
+
+const published = new Set(
+  (await getCollection('caseStudies', ({ data }) => data.published)).map((entry) => entry.id),
+);
+---
+
+<Section id="work" labelledby="work-heading">
+  <SectionHeading
+    eyebrowKey="sections.work.eyebrow"
+    titleKey="sections.work.heading"
+    subtitleKey="sections.work.subhead"
+    id="work-heading"
+  />
+
+  {/* Filter pill mount point — filled by Phase 5.2, empty and inert until then. */}
+  <div id="work-filter" class="empty:hidden"></div>
+
+  <div>
+    {
+      roles.map((role) => {
+        // A role may point at a case study that is not published yet. Linking
+        // to it would produce a 404, so the link is dropped rather than the
+        // reference being treated as a promise.
+        const slug = role.data.case_study?.id;
+        const href = slug && published.has(slug) ? `/work/${slug}` : undefined;
+        return <TimelineEntry role={role.data} id={role.id} caseStudyHref={href} />;
+      })
+    }
+  </div>
+</Section>
