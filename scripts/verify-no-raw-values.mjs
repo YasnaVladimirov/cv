@@ -170,6 +170,42 @@ for (const file of ROOTS.flatMap(walk)) {
 }
 
 /**
+ * `data-lang` may only sit on a <span> or an <li>.
+ *
+ * The language CSS shows the active block with `display: contents`, which
+ * removes that element's own box. On a wrapper span inside a semantic element
+ * that is exactly right — the <h3> keeps its box and only its text swaps. On
+ * the semantic element itself it is a silent layout collapse: `<h3 data-lang>`
+ * measures zero height and its text reflows into whatever follows.
+ *
+ * It is silent in the worst way. Every computed style is correct — the colour,
+ * the font size, the weight all resolve — and only the box is gone, so a
+ * property-by-property check passes. This was found in a screenshot, after a
+ * card title and its outcome had been rendering on one line for two commits.
+ *
+ * <li> is the one exception: a bilingual list needs one <ul> holding tagged
+ * items, and base.css restores `display: list-item` so the marker survives.
+ */
+const LANG_TAG_ALLOWED = new Set(['span', 'li']);
+
+for (const file of ROOTS.flatMap(walk)) {
+  if (!file.endsWith('.astro') && !file.endsWith('.tsx')) continue;
+  const src = stripComments(readFileSync(file, 'utf8'));
+  for (const m of src.matchAll(/<([a-zA-Z][\w.]*)\b[^>]*?\bdata-lang\b/g)) {
+    const tag = m[1];
+    // A capitalised tag is a component, which renders its own markup and is
+    // checked wherever it is defined.
+    if (/^[A-Z]/.test(tag)) continue;
+    if (!LANG_TAG_ALLOWED.has(tag.toLowerCase())) {
+      fail.push(
+        `${file}  data-lang on <${tag}> — "display: contents" deletes that element's box. ` +
+          `Put the attribute on a <span> inside it (see src/components/ui/TContent.astro).`,
+      );
+    }
+  }
+}
+
+/**
  * §6.2 gives backdrop-shape sizes as a RANGE (320–560px on the longest axis,
  * varying per shape) rather than a list, so the check above cannot apply: the
  * sizes are built as `${size}px` from bare numbers and carry no px literal to

@@ -18,6 +18,7 @@ import { formatRange } from '../../lib/format';
 import { LANGS, type Lang } from '../../lib/i18n';
 import Tag from '../ui/Tag.astro';
 import Link from '../ui/Link.astro';
+import TContent from '../ui/TContent.astro';
 
 interface Role {
   company: string;
@@ -60,41 +61,42 @@ const location: Record<Lang, string> = { en: role.location_en, sr: role.location
   ]}
 >
   <div class="flex flex-col gap-1">
-    {
-      LANGS.map((lang) => (
-        <p data-lang={lang} class="font-mono text-mono-sm text-text-tertiary tabular-nums">
-          {formatRange(role.start, role.end, lang)}
-        </p>
-      ))
-    }
+    <p class="font-mono text-mono-sm text-text-tertiary tabular-nums">
+      <TContent
+        en={formatRange(role.start, role.end, 'en')}
+        sr={formatRange(role.start, role.end, 'sr')}
+      />
+    </p>
     <p class="text-sm font-medium text-text-primary">{role.company}</p>
-    {
-      LANGS.map((lang) => (
-        <p data-lang={lang} class="text-sm text-text-tertiary">
-          {location[lang]}
-        </p>
-      ))
-    }
+    <p class="text-sm text-text-tertiary">
+      <TContent en={location.en} sr={location.sr} />
+    </p>
   </div>
 
   <div class="flex flex-col gap-4">
-    {
-      LANGS.map((lang) => (
-        <h3 data-lang={lang} class="text-lg font-semibold text-text-primary">
-          {title[lang]}
-        </h3>
-      ))
-    }
+    <h3 class="text-lg font-semibold text-text-primary">
+      <TContent en={title.en} sr={title.sr} />
+    </h3>
 
     {
-      LANGS.map((lang) => (
-        <ul data-lang={lang} class="timeline-bullets flex max-w-prose flex-col gap-2">
-          {bullets[lang].map((bullet) => (
-            <li class="text-base text-text-primary">{bullet}</li>
-          ))}
-        </ul>
-      ))
+      /*
+      One list, with language-tagged items. Two <ul data-lang> elements would
+      each lose their box to `display: contents` and the bullets of both
+      languages would collapse into the parent column. The <li> keeps its own
+      display: list-item rule (see base.css) so the marker survives.
+    */
     }
+    <ul class="timeline-bullets flex max-w-prose flex-col gap-2">
+      {
+        LANGS.map((lang) =>
+          bullets[lang].map((bullet) => (
+            <li data-lang={lang} class="text-base text-text-primary">
+              {bullet}
+            </li>
+          )),
+        )
+      }
+    </ul>
 
     <div class="flex flex-wrap gap-2">
       {role.stack.map((item) => <Tag label={item} />)}

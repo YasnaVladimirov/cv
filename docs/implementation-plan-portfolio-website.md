@@ -3,7 +3,7 @@
 
 | | |
 |---|---|
-| **Document status** | v1.5 |
+| **Document status** | v1.6 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.2 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
@@ -13,6 +13,8 @@
 **v1.5** — In-place translation mechanism specified concretely: dual-render + CSS for static text, `data-i18n-*` attribute pairs for attributes, store subscription for React islands only. See §2.4.
 
 **v1.4** — Content collections moved to `src/content.config.ts` with the Content Layer loader API (`glob()` / `file()`), which is what Astro 7 supports; `src/content/config.ts` is no longer resolved at all. Skills became one entry per category to suit the `file()` loader. See §2.1.
+
+**v1.6** — Phase 3 build rules added to §3.0, each from a silent failure found while building it. Component dimensions must use arbitrary values (`h-[44px]`), because `--spacing: initial` makes `h-9` emit no rule at all. Display utilities must never be passed to a component through its `class` prop — the recipe already sets one, and which wins is decided by Tailwind's stylesheet order. `data-lang` must sit on a `<span>`, never on the semantic element, because `display: contents` deletes that element's box. Three new CI gates cover these: `verify:values`, `verify:css`, and the `data-lang` placement check. Design System advanced to v1.3.
 
 **v1.3** — Dev-only showcase pages renamed from `_tokens` / `_components` to `tokens` / `components`. The underscore prefix excludes a page from routing altogether, so it never reached the deploy preview and the human approval gates in 1.4 and 3.x were unreachable. They are now real routes carrying `noindex`, excluded from the sitemap, unlinked from shipping pages, and deleted in Phase 10.3. See §1.4.
 

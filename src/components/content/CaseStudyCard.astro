@@ -18,11 +18,12 @@
  */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import { LANGS, type Lang } from '../../lib/i18n';
+import type { Lang } from '../../lib/i18n';
 import SectionEyebrow from '../ui/SectionEyebrow.astro';
 import MetricCallout from '../ui/MetricCallout.astro';
 import Tag from '../ui/Tag.astro';
 import T from '../ui/T.astro';
+import TContent from '../ui/TContent.astro';
 import { ArrowRight } from '../../lib/icons';
 
 interface Metric {
@@ -80,41 +81,36 @@ const aspect = isSpotlight ? 'aspect-[4/3]' : 'aspect-[16/10]';
 >
   <div class:list={['overflow-hidden rounded-md', aspect, !isSpotlight && 'mb-6']}>
     {
-      LANGS.map((lang) => (
-        <span data-lang={lang}>
-          <Image
-            src={image}
-            alt={lang === 'en' ? imageAlt_en : imageAlt_sr}
-            class="h-full w-full object-cover"
-            widths={[400, 800, 1200]}
-            sizes="(min-width: 1024px) 400px, 100vw"
-          />
-        </span>
-      ))
+      /*
+      One image, not two. `alt` is an attribute, and attributes are mechanism 2:
+      the data-i18n pair is swapped by applyAttributeTranslations() on every
+      language change. Dual-rendering the image would ship the same picture
+      twice for the sake of one string.
+    */
     }
+    <Image
+      src={image}
+      alt={imageAlt_en}
+      data-i18n-alt-en={imageAlt_en}
+      data-i18n-alt-sr={imageAlt_sr}
+      class="h-full w-full object-cover"
+      widths={[400, 800, 1200]}
+      sizes="(min-width: 1024px) 400px, 100vw"
+    />
   </div>
 
   <div class="flex min-w-0 flex-col gap-3">
     <SectionEyebrow k="caseStudy.eyebrow.card" />
 
-    {
-      LANGS.map((lang) => (
-        <h3
-          data-lang={lang}
-          class="card-title text-xl font-semibold text-text-primary transition-colors duration-base ease-out"
-        >
-          {title[lang]}
-        </h3>
-      ))
-    }
+    <h3
+      class="card-title text-xl font-semibold text-text-primary transition-colors duration-base ease-out"
+    >
+      <TContent en={title.en} sr={title.sr} />
+    </h3>
 
-    {
-      LANGS.map((lang) => (
-        <p data-lang={lang} class="text-base text-text-secondary">
-          {outcome[lang]}
-        </p>
-      ))
-    }
+    <p class="text-base text-text-secondary">
+      <TContent en={outcome.en} sr={outcome.sr} />
+    </p>
 
     {
       metrics.length > 0 && (

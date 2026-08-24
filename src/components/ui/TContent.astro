@@ -1,0 +1,27 @@
+---
+/**
+ * The content-collection counterpart to <T> (Design System §9.6).
+ *
+ * <T> looks a key up in the UI dictionary. This one takes the two strings
+ * directly, for text that lives beside its content as an `_en` / `_sr` pair —
+ * a case-study title, a timeline bullet, a metric label.
+ *
+ * It renders spans, and that is the whole point. `data-lang` must never sit on
+ * a semantic element: the language CSS uses `display: contents`, which removes
+ * that element's box, so `<h3 data-lang>` collapses the heading and its text
+ * reflows into whatever comes next. Wrap the text, not the element:
+ *
+ *   <h3 class="text-xl"><TContent en={title_en} sr={title_sr} /></h3>
+ */
+import { LANGS } from '../../lib/i18n';
+
+interface Props {
+  en: string;
+  sr: string;
+}
+
+const { en, sr } = Astro.props;
+const value = { en, sr } as const;
+---
+
+{LANGS.map((lang) => <span data-lang={lang}>{value[lang]}</span>)}

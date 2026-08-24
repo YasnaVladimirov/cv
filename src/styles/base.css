@@ -308,6 +308,24 @@ html[lang^='sr'] [data-lang='sr'] {
   display: contents;
 }
 
+/* `contents` removes the element's own box. That is exactly right for a
+   wrapper INSIDE a semantic element — <h3><span data-lang>…</span></h3> keeps
+   the heading and swaps only its text. It is exactly wrong ON the semantic
+   element: <h3 data-lang> collapses the heading's box entirely and its text
+   reflows into whatever follows.
+
+   `data-lang` therefore belongs only on a <span>, with one exception: a list
+   whose two languages have different bullet counts needs one <ul> holding
+   language-tagged items, and a list item must stay a list item or it loses
+   its marker. scripts/verify-no-raw-values.mjs enforces the rule.
+   Found in Phase 3.8, where a card title and its outcome rendered on one
+   line — visible only in a screenshot, since every computed style was
+   correct and the collapsed boxes simply measured zero. */
+html[lang='en'] li[data-lang='en'],
+html[lang^='sr'] li[data-lang='sr'] {
+  display: list-item;
+}
+
 /* Reduced motion — §3.7. The reduced path is instant, not merely faster. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
