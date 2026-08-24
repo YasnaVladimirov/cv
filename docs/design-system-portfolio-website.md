@@ -268,7 +268,10 @@ Timeline entries, testimonials, tags, buttons: **not glass**.
 | `duration-base` | 250ms | Section fade-in-once on first reveal, filter apply, glass hover shadow |
 | `duration-slow` | 400ms | Reserved for the toast entry/exit only |
 | `ease-out` | `cubic-bezier(0.16, 1, 0.3, 1)` | Default easing for all transitions |
+| `duration-pulse` | 2000ms | The availability badge dot (§7.13) — the one looping animation in the system |
 | `ease-linear` | `linear` | Progress-style animations (none currently exist) |
+
+`duration-pulse` is an addition made in Phase 3.5. §7.13 calls for a "subtle pulse" and gave no duration, and §0 forbids picking one in component code. It needs no reduced-motion branch of its own: the global rule below already forces `animation-duration` to 0.01ms and `animation-iteration-count` to 1, which stops a looping animation dead.
 
 Global CSS rule (must be in the base stylesheet):
 ```css
@@ -523,6 +526,7 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
+  --duration-pulse: 2000ms;
 
   /* Z-index — §3.8 */
   --z-base: 0;

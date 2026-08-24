@@ -1,0 +1,60 @@
+---
+/**
+ * The hero availability pill (Design System §7.13).
+ *
+ * Renders nothing unless `hero.availability.enabled` is true in the dictionary,
+ * which is how the human turns it on and off without touching a component.
+ * It is `false` at launch.
+ *
+ * The pulse needs no reduced-motion branch: the global rule in the base
+ * stylesheet forces animation-duration to 0.01ms and iteration-count to 1,
+ * which stops a loop dead rather than merely speeding it up.
+ */
+import { flag } from '../../lib/i18n';
+import T from './T.astro';
+
+interface Props {
+  /**
+   * Overrides the dictionary flag. Only the component showcase passes this —
+   * with the flag off, the component correctly renders nothing, and a state
+   * you cannot look at is a state nobody reviews.
+   */
+  enabled?: boolean;
+  class?: string;
+}
+const { enabled: enabledProp, class: className } = Astro.props;
+
+const enabled = enabledProp ?? flag('hero.availability.enabled');
+---
+
+{
+  enabled && (
+    <p
+      class:list={[
+        'inline-flex h-[32px] items-center gap-2 rounded-full border border-border-subtle bg-bg-elevated px-3 text-sm font-medium text-text-primary',
+        className,
+      ]}
+    >
+      <span class="availability-dot h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+      <T k="hero.availability.text" />
+    </p>
+  )
+}
+
+<style>
+  /* The one looping animation in the system (§3.7). Opacity only — no scale,
+     which would make the dot jitter against the text baseline beside it. */
+  @keyframes availability-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  .availability-dot {
+    animation: availability-pulse var(--duration-pulse) var(--ease-linear) infinite;
+  }
+</style>

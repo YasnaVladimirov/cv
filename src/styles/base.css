@@ -196,6 +196,7 @@
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
+  --duration-pulse: 2000ms;
 
   /* Z-index — §3.8 */
   --z-base: 0;

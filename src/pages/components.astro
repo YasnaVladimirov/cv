@@ -20,6 +20,7 @@ import SectionHeading from '../components/ui/SectionHeading.astro';
 import Button from '../components/ui/Button.astro';
 import Link from '../components/ui/Link.astro';
 import Tag from '../components/ui/Tag.astro';
+import AvailabilityBadge from '../components/ui/AvailabilityBadge.astro';
 import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
 ---
 
@@ -214,6 +215,22 @@ import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
         <Tag label="React" interactive matches />
         <Tag label="Figma" interactive matches={false} />
         <Tag label="Astro" interactive matches />
+      </Case>
+    </Section>
+
+    <Section id="availability" spec="§7.13" title="Availability badge">
+      <Case
+        label="enabled"
+        note="Watch the dot: a 2s opacity loop, the only looping animation in the system. Turn on Reduce Motion in system settings and it must stop dead, not merely speed up — the global rule sets iteration-count to 1."
+      >
+        <AvailabilityBadge enabled />
+      </Case>
+
+      <Case
+        label="disabled — the launch state"
+        note="hero.availability.enabled is false in the dictionary, so the component renders nothing at all. There should be an empty row below this line."
+      >
+        <AvailabilityBadge />
       </Case>
     </Section>
   </main>
