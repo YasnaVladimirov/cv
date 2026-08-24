@@ -29,6 +29,7 @@ import TestimonialCard from '../components/content/TestimonialCard.astro';
 import { getCollection } from 'astro:content';
 import fixtureAvatar from '../content/case-studies/fixture-1.png';
 import ToastHost from '../components/interactive/Toast';
+import LanguageToggle from '../components/interactive/LanguageToggle';
 import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
 
@@ -52,28 +53,9 @@ const caseStudies = (await getCollection('caseStudies'))
         and no scroll jump.
       </p>
 
-      {
-        /*
-        Stand-in for the real LanguageToggle, which arrives in step 3.12. Without
-        it, steps 3.1-3.11 could only be reviewed in English, and half the point
-        of this page is catching where a ~35% longer SR string overflows a
-        component. It sets <html lang> and nothing else, which is exactly what the
-        language CSS keys on. Replaced by the real component in 3.12.
-      */
-      }
-      <button
-        id="dev-lang"
-        type="button"
-        class="mt-4 h-[36px] rounded-md border border-border bg-bg-elevated px-4 font-mono text-mono-sm text-text-primary"
-      >
-        dev: toggle language
-      </button>
-      <script is:inline>
-        document.getElementById('dev-lang').addEventListener('click', () => {
-          const root = document.documentElement;
-          root.lang = root.lang.startsWith('sr') ? 'en' : 'sr-Latn';
-        });
-      </script>
+      <div class="mt-4">
+        <LanguageToggle client:load />
+      </div>
     </header>
 
     <Section id="headings" spec="§6.3, §7.15" title="Section eyebrow + heading">
@@ -382,6 +364,15 @@ const caseStudies = (await getCollection('caseStudies'))
         note="Three things to check. It auto-dismisses after 3s. Hovering pauses that timer, and so does tabbing to the close button — hover alone would let it vanish under a keyboard user's hands. Triggering again while one is visible replaces it and replays the entry; toasts never stack."
       >
         <ToastDemo client:load />
+      </Case>
+    </Section>
+
+    <Section id="language-toggle" spec="§7.16" title="Language toggle">
+      <Case
+        label="the real control — the same one now mounted in this page's header"
+        note="One button, not a dropdown. Both labels stay visible so the control never changes width under the pointer. aria-label names the action, not the state, because aria-pressed already carries the state."
+      >
+        <LanguageToggle client:load />
       </Case>
     </Section>
   </main>
