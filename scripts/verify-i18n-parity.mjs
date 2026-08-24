@@ -76,7 +76,7 @@ if (fail.length) {
 
 // TODO(human) markers are expected until Phase 9; surface the count, don't fail.
 const todos = [...en.entries()]
-  .filter(([k, t]) => t === 'string')
+  .filter(([, t]) => t === 'string')
   .filter(([k]) => get(en2, k).includes('TODO(human)') || get(sr2, k).includes('TODO(human)'))
   .map(([k]) => k);
 

@@ -23,6 +23,18 @@ import Tag from '../components/ui/Tag.astro';
 import AvailabilityBadge from '../components/ui/AvailabilityBadge.astro';
 import MetricCallout from '../components/ui/MetricCallout.astro';
 import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
+import TimelineEntry from '../components/content/TimelineEntry.astro';
+import TestimonialCard from '../components/content/TestimonialCard.astro';
+import { getCollection } from 'astro:content';
+import fixtureAvatar from '../content/case-studies/fixture-1.png';
+
+// Real fixture content, not hand-written demo data: the showcase has to prove
+// these components survive the shapes the schema actually allows — a null end
+// date, a role with no case study, a card carrying three metrics.
+const roles = (await getCollection('roles')).sort((a, b) => b.data.order - a.data.order);
+const caseStudies = (await getCollection('caseStudies'))
+  .filter((entry) => entry.data.published)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title="Components — cv-site" noindex>
@@ -244,6 +256,38 @@ import { ArrowRight, ArrowUpRight, X } from '../lib/icons';
           <MetricCallout value="-58%" labelEn="LCP on mobile" labelSr="LCP na mobilnom" />
           <MetricCallout value="+6.2%" labelEn="Checkout conversion" labelSr="Konverzija naplate" />
           <MetricCallout value="200k" labelEn="Monthly users" labelSr="Mesečnih korisnika" />
+        </div>
+      </Case>
+    </Section>
+
+    <Section id="timeline" spec="§7.14" title="Timeline entry">
+      <Case
+        label="unfiltered — four fixture roles"
+        wide
+        note="The first has end: null and reads as Present, translated. Dates go through Intl, never a template: switch language and the month abbreviation changes with it. The fourth role has no case study, so no link renders — that is content deciding, not a prop."
+      >
+        <div class="w-full">
+          {
+            roles.map((role) => (
+              <TimelineEntry
+                role={role.data}
+                caseStudyHref={
+                  role.data.case_study ? `/work/${role.data.case_study.id}` : undefined
+                }
+              />
+            ))
+          }
+        </div>
+      </Case>
+
+      <Case
+        label="filtered — one match, one dimmed"
+        wide
+        note="What a skill filter looks like once Phase 5 wires it. The match gains a 2px accent edge and indents to meet it; the non-match drops to 0.35 opacity. Both come from one data attribute, so applying a filter is a single write per entry."
+      >
+        <div class="w-full">
+          <TimelineEntry role={roles[0].data} filter="match" />
+          <TimelineEntry role={roles[1].data} filter="out" />
         </div>
       </Case>
     </Section>

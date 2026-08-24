@@ -1,0 +1,149 @@
+---
+/**
+ * One role in the work timeline (Design System §7.14).
+ *
+ * No card container: entries are separated by a rule, which is what keeps the
+ * timeline reading as one continuous history rather than four unrelated boxes.
+ *
+ * The filter states are driven by data attributes, not classes, because Phase 5
+ * sets them from JavaScript and an attribute is a single write per entry with
+ * no class-list bookkeeping. Both states exist here already so the visual can
+ * be reviewed before any of that logic is written:
+ *
+ *   data-filter="match"  — a skill filter is on and this role used it
+ *   data-filter="out"    — a skill filter is on and this role did not
+ *   (absent)             — no filter
+ */
+import { formatRange } from '../../lib/format';
+import { LANGS, type Lang } from '../../lib/i18n';
+import Tag from '../ui/Tag.astro';
+import Link from '../ui/Link.astro';
+
+interface Role {
+  company: string;
+  role_en: string;
+  role_sr: string;
+  start: string;
+  end: string | null;
+  location_en: string;
+  location_sr: string;
+  bullets_en: string[];
+  bullets_sr: string[];
+  stack: string[];
+}
+
+interface Props {
+  role: Role;
+  /** Anchor for the skill filter to scroll to and for Phase 5 to target. */
+  id?: string;
+  /** Showcase-only; Phase 5 sets this from the DOM. */
+  filter?: 'match' | 'out';
+  /** Present only when the role has a published case study (§7.14). */
+  caseStudyHref?: string;
+  class?: string;
+}
+
+const { role, id, filter, caseStudyHref, class: className } = Astro.props;
+
+const bullets: Record<Lang, string[]> = { en: role.bullets_en, sr: role.bullets_sr };
+const title: Record<Lang, string> = { en: role.role_en, sr: role.role_sr };
+const location: Record<Lang, string> = { en: role.location_en, sr: role.location_sr };
+---
+
+<article
+  id={id}
+  data-timeline-entry
+  data-filter={filter}
+  class:list={[
+    'timeline-entry grid grid-cols-1 gap-4 border-b border-border-subtle py-8 md:grid-cols-[200px_1fr] md:gap-8',
+    className,
+  ]}
+>
+  <div class="flex flex-col gap-1">
+    {
+      LANGS.map((lang) => (
+        <p data-lang={lang} class="font-mono text-mono-sm text-text-tertiary tabular-nums">
+          {formatRange(role.start, role.end, lang)}
+        </p>
+      ))
+    }
+    <p class="text-sm font-medium text-text-primary">{role.company}</p>
+    {
+      LANGS.map((lang) => (
+        <p data-lang={lang} class="text-sm text-text-tertiary">
+          {location[lang]}
+        </p>
+      ))
+    }
+  </div>
+
+  <div class="flex flex-col gap-4">
+    {
+      LANGS.map((lang) => (
+        <h3 data-lang={lang} class="text-lg font-semibold text-text-primary">
+          {title[lang]}
+        </h3>
+      ))
+    }
+
+    {
+      LANGS.map((lang) => (
+        <ul data-lang={lang} class="timeline-bullets flex max-w-prose flex-col gap-2">
+          {bullets[lang].map((bullet) => (
+            <li class="text-base text-text-primary">{bullet}</li>
+          ))}
+        </ul>
+      ))
+    }
+
+    <div class="flex flex-wrap gap-2">
+      {role.stack.map((item) => <Tag label={item} />)}
+    </div>
+
+    {
+      caseStudyHref && (
+        <Link variant="standalone" href={caseStudyHref} labelKey="timeline.readCaseStudy" />
+      )
+    }
+  </div>
+</article>
+
+<style>
+  /* A 4px accent square, not a disc (§7.14). ::marker cannot be sized or
+     shaped reliably across browsers, so the list-item marker is removed and
+     drawn as a pseudo-element instead. */
+  .timeline-bullets {
+    list-style: none;
+  }
+  .timeline-bullets > li {
+    position: relative;
+    padding-inline-start: var(--spacing-4);
+  }
+  .timeline-bullets > li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    /* Centres the square on the first line's cap height rather than its box,
+       which is what makes it read as aligned with the text. */
+    top: calc((var(--text-base--line-height) - 4px) / 2);
+    width: 4px;
+    height: 4px;
+    background: var(--color-accent);
+  }
+
+  /* §7.14 filter states. The transition is on the entry, so applying and
+     clearing a filter both animate; the global reduced-motion rule flattens
+     it to nothing. */
+  .timeline-entry {
+    transition: opacity var(--duration-base) var(--ease-out);
+    border-inline-start: 2px solid transparent;
+    padding-inline-start: 0;
+  }
+  .timeline-entry[data-filter='out'] {
+    opacity: 0.35;
+  }
+  .timeline-entry[data-filter='match'] {
+    border-inline-start-color: var(--color-accent);
+    padding-inline-start: var(--spacing-4);
+  }
+</style>
