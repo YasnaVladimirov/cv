@@ -15,7 +15,7 @@
 - There is no `tailwind.config.mjs`. The theme is CSS-first, in `src/styles/base.css`. Design System §4 was rewritten for this; token *values* did not change.
 - **TypeScript is pinned to 6.x, not 7.x.** `@astrojs/check@0.9.10` declares a peer of `^5 || ^6`. Since `astro check` is a blocking CI gate, TS 7 is not usable yet. Revisit when `@astrojs/check` widens the range.
 - `@astrojs/mdx@7` requires `@astrojs/markdown-satteri` as an explicit peer — install it alongside.
-- Node floor rises to **≥22.12.0** (Astro 7 engine requirement).
+- Node floor rises to **≥22.13.0** — Astro 7 requires 22.12 and pnpm 11.23 requires 22.13; the higher wins. `packageManager` is pinned in `package.json` because `pnpm/action-setup` reads its version from there.
 - Browser floor rises to Safari 16.4+ / Chrome 111+ / Firefox 128+ (Tailwind v4).
 - Step 8.3's gradient lint must now also catch v4 utility classes (`bg-linear-`, `bg-radial`, `bg-conic`), because v4 has no `corePlugins` to disable them with.
 
@@ -82,7 +82,7 @@ Confirming and pinning what the PRD §6 and Design System §4 recommended:
 
 | Layer | Choice | Version notes |
 |---|---|---|
-| Runtime | Node.js | **≥ 22.12.0** (Astro 7 engine floor). Verify with `node --version`. |
+| Runtime | Node.js | **≥ 22.13.0**. Astro 7's own floor is 22.12, but pnpm 11.23 requires 22.13 — the higher of the two wins. CI runs 24.x to match local development. |
 | Package manager | **pnpm** | Fastest, disk-efficient, correct hoisting. Not npm, not yarn. |
 | Framework | **Astro 7.2.6** | Latest. Note the engine floor above. |
 | Styles | **Tailwind CSS 4.3.3** | CSS-first. No `tailwind.config.mjs`; the theme is an `@theme` block in `src/styles/base.css` per Design System §4.2. Wired via `@tailwindcss/vite` — **not** `@astrojs/tailwind`, which is deprecated and caps at Astro 5. |

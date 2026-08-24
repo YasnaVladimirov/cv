@@ -19,16 +19,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
-      # Node floor is 22.12 (Astro 7 engine requirement).
+      # Node floor is 22.13, not Astro 7's 22.12 — pnpm 11.23 raises it.
+      # Running 24.x here to match local development.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 22.12.0
+          node-version: 24
           cache: pnpm
 
       - name: Install

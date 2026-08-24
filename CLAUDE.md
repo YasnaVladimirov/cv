@@ -101,7 +101,7 @@ Run a single test: `pnpm vitest run path/to/file.test.ts -t "test name"`.
 
 ## Stack (pinned by plan §1)
 
-Node **≥22.12** · pnpm · **Astro 7.2.6** · **Tailwind v4.3.3** (CSS-first, via `@tailwindcss/vite`) · `@astrojs/react` 6 + **React 19.2.8** · **TypeScript 6.0.3** · `@astrojs/mdx` 7 + `@astrojs/markdown-satteri` · `lucide-astro` / `lucide-react` · self-hosted `@fontsource-variable/inter` and `jetbrains-mono` (Latin Extended subset) · Vercel · GitHub Actions · Vitest (`src/lib/` only) · `@lhci/cli`.
+Node **≥22.13** (Astro wants 22.12, pnpm 11.23 wants 22.13) · pnpm · **Astro 7.2.6** · **Tailwind v4.3.3** (CSS-first, via `@tailwindcss/vite`) · `@astrojs/react` 6 + **React 19.2.8** · **TypeScript 6.0.3** · `@astrojs/mdx` 7 + `@astrojs/markdown-satteri` · `lucide-astro` / `lucide-react` · self-hosted `@fontsource-variable/inter` and `jetbrains-mono` (Latin Extended subset) · Vercel · GitHub Actions · Vitest (`src/lib/` only) · `@lhci/cli`.
 
 Three pins that look wrong but are deliberate:
 - **TypeScript 6, not 7** — `@astrojs/check` peers `^5 || ^6`, and `astro check` is a blocking CI gate.
