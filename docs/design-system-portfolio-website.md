@@ -1209,19 +1209,32 @@ Manual (pre-launch):
 
 ## 12. Reference — components-to-token mapping cheat sheet
 
+**Utility names stutter where a token name repeats its namespace.** Tailwind builds a colour utility as `<property>-<token name minus the --color- prefix>`. Since several tokens in §3.1 are themselves named `text-*`, `bg-*`, or `border-*`, the resulting class doubles the word:
+
+| Token | Text colour | Background | Border |
+|---|---|---|---|
+| `--color-text-primary` | `text-text-primary` | — | — |
+| `--color-text-inverse` | `text-text-inverse` | — | — |
+| `--color-bg-elevated` | — | `bg-bg-elevated` | — |
+| `--color-border-subtle` | — | — | `border-border-subtle` |
+| `--color-accent` | `text-accent` | `bg-accent` | `border-accent` |
+
+This is cosmetic, not a bug, and it was true of the v3 config too. The table below uses the **real** class names. Verified by build probe, not by assumption.
+
+
 | Component | Primary tokens |
 |---|---|
-| Button (Primary) | `bg-accent`, `text-inverse`, `radius-md`, `text-base` |
-| Button (Secondary) | `border`, `text-primary`, `radius-md`, `text-base` |
-| Text input | `bg-elevated`, `border`, `text-primary`, `radius-sm`, `text-base` |
-| Toast | `glass-strong`, `shadow-toast`, `text-sm`, `radius-md` |
-| Case study card | `glass`, `shadow-glass`, `radius-lg`, `text-xl` (title), `text-metric` (metrics) |
-| Testimonial card | `bg-elevated`, `border`, `radius-lg`, `text-xl` (quote) |
-| Tag / skill | `bg-elevated`, `border-subtle`, `radius-sm`, `text-mono-sm` |
-| Section eyebrow | `text-mono-sm`, `text-tertiary` |
-| Section H2 | `text-2xl` mobile / `text-3xl` md, weight 600, `text-primary` |
+| Button (Primary) | `bg-accent`, `text-text-inverse`, `rounded-md`, `text-base` |
+| Button (Secondary) | `border-border`, `text-text-primary`, `rounded-md`, `text-base` |
+| Text input | `bg-bg-elevated`, `border-border`, `text-text-primary`, `rounded-sm`, `text-base` |
+| Toast | `glass-strong`, `shadow-toast`, `text-sm`, `rounded-md` |
+| Case study card | `glass`, `shadow-glass`, `rounded-lg`, `text-xl` (title), `text-metric` (metrics) |
+| Testimonial card | `bg-bg-elevated`, `border-border`, `rounded-lg`, `text-xl` (quote) |
+| Tag / skill | `bg-bg-elevated`, `border-border-subtle`, `rounded-sm`, `text-mono-sm` |
+| Section eyebrow | `text-mono-sm`, `text-text-tertiary` |
+| Section H2 | `text-2xl` mobile / `text-3xl` md, `font-semibold`, `text-text-primary` |
 | Header (both) | `glass`, sticky, `z-sticky`, height 64/72 |
-| Footer | `bg-elevated`, `border-top: border-subtle` |
-| FAB | `bg-accent`, `text-inverse`, `radius-full`, `shadow-glass-hover`, `z-sticky` |
-| Language toggle | `bg-elevated`, `border-subtle`, `radius-full`, `text-mono-sm` |
-| Filter pill | `accent-subtle-bg`, `accent` border+text, `radius-sm`, `text-sm` |
+| Footer | `bg-bg-elevated`, `border-t border-border-subtle` |
+| FAB | `bg-accent`, `text-text-inverse`, `rounded-full`, `shadow-glass-hover`, `z-sticky` |
+| Language toggle | `bg-bg-elevated`, `border-border-subtle`, `rounded-full`, `text-mono-sm` |
+| Filter pill | `bg-accent-subtle-bg`, `border-accent text-accent`, `rounded-sm`, `text-sm` |

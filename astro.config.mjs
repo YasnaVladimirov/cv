@@ -13,7 +13,14 @@ export default defineConfig({
   // TODO(human): replace with the production domain in Phase 7.5 / 10.1.
   site: 'https://example.com',
   output: 'static',
-  integrations: [react(), mdx(), sitemap()],
+  integrations: [
+    react(),
+    mdx(),
+    // Dev-only showcase pages (plan 1.4, 3.0) are real routes so they reach
+    // the deploy preview, but they must never be indexed or advertised.
+    // They also carry noindex and are deleted in Phase 10.3.
+    sitemap({ filter: (page) => !/\/(tokens|components)\/?$/.test(page) }),
+  ],
   // Tailwind v4 is a Vite plugin, not an Astro integration
   // (@astrojs/tailwind is deprecated and caps at Astro 5).
   // Design System 4.3.

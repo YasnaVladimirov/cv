@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.2 |
+| **Document status** | v1.3 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.2 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v1.3** — Dev-only showcase pages renamed from `_tokens` / `_components` to `tokens` / `components`. The underscore prefix excludes a page from routing altogether, so it never reached the deploy preview and the human approval gates in 1.4 and 3.x were unreachable. They are now real routes carrying `noindex`, excluded from the sitemap, unlinked from shipping pages, and deleted in Phase 10.3. See §1.4.
 
 **v1.2** — Stack moved to the latest version of everything. Human decision, 2026-08-24. Astro 5 → **7**, Tailwind 3 → **4**, React 18 → **19**. Consequences:
 - `@astrojs/tailwind` is **gone**. Its last release (6.0.2) supports Astro 5 at most and is deprecated upstream. Tailwind v4 wires in through `@tailwindcss/vite` as a Vite plugin instead (Design System §4.3).
@@ -276,7 +278,7 @@ Commit: `phase-1.3: self-host inter and jetbrains mono with latin extended`
 
 ### Step 1.4 — Token showcase page
 
-Create `src/pages/_tokens.astro` (underscore prefix — Astro will not build this to production; it's dev-only). Render:
+Create `src/pages/tokens.astro`. Render:
 - Every color token as a swatch with its variable name and hex value.
 - Every type-scale token as a sample line with size, line-height, and weight labeled.
 - Every spacing token as a labeled horizontal bar.
@@ -287,9 +289,20 @@ Create `src/pages/_tokens.astro` (underscore prefix — Astro will not build thi
 
 This page is the visual truth of your token system. Do NOT skip it — every subsequent phase will reference it to verify components against the tokens they claim to use.
 
+**Naming correction (v1.3).** The original plan said `_tokens.astro`, reasoning that Astro's underscore prefix keeps it out of the production build. That is true and it is exactly the problem: an underscore-prefixed page is excluded from routing entirely, so it never reaches the deploy preview either, and the human approval gate below could not happen. Verified by building `src/pages/_probe.astro`, which produces no route.
+
+The dev-only pages (`tokens`, and `components` in Phase 3) are therefore ordinary routes, kept out of sight by three means instead:
+- `noindex, nofollow` via the `BaseLayout` `noindex` prop
+- excluded from the sitemap by a `filter` in the `@astrojs/sitemap` config
+- listed for deletion in the Phase 10.3 launch checklist
+
+They must not be linked from any shipping page.
+
+**Content rule exemption.** These two pages are development instruments, not product surfaces: their strings are hardcoded English and deliberately bypass the i18n dictionary (plan §0.3 rule 2). They are deleted before launch, so they never ship an untranslated string. No other page gets this exemption.
+
 Commit: `phase-1.4: add token showcase page for visual verification`
 
-**[HUMAN]** — after this commit is deployed to the preview URL, ask the human to visit `<preview>.vercel.app/_tokens` and confirm the palette + typography feel right before you start building components on top. This is the last easy moment to pivot on the accent color.
+**[HUMAN]** — after this commit is deployed to the preview URL, ask the human to visit `<preview>.vercel.app/tokens` and confirm the palette + typography feel right before you start building components on top. This is the last easy moment to pivot on the accent color.
 
 ### Phase 1 verification
 
@@ -405,7 +418,7 @@ Commit: `phase-2.5: bilingual mdx strategy with build-time enforcement`
 
 ### 3.0 — General component build rules
 - Build every component using ONLY tokens from Phase 1 and translation keys from Phase 2. No hardcoded values.
-- For each component: build the component file, then add it to `src/pages/_components.astro` (a dev-only showcase page mirroring `_tokens`) with every state rendered side-by-side.
+- For each component: build the component file, then add it to `src/pages/components.astro` (a dev-only showcase page mirroring `tokens`) with every state rendered side-by-side. Same treatment as the tokens page: `noindex`, excluded from the sitemap, unlinked, and deleted at launch.
 - Verify each component visually on the deploy preview before moving to the next.
 - Static `.astro` components by default. React island only when interactivity is needed (marked below).
 
@@ -1058,6 +1071,7 @@ Run through the launch checklist from PRD Appendix B, adapted:
 - [ ] DNS + HTTPS + apex/www redirects confirmed
 - [ ] `robots.txt` and `sitemap-index.xml` live and correct
 - [ ] Structured data validates
+- [ ] Dev-only pages deleted: `src/pages/tokens.astro` and `src/pages/components.astro`
 - [ ] All CI checks green on main
 
 ### Step 10.4 — Search engine notification

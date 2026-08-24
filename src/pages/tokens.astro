@@ -1,0 +1,289 @@
+---
+/**
+ * Token showcase — the visual truth of the token system (plan 1.4).
+ *
+ * DEV-ONLY. Not linked from any shipping page, carries noindex, excluded
+ * from the sitemap, and deleted in Phase 10.3. Its strings are hardcoded
+ * English by explicit exemption from the i18n rule (plan 1.4) because it
+ * never ships.
+ *
+ * Every value below is parsed out of src/styles/base.css at build time, so
+ * this page cannot drift from the stylesheet it documents.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { readTokens, group, modifier } from '../lib/parse-tokens';
+
+const tokens = readTokens();
+
+const colors = group(tokens, '--color-').filter(
+  (t) => !['--color-transparent', '--color-current'].includes(t.name),
+);
+const fonts = group(tokens, '--font-').filter((t) => !t.name.startsWith('--font-weight-'));
+const weights = group(tokens, '--font-weight-');
+const sizes = group(tokens, '--text-');
+const spacing = group(tokens, '--spacing-');
+const radii = group(tokens, '--radius-');
+const shadows = group(tokens, '--shadow-');
+const eases = group(tokens, '--ease-');
+const breakpoints = group(tokens, '--breakpoint-');
+const containers = group(tokens, '--container-');
+const durations = group(tokens, '--duration-');
+const zIndexes = group(tokens, '--z-');
+
+/** Glass panels need a backdrop shape behind them or the blur has nothing to do. */
+const swatchIsLight = (v: string) =>
+  /^#(f|e)/i.test(v) || v.includes('255, 255, 255') || v === '#ffffff';
+---
+
+<BaseLayout title="Design tokens — cv-site" noindex>
+  <main id="main-content" class="mx-auto max-w-container p-4 md:p-8">
+    <header class="mb-16">
+      <p class="font-mono text-mono-sm text-text-tertiary">--design-tokens</p>
+      <h1 class="text-4xl text-text-primary">Design tokens</h1>
+      <p class="mt-2 max-w-prose text-lg text-text-secondary">
+        Parsed live from <code class="font-mono text-mono-sm">src/styles/base.css</code>.
+        {` ${tokens.length} tokens. `}If something here looks wrong, the stylesheet is wrong.
+      </p>
+    </header>
+
+    <!-- ── Colour ─────────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--color</p>
+      <h2 class="mb-8 text-2xl text-text-primary">Colour · {colors.length}</h2>
+      <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          colors.map((t) => (
+            <li class="flex items-center gap-4 rounded-md border border-border-subtle bg-bg-elevated p-3">
+              <span
+                class:list={[
+                  'h-12 w-12 shrink-0 rounded-sm',
+                  swatchIsLight(t.value) && 'border border-border',
+                ]}
+                style={`background:${t.value}`}
+              />
+              <span class="min-w-0">
+                <span class="block truncate font-mono text-mono-sm text-text-primary">
+                  {t.name}
+                </span>
+                <span class="block truncate text-sm text-text-secondary">{t.value}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ── Typography ─────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--typography</p>
+      <h2 class="mb-8 text-2xl text-text-primary">Type scale · {sizes.length}</h2>
+      <ul class="flex flex-col gap-8">
+        {
+          sizes.map((t) => {
+            const key = t.name.replace('--text-', '');
+            const lh = modifier(tokens, t.name, 'line-height');
+            const ls = modifier(tokens, t.name, 'letter-spacing');
+            const fw = modifier(tokens, t.name, 'font-weight');
+            const mono = key === 'mono-sm';
+            return (
+              <li class="border-b border-border-subtle pb-6">
+                <p class="mb-2 font-mono text-mono-sm text-text-tertiary">
+                  text-{key} · {t.value}/{lh} · ls {ls} · weight {fw}
+                  {mono && ' · mono'}
+                </p>
+                <p
+                  class:list={[mono ? 'font-mono' : 'font-sans', 'text-text-primary']}
+                  style={`font-size:${t.value};line-height:${lh};letter-spacing:${ls};font-weight:${fw}`}
+                >
+                  Šta gradiš? — Frontend engineer
+                </p>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <h3 class="mt-12 mb-4 text-xl text-text-primary">Families &amp; weights</h3>
+      <ul class="flex flex-col gap-3">
+        {
+          fonts.map((t) => (
+            <li class="rounded-md border border-border-subtle bg-bg-elevated p-4">
+              <span class="block font-mono text-mono-sm text-text-tertiary">{t.name}</span>
+              <span class="block text-lg text-text-primary" style={`font-family:${t.value}`}>
+                Đačko šuškanje čeznuće žamor — 0123456789
+              </span>
+            </li>
+          ))
+        }
+        {
+          weights.map((t) => (
+            <li class="flex items-baseline gap-4">
+              <span class="w-32 shrink-0 font-mono text-mono-sm text-text-tertiary">{t.name}</span>
+              <span class="text-lg text-text-primary" style={`font-weight:${t.value}`}>
+                {t.value} — Šta gradiš?
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ── Spacing ────────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--spacing</p>
+      <h2 class="mb-8 text-2xl text-text-primary">Spacing · {spacing.length}</h2>
+      <ul class="flex flex-col gap-3">
+        {
+          spacing.map((t) => (
+            <li class="flex items-center gap-4">
+              <span class="w-32 shrink-0 font-mono text-mono-sm text-text-tertiary">{t.name}</span>
+              <span class="w-16 shrink-0 text-sm text-text-secondary">{t.value}</span>
+              <span class="h-4 rounded-sm bg-accent" style={`width:${t.value}`} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ── Radius ─────────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--radius</p>
+      <h2 class="mb-8 text-2xl text-text-primary">Radius · {radii.length}</h2>
+      <ul class="flex flex-wrap gap-8">
+        {
+          radii.map((t) => (
+            <li class="flex flex-col items-center gap-2">
+              <span
+                class="h-16 w-16 border border-border bg-accent-subtle-bg"
+                style={`border-radius:${t.value}`}
+              />
+              <span class="font-mono text-mono-sm text-text-tertiary">
+                {t.name.replace('--radius-', '')}
+              </span>
+              <span class="text-sm text-text-secondary">{t.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ── Shadow ─────────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--shadow</p>
+      <h2 class="mb-8 text-2xl text-text-primary">Elevation · {shadows.length}</h2>
+      <ul class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          shadows.map((t) => (
+            <li class="rounded-lg bg-bg-elevated p-6" style={`box-shadow:${t.value}`}>
+              <span class="block font-mono text-mono-sm text-text-tertiary">
+                {t.name.replace('--shadow-', '')}
+              </span>
+              <span class="mt-1 block text-sm text-text-secondary">
+                {t.value === 'none' ? 'none' : 'layered'}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ── Glass ──────────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--glass</p>
+      <h2 class="mb-2 text-2xl text-text-primary">Glass over a backdrop shape</h2>
+      <p class="mb-8 max-w-prose text-base text-text-secondary">
+        Glass must sit above a backdrop shape (§6.2) — blur over flat page background looks broken.
+        Disable backdrop-filter, or turn on Reduce Transparency, and both panels must fall back to
+        solid.
+      </p>
+      <div class="relative overflow-hidden rounded-xl border border-border-subtle p-8">
+        <!-- Backdrop shape. The 80px blur in §6.2 is not tokenised; see notes. -->
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute z-backdrop"
+          style="width:380px;height:380px;left:-40px;top:-80px;border-radius:9999px;background:var(--color-accent-backdrop);filter:blur(80px)"
+        ></span>
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute z-backdrop"
+          style="width:320px;height:320px;right:-30px;bottom:-90px;border-radius:9999px;background:var(--color-accent-backdrop);filter:blur(80px)"
+        ></span>
+        <div class="relative z-content grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div class="glass p-8">
+            <p class="font-mono text-mono-sm text-text-tertiary">.glass</p>
+            <p class="text-base text-text-primary">
+              Standard panel — 0.55 fill. Containers only, never text-bearing on its own.
+            </p>
+          </div>
+          <div class="glass-strong p-8">
+            <p class="font-mono text-mono-sm text-text-tertiary">.glass-strong</p>
+            <p class="text-base text-text-primary">
+              0.72 fill. Mandatory wherever text sits directly on glass (§10.1).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Focus ring ─────────────────────────────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--focus-ring</p>
+      <h2 class="mb-2 text-2xl text-text-primary">Focus ring</h2>
+      <p class="mb-8 max-w-prose text-base text-text-secondary">
+        Tab into these. The ring is 2px accent at 2px offset and is never suppressed. Check it
+        against the glass panel too — it must stay visible there.
+      </p>
+      <div class="flex flex-wrap items-center gap-6">
+        <button class="h-12 rounded-md bg-accent px-6 text-base text-text-inverse">
+          Primary button
+        </button>
+        <button
+          class="h-12 rounded-md border border-border bg-bg-elevated px-6 text-base text-text-primary"
+        >
+          Secondary button
+        </button>
+        <a href="#main-content" class="text-base text-accent underline">A link</a>
+        <input
+          type="text"
+          placeholder="An input"
+          class="h-12 rounded-sm border border-border bg-bg-elevated px-3 text-base text-text-primary"
+        />
+      </div>
+    </section>
+
+    <!-- ── Scales without a Tailwind namespace ────────────────── -->
+    <section class="mb-24">
+      <p class="font-mono text-mono-sm text-text-tertiary">--scales</p>
+      <h2 class="mb-8 text-2xl text-text-primary">Motion, depth, layout</h2>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+        {
+          [
+            ['Duration', durations],
+            ['Easing', eases],
+            ['Z-index', zIndexes],
+            ['Breakpoint', breakpoints],
+            ['Container', containers],
+          ].map(([label, list]) => (
+            <div>
+              <h3 class="mb-3 text-xl text-text-primary">{label as string}</h3>
+              <ul class="flex flex-col gap-1">
+                {(list as { name: string; value: string }[]).map((t) => (
+                  <li class="flex justify-between gap-4 border-b border-border-subtle py-1">
+                    <span class="font-mono text-mono-sm text-text-secondary">{t.name}</span>
+                    <span class="font-mono text-mono-sm text-text-primary">{t.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <footer class="border-t border-border-subtle py-8">
+      <p class="text-sm text-text-tertiary">
+        Dev-only page. noindex, excluded from sitemap, deleted at launch (plan 10.3).
+      </p>
+    </footer>
+  </main>
+</BaseLayout>
