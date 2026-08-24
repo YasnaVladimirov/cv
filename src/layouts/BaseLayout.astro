@@ -1,6 +1,35 @@
 ---
-// Base document shell: <html>, <head>, skip link, <main id="main-content">,
-// header/footer/fab slots, global Toast mount. Built in Phase 4.1.
-// The inline apply-language script must go in <head> BEFORE any stylesheet
-// so a returning Serbian visitor never sees a flash of English (Phase 2.4).
+// Base document shell.
+//
+// Phase 1 scope: <html>/<head> skeleton and the single import of the token
+// stylesheet. Phase 4.1 completes it — skip link, <main id="main-content">,
+// header/footer/fab slots, the global Toast mount, and the inline
+// apply-language script that must run in <head> BEFORE any stylesheet so a
+// returning Serbian visitor never sees a flash of English (Phase 2.4).
+//
+// base.css is imported here and nowhere else. Importing it per-component
+// would duplicate the @theme block in every chunk.
+import '../styles/base.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Keeps dev-only pages (tokens, components) out of search results. */
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
 ---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -306,6 +306,8 @@ Four differences change how the rules in this document are enforced. Know them b
 
 Note on structure: in v4, everything declared in `@theme` is **also emitted as a CSS custom property on `:root`**. So the glass recipe and the `@utility` blocks below can read `var(--color-accent)` directly — there is no need to declare tokens twice, and doing so would create a circular reference. Only the scales Tailwind does not namespace (duration, z-index, glass geometry) are declared in a separate `:root` block.
 
+**`@theme static` is mandatory, not stylistic.** A plain `@theme` block tree-shakes every variable no utility happens to reference, so `var(--color-accent)` inside the glass recipe would resolve to nothing and the panel would render transparent. This fails silently — the build succeeds and the page just looks wrong. `static` forces all tokens into `:root` unconditionally, which is what this design system assumes, because much of its CSS is hand-written rather than utility-generated.
+
 ```css
 @import 'tailwindcss';
 
@@ -316,7 +318,7 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
  *    this list" true rather than aspirational.                        *
  *    v4 also emits each of these as a :root custom property.          *
  * ------------------------------------------------------------------ */
-@theme {
+@theme static {
   /* --- Color — §3.1. Wipes Tailwind's default palette entirely. --- */
   --color-*: initial;
   --color-transparent: transparent;
