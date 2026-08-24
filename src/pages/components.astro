@@ -341,5 +341,26 @@ const caseStudies = (await getCollection('caseStudies'))
         </div>
       </Case>
     </Section>
+
+    <Section id="testimonials" spec="§7.11" title="Testimonial card">
+      <Case
+        label="one card — fed a fixture, since the collection is empty"
+        wide
+        note="Not glass, on purpose: this is the densest block of read-once text on the page and §10.1 wants the contrast. Solid surface, 1px border, no shadow. Nothing renders this at launch; it exists so that turning testimonials on later is a content change."
+      >
+        <div class="w-full max-w-prose">
+          <TestimonialCard
+            quote_en="FIXTURE — He rebuilt the checkout flow in six weeks and it has not needed a hotfix since. What I remember is that he found the problem we actually had, not the one we described."
+            quote_sr="FIXTURE — Prepravio je tok naplate za šest nedelja i od tada nije bilo nijedne hitne popravke. Pamtim to što je pronašao pravi problem, a ne onaj koji smo opisali."
+            author="FIXTURE Jane Doe"
+            role_en="FIXTURE Engineering Manager"
+            role_sr="FIXTURE Menadžer inženjeringa"
+            company="FIXTURE Globex"
+            avatar={fixtureAvatar}
+            linkedinUrl="https://linkedin.com"
+          />
+        </div>
+      </Case>
+    </Section>
   </main>
 </BaseLayout>

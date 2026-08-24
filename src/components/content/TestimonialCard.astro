@@ -1,0 +1,83 @@
+---
+/**
+ * A named third-party quote (Design System §7.11).
+ *
+ * Deliberately NOT glass. Testimonials are the densest block of read-once text
+ * on the page, and §10.1 wants maximum contrast for that — a solid elevated
+ * surface, a border, and no shadow.
+ *
+ * Nothing renders it at launch: the testimonials collection is empty by
+ * decision. It is built now so that enabling testimonials later is a content
+ * change and not a component change (plan §3.9, §11).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { LANGS, type Lang } from '../../lib/i18n';
+import Link from '../ui/Link.astro';
+
+interface Props {
+  quote_en: string;
+  quote_sr: string;
+  author: string;
+  role_en: string;
+  role_sr: string;
+  company: string;
+  avatar: ImageMetadata;
+  linkedinUrl?: string;
+  class?: string;
+}
+
+const {
+  quote_en,
+  quote_sr,
+  author,
+  role_en,
+  role_sr,
+  company,
+  avatar,
+  linkedinUrl,
+  class: className,
+} = Astro.props;
+
+const quote: Record<Lang, string> = { en: quote_en, sr: quote_sr };
+const role: Record<Lang, string> = { en: role_en, sr: role_sr };
+---
+
+<figure class:list={['rounded-lg border border-border bg-bg-elevated p-8 shadow-flat', className]}>
+  {
+    /*
+      No decorative quote marks (§7.11) — the <blockquote> carries the
+      semantics and the type size carries the emphasis.
+    */
+  }
+  <blockquote class="max-w-[55ch] text-xl font-normal text-text-primary">
+    {LANGS.map((lang) => <span data-lang={lang}>{quote[lang]}</span>)}
+  </blockquote>
+
+  <hr class="my-6 w-[40px] border-0 border-t border-border-subtle" />
+
+  <figcaption class="flex items-center gap-3">
+    <Image
+      src={avatar}
+      alt=""
+      width={40}
+      height={40}
+      class="h-[40px] w-[40px] shrink-0 rounded-full object-cover"
+    />
+    <div class="flex min-w-0 flex-col">
+      <span class="text-sm font-semibold text-text-primary">{author}</span>
+      {
+        LANGS.map((lang) => (
+          <span data-lang={lang} class="text-sm text-text-secondary">
+            {role[lang]} · {company}
+          </span>
+        ))
+      }
+    </div>
+    {
+      linkedinUrl && (
+        <Link variant="external" href={linkedinUrl} labelKey="footer.linkedin" class="ml-auto" />
+      )
+    }
+  </figcaption>
+</figure>
