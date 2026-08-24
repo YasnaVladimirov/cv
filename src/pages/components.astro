@@ -32,6 +32,7 @@ import ToastHost from '../components/interactive/Toast';
 import LanguageToggle from '../components/interactive/LanguageToggle';
 import StickyFAB from '../components/interactive/StickyFAB';
 import ContactForm from '../components/interactive/ContactForm';
+import CalendlyEmbed from '../components/interactive/CalendlyEmbed';
 import ToastDemo from '../components/dev/ToastDemo';
 import FormFieldDemo from '../components/dev/FormFieldDemo';
 import FilterPillDemo from '../components/dev/FilterPillDemo';
@@ -425,6 +426,19 @@ const caseStudies = (await getCollection('caseStudies'))
       >
         <div class="w-full max-w-prose">
           <ContactForm client:load email="hello@example.com" />
+        </div>
+      </Case>
+    </Section>
+
+    <Section id="calendly" spec="§7.23" title="Calendly placeholder">
+      <Case
+        label="loading — and the same panel after the 4s timeout"
+        wide
+        note="Full-size, not a spinner: it reserves the embed's eventual height so the page does not reflow when the widget lands, and it is the only skeleton §2 permits. Wait 4s on the left panel and it becomes the right one on its own — a blocked widget is the likeliest outcome on this page, not an edge case."
+      >
+        <div class="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
+          <CalendlyEmbed client:load directUrl="https://calendly.com" />
+          <CalendlyEmbed client:load forceState="failed" directUrl="https://calendly.com" />
         </div>
       </Case>
     </Section>
