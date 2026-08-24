@@ -38,6 +38,7 @@ import FormFieldDemo from '../components/dev/FormFieldDemo';
 import FilterPillDemo from '../components/dev/FilterPillDemo';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import SkipToContent from '../components/layout/SkipToContent.astro';
 
 // Real fixture content, not hand-written demo data: the showcase has to prove
 // these components survive the shapes the schema actually allows — a null end
@@ -49,6 +50,8 @@ const caseStudies = (await getCollection('caseStudies'))
 ---
 
 <BaseLayout title="Components — cv-site" noindex>
+  <SkipToContent />
+
   <main id="main-content" class="z-content relative mx-auto max-w-container p-4 md:p-8">
     <header class="mb-16">
       <p class="font-mono text-mono-sm text-text-tertiary">--components</p>
@@ -477,6 +480,17 @@ const caseStudies = (await getCollection('caseStudies'))
           <Header variant="not-found" />
           <div class="h-32 bg-bg"></div>
         </div>
+      </Case>
+    </Section>
+
+    <Section id="skip-link" spec="§7.24" title="Skip to content">
+      <Case
+        label="the first tab stop on this page"
+        note="Click the page background, then press Tab once. It appears at the top left. It is moved off-screen rather than hidden, because display:none and visibility:hidden both remove an element from the tab order — the link could never be focused and would never appear."
+      >
+        <p class="text-sm text-text-secondary">
+          Already mounted above &lt;main&gt;. Press Tab from the top of the page.
+        </p>
       </Case>
     </Section>
   </main>

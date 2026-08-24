@@ -1,0 +1,28 @@
+---
+/**
+ * The first tab stop on every page (Design System §7.24).
+ *
+ * Translated off-screen rather than `display: none` or `visibility: hidden`:
+ * both of those remove an element from the tab order entirely, so the link
+ * could never be focused and would never appear. Moving it out of view keeps
+ * it focusable, which is the whole mechanism.
+ */
+import { buttonClasses } from '../../lib/button-classes';
+import T from '../ui/T.astro';
+---
+
+<a href="#main-content" class:list={['skip-link', buttonClasses('primary', 'small')]}>
+  <T k="nav.skipToContent" />
+</a>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--spacing-4);
+    z-index: var(--z-skip-link);
+  }
+  .skip-link:focus-visible {
+    top: var(--spacing-4);
+  }
+</style>
