@@ -1,4 +1,11 @@
-@import 'tailwindcss';
+/* `source(none)` disables v4's automatic content detection, which otherwise
+   scans every non-gitignored file in the project — including this design
+   system document and the lint scripts. Prose that merely NAMES a utility
+   is enough to generate it: documenting the ban on `bg-conic` is what put
+   a real conic-gradient rule in the bundle. Scanning is therefore scoped
+   to the source files that can legitimately contain class names. */
+@import 'tailwindcss' source(none);
+@source '../**/*.{astro,ts,tsx,js,jsx,mdx}';
 
 /* ------------------------------------------------------------------ *
  * 1. Tailwind theme — Section 3 tokens, verbatim.                     *
@@ -36,8 +43,7 @@
   /* --- Font family — §3.2 --- */
   --font-*: initial;
   --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:
-    'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* --- Type scale — §3.2. Every size carries its line-height,
          letter-spacing and weight, so `text-*` alone is always complete
@@ -197,37 +203,17 @@
 /* ------------------------------------------------------------------ *
  * 3. Named utilities for the two scales above, plus the glass recipe. *
  * ------------------------------------------------------------------ */
-@utility z-base {
-  z-index: var(--z-base);
-}
-@utility z-backdrop {
-  z-index: var(--z-backdrop);
-}
-@utility z-content {
-  z-index: var(--z-content);
-}
-@utility z-sticky {
-  z-index: var(--z-sticky);
-}
-@utility z-toast {
-  z-index: var(--z-toast);
-}
-@utility z-skip-link {
-  z-index: var(--z-skip-link);
-}
+@utility z-base       { z-index: var(--z-base); }
+@utility z-backdrop   { z-index: var(--z-backdrop); }
+@utility z-content    { z-index: var(--z-content); }
+@utility z-sticky     { z-index: var(--z-sticky); }
+@utility z-toast      { z-index: var(--z-toast); }
+@utility z-skip-link  { z-index: var(--z-skip-link); }
 
-@utility duration-instant {
-  transition-duration: var(--duration-instant);
-}
-@utility duration-fast {
-  transition-duration: var(--duration-fast);
-}
-@utility duration-base {
-  transition-duration: var(--duration-base);
-}
-@utility duration-slow {
-  transition-duration: var(--duration-slow);
-}
+@utility duration-instant { transition-duration: var(--duration-instant); }
+@utility duration-fast    { transition-duration: var(--duration-fast); }
+@utility duration-base    { transition-duration: var(--duration-base); }
+@utility duration-slow    { transition-duration: var(--duration-slow); }
 
 /* Glass — §3.6. A fixed recipe, not a composable utility.
    Never nest glass in glass. Never animate backdrop-filter. */
@@ -261,14 +247,10 @@ html {
   color: var(--color-text-primary);
   background: var(--color-bg);
 }
-body {
-  min-height: 100dvh;
-}
+body { min-height: 100dvh; }
 
 /* Focus ring — never suppressed. §10.6 */
-:focus {
-  outline: none;
-}
+:focus { outline: none; }
 :focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
@@ -279,8 +261,7 @@ body {
    These are plain class selectors, so they override the @utility
    definitions above by source order. */
 @supports not (backdrop-filter: blur(1px)) {
-  .glass,
-  .glass-strong {
+  .glass, .glass-strong {
     background: var(--color-bg-elevated);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -289,8 +270,7 @@ body {
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .glass,
-  .glass-strong {
+  .glass, .glass-strong {
     background: var(--color-bg-elevated);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -300,9 +280,7 @@ body {
 
 /* Reduced motion — §3.7. The reduced path is instant, not merely faster. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

@@ -5,3 +5,7 @@ pnpm-lock.yaml
 docs/
 CLAUDE.md
 README.md
+
+# Extracted verbatim from Design System 4.2 — the spec owns its formatting.
+# Enforced by scripts/verify-theme.mjs.
+src/styles/base.css

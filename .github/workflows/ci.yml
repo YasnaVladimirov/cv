@@ -44,8 +44,15 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
+      - name: Verify theme
+        run: pnpm verify:theme
+
       - name: Build
         run: pnpm build
+
+      # Runs after the build so it can inspect the emitted CSS, not just src/.
+      - name: Verify no gradients
+        run: pnpm verify:gradients
 
   # Lighthouse CI, the i18n parity and font-subset scripts, and the regex
   # design lints join this workflow in Phases 1.3, 2.4, and 8.1-8.3.

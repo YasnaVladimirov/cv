@@ -309,7 +309,14 @@ Note on structure: in v4, everything declared in `@theme` is **also emitted as a
 **`@theme static` is mandatory, not stylistic.** A plain `@theme` block tree-shakes every variable no utility happens to reference, so `var(--color-accent)` inside the glass recipe would resolve to nothing and the panel would render transparent. This fails silently — the build succeeds and the page just looks wrong. `static` forces all tokens into `:root` unconditionally, which is what this design system assumes, because much of its CSS is hand-written rather than utility-generated.
 
 ```css
-@import 'tailwindcss';
+/* `source(none)` disables v4's automatic content detection, which otherwise
+   scans every non-gitignored file in the project — including this design
+   system document and the lint scripts. Prose that merely NAMES a utility
+   is enough to generate it: documenting the ban on `bg-conic` is what put
+   a real conic-gradient rule in the bundle. Scanning is therefore scoped
+   to the source files that can legitimately contain class names. */
+@import 'tailwindcss' source(none);
+@source '../**/*.{astro,ts,tsx,js,jsx,mdx}';
 
 /* ------------------------------------------------------------------ *
  * 1. Tailwind theme — Section 3 tokens, verbatim.                     *
@@ -616,7 +623,9 @@ Prohibition #1 (Section 2) is absolute, but v4 gives no way to delete the gradie
 - Raw CSS functions: `linear-gradient`, `radial-gradient`, `conic-gradient`
 - v4 utility classes: `bg-linear-*`, `bg-radial*`, `bg-conic*`
 
-Gradient colour stops (`from-*`, `via-*`, `to-*`) produce nothing on their own, so the three `bg-` prefixes above are sufficient and precise. The lint runs against `src/` **and** the built `dist/` CSS, because a gradient can only reach `dist/` if it was written in `src/`.
+Gradient colour stops (`from-*`, `via-*`, `to-*`) produce nothing on their own, so the three `bg-` prefixes above are sufficient and precise. The lint runs against `src/` **and** the built `dist/` CSS.
+
+**Scope Tailwind's source detection or the lint fights itself.** v4 scans every non-gitignored file by default, so naming a utility anywhere in the repo generates it — this document listing `bg-conic` as forbidden was enough to emit `.bg-conic{background-image:conic-gradient(…)}` into the build. §4.2 opens with `source(none)` plus an explicit `@source` for exactly this reason. Keep prose and lint patterns out of the scanned set, and treat any gradient in `dist/` as a genuine violation rather than a false positive.
 
 ### 4.5 Browser floor
 
