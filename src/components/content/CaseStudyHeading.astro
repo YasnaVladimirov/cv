@@ -1,0 +1,32 @@
+---
+/**
+ * The `h2` override for case-study MDX bodies.
+ *
+ * Its whole job is to put the §6.3 eyebrow above a heading that was authored
+ * as plain `## Context`. The heading text is read back out of the slot and
+ * looked up, so MDX authoring stays plain markdown and no key ends up in the
+ * content file.
+ */
+import { eyebrowKeyFor } from '../../lib/case-study-sections';
+import SectionEyebrow from '../ui/SectionEyebrow.astro';
+
+interface Props {
+  id?: string;
+}
+
+const { id } = Astro.props;
+
+// Rendered slot HTML, so emphasis inside a heading survives; the plain-text
+// form is only used for the lookup.
+const html = await Astro.slots.render('default');
+const text = html
+  .replace(/<[^>]*>/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
+const eyebrowKey = eyebrowKeyFor(text);
+---
+
+<div class="mt-12 first:mt-0">
+  <SectionEyebrow k={eyebrowKey} class="mb-2" />
+  <h2 {id} class="text-2xl text-text-primary md:text-3xl" set:html={html} />
+</div>
