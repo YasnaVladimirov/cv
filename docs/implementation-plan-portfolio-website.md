@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.3 |
+| **Document status** | v1.4 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.2 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v1.4** — Content collections moved to `src/content.config.ts` with the Content Layer loader API (`glob()` / `file()`), which is what Astro 7 supports; `src/content/config.ts` is no longer resolved at all. Skills became one entry per category to suit the `file()` loader. See §2.1.
 
 **v1.3** — Dev-only showcase pages renamed from `_tokens` / `_components` to `tokens` / `components`. The underscore prefix excludes a page from routing altogether, so it never reached the deploy preview and the human approval gates in 1.4 and 3.x were unreachable. They are now real routes carrying `noindex`, excluded from the sitemap, unlinked from shipping pages, and deleted in Phase 10.3. See §1.4.
 
@@ -323,7 +325,11 @@ Commit: `phase-1.4: add token showcase page for visual verification`
 
 ### Step 2.1 — Define content collection schemas
 
-In `src/content/config.ts`, define Astro Content Collection schemas for:
+**Path and API correction (v1.4).** The plan said `src/content/config.ts`. Astro 7 resolves the content config at **`src/content.config.ts`** — verified against `astro/dist/content/utils.js`, which searches only for `src/content.config.{ts,js,mjs}`. The old folder-based path is gone, along with the implicit "a directory under `src/content/` is a collection" behaviour. Collections are now declared explicitly with a **loader** (`glob()` or `file()` from `astro/loaders`).
+
+One shape change follows from this: the skills collection is one entry **per category** rather than a single document containing a `categories` array, because `file()` maps an array to entries. The data is identical; only the container differs.
+
+In `src/content.config.ts`, define Astro Content Collection schemas for:
 - `case-studies` (MDX): frontmatter with `slug`, `order`, `title_en`, `title_sr`, `outcome_en`, `outcome_sr`, `metrics` (array of `{value, label_en, label_sr}`), `stack` (array of strings), `hero_image` (image path), `published` (boolean). Body content is MDX with both `<div lang="en">…</div>` and `<div lang="sr">…</div>` blocks — this is how case-study body copy handles bilingual content since the in-place toggle needs both languages rendered and swapped via CSS/JS.
 - `roles` (JSON): `id`, `company`, `role_en`, `role_sr`, `dates` (`start`, `end` or null for current), `location`, `bullets_en` (array), `bullets_sr` (array), `stack` (array), `case_study_slug` (optional).
 - `skills` (JSON): `categories` (array of `{name_en, name_sr, skills: [{name, timeline_matches: [role_id, ...]}]}`).
