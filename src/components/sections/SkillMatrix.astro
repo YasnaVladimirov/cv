@@ -1,0 +1,52 @@
+---
+/**
+ * The skill matrix (#skills) — PRD FR-3, App Flow §4.6.
+ *
+ * Text first. Every skill is in the initial HTML as plain text, because a
+ * recruiter matching a job spec presses Ctrl+F for "TypeScript" and a crawler
+ * reads the same markup. No bars, no star ratings (FR-3 bans both).
+ *
+ * Skills are rendered NON-interactive here on purpose. FR-3 makes the filter
+ * "progressive enhancement only" and App Flow §4.6 puts the no-JS state at
+ * "plain text, every skill" — a server-rendered <button> that cannot do
+ * anything until an island loads is a promise the page may never keep. Each
+ * item instead carries `data-skill` and the role ids it matches, and Phase 5.2
+ * upgrades only the ones whose match list is non-empty. A skill with no timeline matches is never
+ * upgraded, which is what designs the zero-result state out of existence.
+ */
+import { getCollection } from 'astro:content';
+import Section from './Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Tag from '../ui/Tag.astro';
+import TContent from '../ui/TContent.astro';
+
+const categories = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Section id="skills" labelledby="skills-heading">
+  <SectionHeading
+    eyebrowKey="sections.skills.eyebrow"
+    titleKey="sections.skills.heading"
+    subtitleKey="sections.skills.subhead"
+    id="skills-heading"
+  />
+
+  <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      categories.map((category) => (
+        <div>
+          <h3 class="mb-3 text-sm font-semibold text-text-primary">
+            <TContent en={category.data.name_en} sr={category.data.name_sr} />
+          </h3>
+          <ul class="flex flex-wrap gap-2">
+            {category.data.skills.map((skill) => (
+              <li data-skill={skill.name} data-timeline-matches={skill.timeline_matches.join(' ')}>
+                <Tag label={skill.name} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</Section>

@@ -1,0 +1,84 @@
+---
+/**
+ * The contact section (#contact) — App Flow §4.7.
+ *
+ * Three channels in the order App Flow gives them: the calendar first because
+ * a booked slot is the strongest outcome, the form second, the plain address
+ * last for anyone who wants neither. (The plan's §4.4 lists the same three
+ * parts in a different order; App Flow states an explicit layout order, so
+ * that is the one followed.)
+ *
+ * Every channel degrades on its own. The embed is replaced by a direct link
+ * without JS, the form posts natively to the form service, and the address is
+ * a plain mailto that never depended on anything.
+ */
+import Section from './Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Link from '../ui/Link.astro';
+import T from '../ui/T.astro';
+import ContactForm from '../interactive/ContactForm';
+import CalendlyEmbed from '../interactive/CalendlyEmbed';
+import { t, DEFAULT_LANG } from '../../lib/i18n';
+
+interface Props {
+  /** [HUMAN] supplies the real URL in Phase 6 via PUBLIC_CALENDLY_URL. */
+  calendlyUrl?: string;
+}
+
+// TODO(human): Phase 6 — replace with PUBLIC_CALENDLY_URL from the environment.
+const { calendlyUrl = '#' } = Astro.props;
+
+const email = t('contact.email', DEFAULT_LANG);
+---
+
+<Section id="contact" labelledby="contact-heading">
+  <SectionHeading
+    eyebrowKey="sections.contact.eyebrow"
+    titleKey="sections.contact.heading"
+    subtitleKey="sections.contact.subhead"
+    id="contact-heading"
+  />
+
+  <div class="glass flex flex-col gap-12 p-8">
+    <div id="calendly">
+      {
+        /*
+        client:visible, not client:load — §4.8 lazy-loads the embed on
+        approach, and its 4-second failure timer should start when the visitor
+        arrives at it rather than while they are still reading the hero.
+      */
+      }
+      <CalendlyEmbed client:visible directUrl={calendlyUrl} />
+    </div>
+
+    {
+      /*
+      Without JS the placeholder above never resolves, so it is hidden and a
+      plain link takes its place (§4.8, no-JS row). A <noscript> stylesheet is
+      the only mechanism that can do this without JS having to run.
+    */
+    }
+    <noscript>
+      <style>
+        #calendly {
+          display: none;
+        }
+      </style>
+      <p class="text-base text-text-secondary">
+        <Link variant="external" href={calendlyUrl} labelKey="hero.cta.book" />
+      </p>
+    </noscript>
+
+    <div class="flex max-w-prose flex-col gap-4">
+      <ContactForm client:visible email={email} />
+      <p class="text-sm text-text-tertiary">
+        <T k="contact.privacyNote" />
+      </p>
+    </div>
+
+    <p class="flex flex-wrap items-center gap-2 text-base text-text-secondary">
+      <T k="contact.emailPrompt" />
+      <Link variant="standalone" href={`mailto:${email}`} labelKey="contact.emailLink" />
+    </p>
+  </div>
+</Section>
