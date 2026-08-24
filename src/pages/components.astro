@@ -28,6 +28,7 @@ import CaseStudyCard from '../components/content/CaseStudyCard.astro';
 import TestimonialCard from '../components/content/TestimonialCard.astro';
 import { getCollection } from 'astro:content';
 import fixtureAvatar from '../content/case-studies/fixture-1.png';
+import FormFieldDemo from '../components/dev/FormFieldDemo';
 
 // Real fixture content, not hand-written demo data: the showcase has to prove
 // these components survive the shapes the schema actually allows — a null end
@@ -360,6 +361,16 @@ const caseStudies = (await getCollection('caseStudies'))
             linkedinUrl="https://linkedin.com"
           />
         </div>
+      </Case>
+    </Section>
+
+    <Section id="form-primitives" spec="§7.7–7.9" title="Form primitives">
+      <Case
+        label="default · with helper · error · disabled · textarea"
+        wide
+        note="Every control sits inside a FormField, which owns the for/id pairing, aria-describedby and aria-invalid. Click a label: focus must land in its control — that is the pairing working. The error field keeps its helper text, because dropping instructions the moment something goes wrong removes them exactly when they are needed. Drag the textarea's corner: it grows down to 320px and refuses to grow sideways."
+      >
+        <FormFieldDemo client:load />
       </Case>
     </Section>
   </main>
