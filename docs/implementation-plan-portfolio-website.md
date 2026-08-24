@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.4 |
+| **Document status** | v1.5 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.2 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v1.5** — In-place translation mechanism specified concretely: dual-render + CSS for static text, `data-i18n-*` attribute pairs for attributes, store subscription for React islands only. See §2.4.
 
 **v1.4** — Content collections moved to `src/content.config.ts` with the Content Layer loader API (`glob()` / `file()`), which is what Astro 7 supports; `src/content/config.ts` is no longer resolved at all. Skills became one entry per category to suit the `file()` loader. See §2.1.
 
@@ -381,6 +383,16 @@ Implement `src/lib/i18n.ts`:
   - Reads initial language from `localStorage.lang` (falls back to `en`).
   - On language change: updates the store, updates `document.documentElement.lang`, updates `localStorage`, notifies subscribers, fires the `lang_switch` analytics event.
 - Every React island that renders text subscribes to language changes and re-renders on switch.
+
+**Mechanism decision (v1.5).** The plan described React islands re-rendering on switch, which covers the islands but leaves most of the site unaddressed: the hero, timeline, skill matrix and footer are static `.astro`, and hydrating them purely to swap text would forfeit the performance budget the whole stack choice exists to protect. Three mechanisms are used instead, chosen per case:
+
+| Content | Mechanism | Why |
+|---|---|---|
+| Static text in `.astro` | Both languages rendered, one shown by CSS on `html[lang]` — the `<T>` component | No JS, no hydration, no flash; identical technique to the MDX bodies in §2.5, so the site has one story rather than two |
+| Attributes (`href`, `alt`, `aria-label`, `title`, `placeholder`) | `data-i18n-<attr>-en` / `-sr` pairs, swapped by `applyAttributeTranslations` | CSS cannot reach attributes. This is what moves the resume CTA between `cv.pdf` and `cv-sr.pdf` |
+| React islands (form errors, toast) | `useI18n()` subscribing to the store | Strings appear conditionally at runtime, so they cannot be dual-rendered |
+
+The cost is that static text ships twice. It is text, it gzips well, and it buys an instant switch that does not depend on hydration having finished. The `display: contents` rule that drives it is in Design System §4.2.
 - A vanilla script `src/scripts/apply-language.js` that runs before first paint via `is:inline` in `<head>` to read `localStorage.lang` and set `document.documentElement.lang` — this prevents the flash of English for returning SR visitors.
 
 Add a build-time script `scripts/verify-i18n-parity.mjs`: fails the build if any key exists in `en.json` but not `sr.json`, or vice versa. Wire into CI.

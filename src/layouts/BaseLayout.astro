@@ -1,32 +1,55 @@
 ---
 // Base document shell.
 //
-// Phase 1 scope: <html>/<head> skeleton and the single import of the token
-// stylesheet. Phase 4.1 completes it — skip link, <main id="main-content">,
-// header/footer/fab slots, the global Toast mount, and the inline
-// apply-language script that must run in <head> BEFORE any stylesheet so a
-// returning Serbian visitor never sees a flash of English (Phase 2.4).
+// Phase 1-2 scope: <head> skeleton, the token stylesheet, and the pre-paint
+// language script. Phase 4.1 completes it — skip link, <main id="main-content">,
+// header/footer/fab slots, and the global Toast mount.
 //
 // base.css is imported here and nowhere else. Importing it per-component
 // would duplicate the @theme block in every chunk.
 import '../styles/base.css';
+import applyLanguage from '../scripts/apply-language.js?raw';
+import { t, DEFAULT_LANG, HTML_LANG } from '../lib/i18n';
 
 interface Props {
-  title: string;
+  /** Literal title. Omit and titleKey is used instead. */
+  title?: string;
+  /** Dictionary key for the title. Metadata is English-only (PRD 5.3). */
+  titleKey?: string;
   description?: string;
+  descriptionKey?: string;
   /** Keeps dev-only pages (tokens, components) out of search results. */
   noindex?: boolean;
 }
 
-const { title, description, noindex = false } = Astro.props;
+const { title, titleKey, description, descriptionKey, noindex = false } = Astro.props;
+
+// Metadata is deliberately English-only: with one URL per page there is no
+// Serbian URL for a crawler to index, so hreflang and translated meta would
+// both be lies (PRD 5.3, FR-6).
+const resolvedTitle =
+  title ?? (titleKey ? t(titleKey, DEFAULT_LANG) : t('meta.default.title', DEFAULT_LANG));
+const resolvedDescription =
+  description ?? (descriptionKey ? t(descriptionKey, DEFAULT_LANG) : undefined);
 ---
 
-<html lang="en">
+<html lang={HTML_LANG[DEFAULT_LANG]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    {description && <meta name="description" content={description} />}
+
+    {
+      /*
+      MUST stay above the stylesheet. It sets <html lang> from the stored
+      preference so the language-swap CSS is already correct at first paint;
+      below the stylesheet, a returning Serbian visitor gets a frame of
+      English on every navigation.
+    */
+    }
+    <script is:inline set:html={applyLanguage} />
+
+    <title>{resolvedTitle}</title>
+    {resolvedDescription && <meta name="description" content={resolvedDescription} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
   </head>
   <body>

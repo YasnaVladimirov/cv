@@ -1,0 +1,33 @@
+---
+/**
+ * Renders a translated string in BOTH languages; CSS shows the active one.
+ *
+ * This is how static text switches with no JavaScript and no flash. The cost
+ * is that both strings ship in the HTML — accepted in exchange for an instant,
+ * hydration-free switch (see src/lib/i18n.ts).
+ *
+ *   <T k="hero.cta.resume" />
+ *   <T k="timeline.filter.showing" vars={{ skill: 'React' }} />
+ *
+ * For text inside an attribute, use data-i18n-<attr>-en/-sr instead — CSS
+ * cannot reach attributes.
+ */
+import { t, LANGS } from '../../lib/i18n';
+
+interface Props {
+  /** Dot path into the dictionaries, e.g. "contact.form.submit". */
+  k: string;
+  /** Values for {placeholders} in the string. */
+  vars?: Record<string, string | number>;
+}
+
+const { k, vars } = Astro.props;
+---
+
+{
+  LANGS.map((lang) => (
+    <span data-lang={lang} data-i18n-key={k}>
+      {t(k, lang, vars)}
+    </span>
+  ))
+}

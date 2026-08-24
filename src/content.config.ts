@@ -9,8 +9,11 @@
  * Long-form case study prose is the one exception: it lives in the MDX body
  * as two language blocks rather than as frontmatter fields. See plan 2.5.
  */
-import { defineCollection, reference, z } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob, file } from 'astro/loaders';
+// Imported directly rather than via astro:content, whose re-export of `z` is
+// deprecated in Astro 7.
+import { z } from 'zod';
 
 /** A metric callout: a real measured outcome, never a vanity number (DS 6.4). */
 const metric = z.object({
@@ -108,7 +111,7 @@ const testimonials = defineCollection({
       role_sr: z.string().min(1),
       company: z.string().min(1),
       avatar: image(),
-      linkedin_url: z.string().url().optional(),
+      linkedin_url: z.url().optional(),
       /** Empty at launch by decision — see src/content/testimonials/README.md. */
       published: z.boolean().default(false),
     }),

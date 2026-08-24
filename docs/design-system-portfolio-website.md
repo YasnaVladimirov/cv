@@ -599,6 +599,23 @@ body { min-height: 100dvh; }
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * 5. Language switching — §9. Both languages are present in the HTML;   *
+ *    exactly one is shown, keyed on <html lang>. This is what makes the *
+ *    switch instant, JS-free after first paint, and flash-free.         *
+ *                                                                       *
+ *    `display: contents` rather than block/inline: the wrapper must not  *
+ *    affect layout, and the same rule has to serve both an inline <span> *
+ *    around a button label and a block <div> around a case-study body.   *
+ * ------------------------------------------------------------------ */
+[data-lang] {
+  display: none;
+}
+html[lang='en'] [data-lang='en'],
+html[lang^='sr'] [data-lang='sr'] {
+  display: contents;
+}
+
 /* Reduced motion — §3.7. The reduced path is instant, not merely faster. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
