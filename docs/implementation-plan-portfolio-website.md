@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.7 |
+| **Document status** | v1.8 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.3 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v1.8** — Phase 5 build rules added to §5.0. Shared client state must live in islands, which share a bundle graph, rather than being split across an Astro `<script>` and an island. `astro-island` is `display: contents`, which is what makes the filter pill's `position: sticky` work against the grandparent wrapper. Scripts must never hold a second copy of Tailwind classes — hence `lib/tag-classes.ts` alongside the existing `lib/button-classes.ts`. The pre-paint language script covers text but not attributes, so `applyAttributeTranslations()` runs on load; a new CI gate, `verify:no-flash`, guards the ordering. Two deliberate deviations (5.1 as a script rather than an island, 5.2 reusing `data-filter`) and one **open question**: filtered entries dim but do not collapse.
 
 **v1.7** — Phase 4 build rules added to §4.0, again each from a failure found while building. `break-words` alone cannot break a long word inside `flex-col items-start`, because max-content sizing measures as if it could not wrap; `max-w-full` is the other half. Metric rows need `flex-wrap` to survive the three-card grid. `list-style: disc` is rewritten by the minifier and must be written as the longhand. §4.0 also records one **open question for the human**: Design System §5.4 and §3.3 give different section rhythms, and Phase 4 followed §5.4.
 
@@ -676,6 +678,20 @@ Commit: `phase-4.7: section rhythm audit and fixes`
 **Objective**: Every interactive behavior specified in App Flow works: smooth scrolling with scrollspy, skill filtering, sticky FAB visibility, toast on resume download, language persistence.
 
 **Prerequisites**: Phase 4 complete.
+
+### 5.0 — General interactive-systems build rules
+
+- **Shared client STATE must live in one island; stateless helpers may be duplicated.** Astro compiles `<script>` tags and React islands as separate entry points, so a module-scope store imported by both risks two instances — a filter that sets state and a pill that never hears about it. Islands do share a bundle graph (`lib/i18n.ts` is already one store across four of them), so the safe arrangement is: all state in islands, and pure functions like `lib/scroll.ts` wherever they are convenient.
+- **`astro-island` is `display: contents`.** It generates no box, so a `position: sticky` child's containing block is the island's *grandparent*. That is what lets the filter pill stick across the whole timeline; it also means an island wrapped in a box of its own would pin its sticky child to that box's height. Verified in the browser, not assumed.
+- **A script must never hold a second copy of Tailwind classes.** The scrollspy toggles `aria-current` and nothing else, with the active appearance in Header.astro's stylesheet; the skill filter builds its button classes from `lib/tag-classes.ts`, the same function `Tag.astro` uses. Both follow `lib/button-classes.ts` from Phase 3. A class list written once in `.astro` and again in `.ts` will drift, and it drifts in the state nobody re-checks.
+- **The pre-paint script covers text, not attributes.** `apply-language.js` sets `<html lang>`, which is enough for the dual-rendered copy because CSS does that swap. Attributes are unreachable from CSS, so `applyAttributeTranslations()` has to run once on load — without it a returning Serbian visitor got a page in Serbian whose resume link still served `/cv.pdf`, against FR-6 and App Flow §2.5. Found in 5.4 on the 404. `LanguageToggle` runs it on mount; `scripts/verify-no-flash.mjs` guards the ordering half of the same guarantee.
+
+**Two deviations from the step text below, both deliberate:**
+
+- **5.1 is a script, not `ScrollNav.jsx`.** CLAUDE.md enumerates the islands this site may have and the header nav is not among them. Making it one would also route the nav labels through the React store and cost the nav its no-JS rendering, in exchange for toggling one attribute on three anchors.
+- **5.2 uses the existing `data-filter="match"｜"out"` contract**, not a new `data-filtered-out`. `TimelineEntry` shipped that attribute and its styles in Phase 3; a second attribute meaning the same thing would leave two ways to express one state.
+
+**OPEN — filtered entries dim but do not collapse.** App Flow §4.5 says non-matching entries "dim + collapse vertically"; Design System §7.14 specifies only `opacity: 0.35` with a `duration-base` transition and says nothing about height. §7.14 wins on the authority order, and that is what Phase 3 built and Phase 5 wired. Flagging it because the difference is visible: a filtered timeline stays full height. **Human decision if the collapse is wanted.**
 
 ### Step 5.1 — Smooth scrolling + scrollspy
 

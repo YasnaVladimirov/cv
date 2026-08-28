@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A bilingual (English / Serbian-Latin) CV & portfolio site for a frontend engineer. **The site is itself the work sample** — performance, accessibility, and code quality are the product, not decoration.
 
-**Current state: Phases 0–4 complete.** Scaffold, tokens, content collections, the component library, and page assembly are all built and deployed. Phase 5 (interactive systems: smooth scrolling and scrollspy, the skill filter, the resume toast, language persistence) is next and needs explicit human approval before it starts. Content is still fixtures and `TODO(human):` strings — real content lands in Phase 9.
+**Current state: Phases 0–5 complete.** Scaffold, tokens, content collections, the component library, page assembly, and every interactive system are built and deployed. Phase 6 (external integrations: form service, Calendly, analytics) is next, needs explicit human approval, and is blocked on [HUMAN] credentials for all three providers. Content is still fixtures and `TODO(human):` strings — real content lands in Phase 9.
 
 Origin is `github.com/YasnaVladimirov/cv`. Push works over git; `gh` is authenticated to a different (JET) GitHub Enterprise host, so `gh` API commands fail against this repo — use plain `git`.
 
@@ -14,7 +14,7 @@ Origin is `github.com/YasnaVladimirov/cv`. Push works over git; `gh` is authenti
 
 Read specific document only when relevant. On conflict, higher wins; if they genuinely disagree, **ask the human — do not resolve it yourself** (`docs/implementation-plan-portfolio-website.md` §0.1).
 
-1. `docs/implementation-plan-portfolio-website.md` (v1.7) — what to build, in what order, and definition-of-done per phase. **Read its Changelog first.**
+1. `docs/implementation-plan-portfolio-website.md` (v1.8) — what to build, in what order, and definition-of-done per phase. **Read its Changelog first.**
 2. `docs/design-system-portfolio-website.md` (v1.3) — every visual and component decision (tokens, prohibitions, component specs §7)
 3. `docs/app-flow-portfolio-website.md` — navigation, state, interaction; the cross-cutting state matrix (§6) is the pre-launch verification grid
 4. `docs/prd-portfolio-website.md` — goals, scope, non-functional targets
@@ -94,6 +94,7 @@ pnpm test             # unit tests (Vitest) — src/lib/ pure logic only
 pnpm lint             # prettier + eslint
 pnpm verify:fonts     # font subset check (Serbian glyphs)
 pnpm verify:i18n      # i18n key parity check
+pnpm verify:no-flash  # pre-paint language script precedes all styles
 pnpm lhci             # Lighthouse CI locally
 ```
 
