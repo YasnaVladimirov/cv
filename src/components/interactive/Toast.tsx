@@ -19,6 +19,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Check, X } from '../../lib/icons-react';
 import { useI18n } from '../../lib/i18n-react';
 import { dismissToast, subscribeToast, TOAST_DURATION_MS, type Toast } from '../../lib/toast';
+import { scrollToSection } from '../../lib/scroll';
 
 export default function ToastHost() {
   const { t } = useI18n();
@@ -96,6 +97,17 @@ export default function ToastHost() {
             {' '}
             <a
               href={toast.linkHref}
+              // Dismiss first, then scroll. Leaving the toast up while the page
+              // travels to the section it pointed at reads as an acknowledgement
+              // that outlived what it was acknowledging. A cross-page href — the
+              // 404's `/#contact` — is left to the browser.
+              onClick={(event) => {
+                dismissToast();
+                const href = toast.linkHref ?? '';
+                if (href.startsWith('#') && scrollToSection(href.slice(1))) {
+                  event.preventDefault();
+                }
+              }}
               className="font-medium text-accent no-underline hover:underline"
             >
               {t(toast.linkKey)}
