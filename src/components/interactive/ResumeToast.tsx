@@ -19,6 +19,7 @@
 import { useEffect } from 'react';
 import { showToast } from '../../lib/toast';
 import { trackEvent } from '../../lib/analytics';
+import { getLanguage } from '../../lib/i18n';
 
 export default function ResumeToast() {
   useEffect(() => {
@@ -39,7 +40,9 @@ export default function ResumeToast() {
         linkHref,
       });
 
-      trackEvent('resume_download');
+      // The language decides which PDF was served, so it is the one prop that
+      // makes this event answerable (App Flow §2.5).
+      trackEvent('resume_download', { lang: getLanguage() });
       if (link.closest('#hero')) trackEvent('cta_hero_resume');
     };
 

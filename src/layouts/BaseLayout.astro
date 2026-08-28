@@ -13,6 +13,7 @@ import { t, DEFAULT_LANG, HTML_LANG } from '../lib/i18n';
 import SkipToContent from '../components/layout/SkipToContent.astro';
 import ToastHost from '../components/interactive/Toast';
 import ResumeToast from '../components/interactive/ResumeToast';
+import Analytics from '../components/interactive/Analytics';
 
 interface Props {
   /** Literal title. Omit and titleKey is used instead. */
@@ -88,5 +89,6 @@ const resolvedDescription =
     }
     <ToastHost client:idle />
     <ResumeToast client:idle />
+    <Analytics client:idle />
   </body>
 </html>

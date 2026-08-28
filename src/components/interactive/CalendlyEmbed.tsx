@@ -20,7 +20,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Calendar, ExternalLink, ArrowUpRight } from '../../lib/icons-react';
 import { useI18n } from '../../lib/i18n-react';
 import { buildEmbedUrl, isCalendlyConfigured, loadCalendlyScript } from '../../lib/calendly';
-import { trackEvent } from '../../lib/analytics';
 
 /** §4.8. Long enough for a slow connection, short enough to still be a fallback. */
 const TIMEOUT_MS = 4000;
@@ -117,7 +116,6 @@ export default function CalendlyEmbed({ directUrl, forceState }: Props) {
                 href={target}
                 target="_blank"
                 rel="noopener"
-                onClick={() => trackEvent('calendly_open', { from: 'fallback' })}
                 className="inline-flex items-center gap-1 text-sm font-medium text-accent no-underline hover:underline"
               >
                 {t('contact.calendar.openDirect')}
