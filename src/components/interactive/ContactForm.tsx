@@ -11,16 +11,30 @@
  * dead end — it surfaces a mailto with the message already lost, so the point
  * of it is to hand back the address, not to apologise.
  *
- * Submission is stubbed until Phase 6. `?form=success` and `?form=error` drive
- * the two outcomes so the states can be reviewed before an endpoint exists.
+ * `?form=success` and `?form=error` still force either terminal state, which
+ * is how the failure path stays reviewable without breaking the endpoint.
  *
- * No CAPTCHA (§2). The honeypot and the timing check are the whole defence;
- * both are wired to a real endpoint in Phase 6, and the field is here now so
- * that adding it later does not mean reopening this component.
+ * No CAPTCHA (§2). The honeypot and the timing check are the whole defence,
+ * and both are decided by pure functions in `lib/form.ts` so they can be
+ * tested — a heuristic that is wrong throws away real messages silently.
+ *
+ * The form also carries `action` and `method`, so with JavaScript off it
+ * posts natively to the same endpoint and the provider's own confirmation
+ * page becomes the success state (App Flow §4.7, no-JS row).
  */
 import { useEffect, useRef, useState, type SubmitEvent } from 'react';
 import { CircleAlert } from '../../lib/icons-react';
 import { useI18n } from '../../lib/i18n-react';
+import {
+  buildPayload,
+  FORM_ENDPOINT,
+  FORM_KEY,
+  KEY_FIELD,
+  HONEYPOT_FIELD,
+  isFormConfigured,
+  isSpam,
+} from '../../lib/form';
+import { trackEvent } from '../../lib/analytics';
 import Button from './Button';
 import FormField from './FormField';
 import TextInput from './TextInput';
@@ -82,17 +96,60 @@ export default function ContactForm({ email: contactEmail }: Props) {
       return;
     }
 
+    // A bot is shown the success state and nothing is sent (App Flow §4.7).
+    // Telling it which check it failed is telling it what to fix.
+    const spam = isSpam({
+      honeypot: String(data.get(HONEYPOT_FIELD) ?? ''),
+      elapsedMs: Date.now() - mountedAt.current,
+    });
+    if (spam) {
+      setStatus('success');
+      return;
+    }
+
     setStatus('submitting');
 
-    // Phase 6 replaces this with the real POST. The honeypot and the elapsed
-    // time are read there; they are collected here so the shape is settled.
-    const honeypot = String(data.get('website') ?? '');
-    const elapsed = Date.now() - mountedAt.current;
-    void honeypot;
-    void elapsed;
+    // Dev override, checked before the network so both terminal states stay
+    // reachable on a preview that has no endpoint configured.
+    if (forced === 'error' || forced === 'success') {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setStatus(forced === 'error' ? 'error' : 'success');
+      return;
+    }
 
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setStatus(forced === 'error' ? 'error' : 'success');
+    // Until [HUMAN] provides the endpoint there is nowhere to post, and the
+    // error state is the honest answer: it hands back the address rather than
+    // claiming a message was delivered.
+    if (!isFormConfigured()) {
+      setStatus('error');
+      trackEvent('form_submit_error', { reason: 'not_configured' });
+      return;
+    }
+
+    try {
+      const response = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(
+          buildPayload({
+            name: String(data.get('name') ?? '').trim(),
+            email: String(data.get('email') ?? '').trim(),
+            company: String(data.get('company') ?? '').trim(),
+            message: String(data.get('message') ?? '').trim(),
+          }),
+        ),
+      });
+
+      if (!response.ok) throw new Error(`Form endpoint returned ${response.status}`);
+
+      setStatus('success');
+      trackEvent('form_submit_success');
+    } catch {
+      // Content is left in the fields on purpose: the failure state exists to
+      // hand back the email address, not to make someone retype a message.
+      setStatus('error');
+      trackEvent('form_submit_error', { reason: 'request_failed' });
+    }
   }
 
   if (status === 'success') {
@@ -110,7 +167,14 @@ export default function ContactForm({ email: contactEmail }: Props) {
   const hasErrors = Object.keys(errors).length > 0;
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4" aria-live="polite">
+    <form
+      onSubmit={onSubmit}
+      action={FORM_ENDPOINT || undefined}
+      method="post"
+      noValidate
+      className="flex flex-col gap-4"
+      aria-live="polite"
+    >
       {hasErrors && (
         <p ref={summaryRef} tabIndex={-1} className="flex items-center gap-1 text-sm text-error">
           <CircleAlert size={14} aria-hidden="true" className="shrink-0" />
@@ -173,6 +237,14 @@ export default function ContactForm({ email: contactEmail }: Props) {
       </FormField>
 
       {/*
+        The access key as a real input, not just a JSON field: with JavaScript
+        off the browser posts this form natively, and the provider rejects a
+        submission that does not carry it. It is public by design — it only
+        authorises delivery to an inbox the human already owns.
+      */}
+      <input type="hidden" name={KEY_FIELD} value={FORM_KEY} />
+
+      {/*
         The honeypot. Hidden from sight, from the tab order and from screen
         readers — a bot fills it, a person cannot reach it. `display: none` on
         the wrapper rather than `type="hidden"`, because some bots skip hidden
@@ -180,7 +252,13 @@ export default function ContactForm({ email: contactEmail }: Props) {
       */}
       <div className="hidden" aria-hidden="true">
         <label htmlFor="contact-website">Website</label>
-        <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <input
+          id="contact-website"
+          name={HONEYPOT_FIELD}
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       {status === 'error' && (
