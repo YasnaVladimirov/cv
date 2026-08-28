@@ -7,17 +7,18 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import { CALENDLY_URL } from '../lib/calendly';
 
 interface Props {
   title?: string;
   titleKey?: string;
   description?: string;
   descriptionKey?: string;
-  /** [HUMAN] supplies the real Calendly URL in Phase 6. */
+  /** Defaults to PUBLIC_CALENDLY_URL; §7.19's header CTA opens it in a new tab. */
   calendlyUrl?: string;
 }
 
-const { title, titleKey, description, descriptionKey, calendlyUrl } = Astro.props;
+const { title, titleKey, description, descriptionKey, calendlyUrl = CALENDLY_URL } = Astro.props;
 ---
 
 <BaseLayout {title} {titleKey} {description} {descriptionKey}>

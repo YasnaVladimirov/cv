@@ -19,14 +19,17 @@ import T from '../ui/T.astro';
 import ContactForm from '../interactive/ContactForm';
 import CalendlyEmbed from '../interactive/CalendlyEmbed';
 import { t, DEFAULT_LANG } from '../../lib/i18n';
+import { CALENDLY_URL } from '../../lib/calendly';
 
 interface Props {
   /** [HUMAN] supplies the real URL in Phase 6 via PUBLIC_CALENDLY_URL. */
   calendlyUrl?: string;
 }
 
-// TODO(human): Phase 6 — replace with PUBLIC_CALENDLY_URL from the environment.
-const { calendlyUrl = '#' } = Astro.props;
+// PUBLIC_CALENDLY_URL, normalised. Empty when unset, which the embed reads as
+// its failure state and the noscript link renders as a dead href — both are
+// better than a spinner that never resolves.
+const { calendlyUrl = CALENDLY_URL } = Astro.props;
 
 const email = t('contact.email', DEFAULT_LANG);
 ---
