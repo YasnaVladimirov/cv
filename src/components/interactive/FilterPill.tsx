@@ -1,16 +1,17 @@
 /**
  * The active-skill-filter indicator (Design System §7.21, App Flow §4.5).
  *
- * Sticky within `#work` only, not to the viewport. The pill answers "why am I
- * seeing a subset?", so it needs to be visible for exactly as long as the
- * filtered list is — and no longer. A viewport-fixed pill would follow the
- * reader into the contact form still announcing a filter they left behind.
+ * Presentational only. §7.21 makes the pill sticky within `#work`, but the
+ * stickiness lives on a full-width strip in SkillFilter rather than on the
+ * pill itself: a bare sticky pill is 282px of opaque background travelling
+ * over a 1100px column, and it came to rest on top of an entry's "Read case
+ * study" link — hiding half the words and taking the clicks. Found in the
+ * Phase 5 visual pass. The pill draws itself; the caller positions it.
  *
  * §7.21 gives three ways to clear a filter: this close button, Escape while
  * focus is inside `#work`, and clicking the active skill again. The other two
  * are wired in Phase 5; this component owns only the button.
  *
- * `top` is the header height plus 16px, per §5.5 — 80px mobile, 88px desktop.
  */
 import { Funnel, X } from '../../lib/icons-react';
 import { useI18n } from '../../lib/i18n-react';
@@ -29,7 +30,6 @@ export default function FilterPill({ skill, onClear, className }: Props) {
   return (
     <div
       className={[
-        'sticky top-[80px] md:top-[88px]',
         'inline-flex h-[32px] items-center gap-2 rounded-sm px-3 py-1',
         'border border-accent bg-accent-subtle-bg text-sm font-medium text-accent',
         className,

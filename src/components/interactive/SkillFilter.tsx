@@ -118,5 +118,18 @@ export default function SkillFilter() {
     if (work && isOffScreen(work, headerHeight())) scrollToSection('work', { focus: false });
   }, [active]);
 
-  return <FilterPill skill={active} onClear={() => setActive(null)} className="mb-8" />;
+  if (!active) return null;
+
+  return (
+    /*
+     * The strip, not the pill, is what is sticky (§7.21, §5.5: header + 16px).
+     * It spans the column and carries the page background, so when it comes to
+     * rest over an entry it covers that line outright instead of sitting on
+     * half of it. Rendered only while a filter is applied — an always-present
+     * strip would be an invisible 48px band lying across the timeline.
+     */
+    <div className="sticky top-[80px] z-content mb-8 bg-bg py-2 md:top-[88px]">
+      <FilterPill skill={active} onClear={() => setActive(null)} />
+    </div>
+  );
 }
