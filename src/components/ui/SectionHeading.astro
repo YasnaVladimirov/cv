@@ -50,7 +50,19 @@ const showSubtitle = subtitleKey !== undefined && hasText(subtitleKey);
 
 <div class:list={['mb-8', className]}>
   <SectionEyebrow k={eyebrowKey} class="mb-2" />
-  <Heading id={id} class:list={['text-text-primary', headingClass]}>
+  {
+    /*
+    tabindex="-1" only when the heading is an anchor target: App Flow §7.2
+    moves focus here after in-page navigation, so a screen reader user is read
+    the heading of the section they just arrived at rather than being left
+    where they were. It adds no tab stop — -1 is programmatic focus only.
+  */
+  }
+  <Heading
+    id={id}
+    tabindex={id ? '-1' : undefined}
+    class:list={['text-text-primary', headingClass]}
+  >
     <T k={titleKey} />
   </Heading>
   {

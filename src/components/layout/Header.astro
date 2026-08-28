@@ -39,7 +39,11 @@ const NAV = [
   { key: 'nav.contact', href: '#contact', id: 'contact' },
 ] as const;
 
-// Ghost-button geometry with no background of its own (§7.18).
+// Ghost-button geometry with no background of its own (§7.18). The active and
+// inactive appearance is in the stylesheet below rather than here, because
+// Phase 5.1's scrollspy toggles `aria-current` and nothing else — a script
+// that instead swapped Tailwind classes would hold a second copy of them,
+// free to drift from this one.
 const NAV_LINK = 'inline-flex h-[36px] items-center px-4 text-sm font-medium no-underline';
 ---
 
@@ -76,13 +80,7 @@ const NAV_LINK = 'inline-flex h-[36px] items-center px-4 text-sm font-medium no-
               href={item.href}
               data-nav-link={item.id}
               aria-current={activeSection === item.id ? 'true' : undefined}
-              class:list={[
-                NAV_LINK,
-                'transition-colors duration-fast ease-out',
-                activeSection === item.id
-                  ? 'text-text-primary underline decoration-accent decoration-1 underline-offset-[3px]'
-                  : 'text-text-secondary hover:text-text-primary',
-              ]}
+              class:list={[NAV_LINK, 'transition-colors duration-fast ease-out']}
             >
               <T k={item.key} />
             </a>
@@ -137,3 +135,20 @@ const NAV_LINK = 'inline-flex h-[36px] items-center px-4 text-sm font-medium no-
     </div>
   </div>
 </header>
+
+<style>
+  /* §7.18 — the scrollspy's only output is `aria-current`. */
+  [data-nav-link] {
+    color: var(--color-text-secondary);
+  }
+  [data-nav-link]:hover {
+    color: var(--color-text-primary);
+  }
+  [data-nav-link][aria-current='true'] {
+    color: var(--color-text-primary);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+</style>

@@ -50,3 +50,14 @@ const { title, titleKey, description, descriptionKey, calendlyUrl } = Astro.prop
   }
   <StickyFAB slot="fab" client:idle />
 </BaseLayout>
+
+{
+  /*
+  S1 only. The case study page and the 404 have no in-page sections to spy on
+  or scroll between; their anchors point at another document.
+*/
+}
+<script>
+  import { initScrollNav } from '../scripts/scroll-nav';
+  initScrollNav();
+</script>
