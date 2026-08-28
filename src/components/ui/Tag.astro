@@ -9,8 +9,10 @@
  * impossible to reach rather than merely unlikely. Content decides it: the
  * schema allows an empty `timeline_matches`, and this is where that shows up.
  *
- * Filter wiring lands in Phase 5; here `active` is just a prop.
+ * The class recipe lives in `src/lib/tag-classes.ts` because Phase 5.2's
+ * filter has to build the same classes when it upgrades a skill to a button.
  */
+import { tagClasses } from '../../lib/tag-classes';
 import T from './T.astro';
 
 interface Props {
@@ -39,21 +41,11 @@ const {
   class: className,
 } = Astro.props;
 
-const BASE = 'inline-flex h-[24px] items-center rounded-sm px-2 font-mono text-mono-sm';
-
 // An interactive skill with no matches is not interactive. Deciding that here
 // rather than at every call site is the point of the component.
 const isButton = interactive && matches;
 
-const STATIC = 'border border-border-subtle bg-bg-elevated text-text-secondary';
-const INTERACTIVE = [
-  'border transition-colors duration-fast ease-out',
-  active
-    ? 'border-accent bg-accent text-text-inverse'
-    : 'border-border bg-bg-elevated text-text-primary hover:border-accent hover:bg-accent-subtle-bg hover:text-accent',
-].join(' ');
-
-const classes = [BASE, isButton ? INTERACTIVE : STATIC, className];
+const classes = [tagClasses({ interactive: isButton, active }), className];
 ---
 
 {

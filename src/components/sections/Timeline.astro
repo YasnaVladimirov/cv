@@ -6,14 +6,16 @@
  * "load more": a hiring manager using Ctrl+F must find every bullet, and a
  * crawler must see all of them.
  *
- * The filter is Phase 5.2 and is pure enhancement on top of this markup —
- * each entry carries its collection id so the filter can address it, and the
- * pill has a mount point waiting above the list.
+ * The filter is pure enhancement on top of this markup: each entry carries
+ * its collection id so SkillFilter can address it, and every entry stays in
+ * the HTML whether or not a filter is applied — non-matching ones are dimmed,
+ * never removed.
  */
 import { getCollection } from 'astro:content';
 import Section from './Section.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import TimelineEntry from '../content/TimelineEntry.astro';
+import SkillFilter from '../interactive/SkillFilter';
 
 const roles = (await getCollection('roles')).sort((a, b) => b.data.order - a.data.order);
 
@@ -30,10 +32,16 @@ const published = new Set(
     id="work-heading"
   />
 
-  {/* Filter pill mount point — filled by Phase 5.2, empty and inert until then. */}
-  <div id="work-filter" class="empty:hidden"></div>
-
+  {
+    /*
+    The pill and the entries share one wrapper so that §7.21's `position:
+    sticky` has somewhere to travel: a sticky element can only move within its
+    containing block, so a pill in a box of its own would be pinned to a 32px
+    strip and never follow the reader down the list.
+  */
+  }
   <div>
+    <SkillFilter client:idle />
     {
       roles.map((role) => {
         // A role may point at a case study that is not published yet. Linking
