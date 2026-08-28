@@ -14,7 +14,8 @@
  * to localStorage, swaps translated attributes and fires the analytics event
  * (src/lib/i18n.ts). This component decides nothing.
  */
-import { toggleLanguage } from '../../lib/i18n';
+import { useEffect } from 'react';
+import { applyAttributeTranslations, toggleLanguage } from '../../lib/i18n';
 import { useI18n } from '../../lib/i18n-react';
 
 interface Props {
@@ -24,6 +25,23 @@ interface Props {
 export default function LanguageToggle({ className }: Props) {
   const { lang, t } = useI18n();
   const isSerbian = lang === 'sr';
+
+  /*
+   * Correct the translated ATTRIBUTES on arrival.
+   *
+   * The pre-paint script sets <html lang>, which is enough for text: the
+   * language CSS shows the right copy with no JS. Attributes are not reachable
+   * by CSS, so a returning Serbian visitor was served markup that said
+   * sr-Latn while its resume link still pointed at /cv.pdf — the English CV,
+   * against FR-6 and App Flow §2.5's "SR state: serves cv-sr.pdf". Found in
+   * Phase 5.4 on the 404, where the toast fired in Serbian over an English
+   * download.
+   *
+   * Idempotent, so the header and footer toggles both running it is harmless.
+   */
+  useEffect(() => {
+    applyAttributeTranslations();
+  }, []);
 
   const label = (forLang: 'en' | 'sr') =>
     lang === forLang ? 'font-semibold text-text-primary' : 'font-medium text-text-tertiary';

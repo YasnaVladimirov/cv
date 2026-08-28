@@ -62,12 +62,15 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # These two read dist/, not src/ — they check what the minifier emitted.
+      # These three read dist/, not src/ — they check what was actually emitted.
       - name: Verify no gradients
         run: pnpm verify:gradients
 
       - name: Verify built CSS
         run: pnpm verify:css
+
+      - name: Verify no flash of English
+        run: pnpm verify:no-flash
 
   # Lighthouse CI, the i18n parity and font-subset scripts, and the regex
   # design lints join this workflow in Phases 1.3, 2.4, and 8.1-8.3.

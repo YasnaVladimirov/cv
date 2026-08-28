@@ -22,6 +22,7 @@
     "verify:gradients": "node scripts/verify-no-gradients.mjs",
     "verify:values": "node scripts/verify-no-raw-values.mjs",
     "verify:css": "node scripts/verify-css-output.mjs",
+    "verify:no-flash": "node scripts/verify-no-flash.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
