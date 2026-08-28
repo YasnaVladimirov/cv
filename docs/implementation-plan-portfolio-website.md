@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.8 |
+| **Document status** | v1.9 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.3 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v1.9** — Phase 6 build rules added to §6.0. Every integration degrades independently and the degraded path is what gets tested. Form field names follow Web3Forms (`access_key`, `botcheck`), not the plan's generic placeholders, which would 401. The access key is a real hidden input so the no-JS native POST still authenticates. Spam heuristics and Calendly URL normalisation live in `src/lib/` with unit tests — the pasted `PUBLIC_CALENDLY_URL` had no scheme. Calendly readiness means an iframe appeared, not that the script loaded. Analytics buffers events fired before the provider script arrives, and the `calendly_booked` postMessage listener checks its origin. Also records that the Calendly iframe is the one third party able to set cookies, against §2.
 
 **v1.8** — Phase 5 build rules added to §5.0. Shared client state must live in islands, which share a bundle graph, rather than being split across an Astro `<script>` and an island. `astro-island` is `display: contents`, which is what makes the filter pill's `position: sticky` work against the grandparent wrapper. Scripts must never hold a second copy of Tailwind classes — hence `lib/tag-classes.ts` alongside the existing `lib/button-classes.ts`. The pre-paint language script covers text but not attributes, so `applyAttributeTranslations()` runs on load; a new CI gate, `verify:no-flash`, guards the ordering. Two deliberate deviations (5.1 as a script rather than an island, 5.2 reusing `data-filter`) and one **open question**: filtered entries dim but do not collapse.
 
@@ -759,6 +761,21 @@ Commit: `phase-5.4: verify language persistence and no-flash`
 **Objective**: Real form submissions, real Calendly, real analytics events flow.
 
 **Prerequisites**: Phase 5 complete. Human has provided credentials for form service, Calendly, and analytics.
+
+### 6.0 — General integration build rules
+
+- **Every integration degrades on its own, and the degraded path is the one that gets tested.** The widget is blocked more often than it fails; the form endpoint is absent more often than it errors. `isFormConfigured()`, `isCalendlyConfigured()` and `isAnalyticsConfigured()` each gate one integration, and with all three env vars empty the site still builds, renders and converts — via mailto and a direct booking link.
+- **Trust the provider's field names, not the plan's.** §6.1 specifies `_key` / `_honeypot` / `_time`; Web3Forms, which the same step recommends, reads `access_key` and `botcheck` and would 401 on the plan's names. The mapping is one object at the top of `lib/form.ts`, with the Formspree variant beside it.
+- **Anything the browser posts natively needs a real input.** With JS off the contact form submits itself, so the access key is a hidden `<input>` rather than a JSON field added at fetch time. A payload assembled only in the submit handler silently loses the no-JS path.
+- **Spam heuristics belong in `src/lib/`.** They decide whether a real message from a real person is sent at all, and a wrong one fails silently and permanently. `isSpam()` is pure and unit-tested at its boundary; a hit is answered with the success state and no request (App Flow §4.7 — telling a bot which check it failed tells it what to fix).
+- **Normalise a pasted URL before using it as an href.** The `PUBLIC_CALENDLY_URL` supplied for this build was `calendly.com/name`, with no scheme — which is a relative path in an href and 404s from any nested route. `normalizeCalendlyUrl()` adds it; unit-tested.
+- **"Loaded" means the thing appeared, not that the file arrived.** `script.onload` only says the bytes came down; a widget that then fails to mount would leave the placeholder up forever. The Calendly embed treats an actual `<iframe>` as readiness and holds a hard 4s deadline either way (§4.8).
+- **Buffer analytics events fired before the provider script loads.** `resume_download` is a P0 metric that can fire within a second of arrival, well inside the window where a deferred third-party script has not run. Without the (capped) buffer those are precisely the conversions that go uncounted.
+- **Verify a `postMessage` listener's origin.** `calendly_booked` is driven by a message from the embed; a same-origin spoof of that message is ignored, checked by test.
+
+**Deviations from the step text, all deliberate:** field names as above; no Calendly locale parameter (§6.2 asks for one "if Calendly supports a locale hint" — its inline widget exposes none, so the booking UI follows the browser while the page follows the toggle); `calendly_open` is fired by one delegated handler that derives its `from` prop from context, rather than by each CTA separately.
+
+**Note — the Calendly embed is the one third party that can set cookies.** Design System §2 forbids cookies "of any kind", and the site itself sets none: analytics is cookieless by provider choice and the language preference is `localStorage`. Calendly's iframe is outside that guarantee. Its own consent banner is left enabled rather than suppressed with `hide_gdpr_banner`, so the visitor is asked rather than quietly opted in.
 
 ### Step 6.1 — Form service **[HUMAN]**
 

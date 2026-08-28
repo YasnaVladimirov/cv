@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A bilingual (English / Serbian-Latin) CV & portfolio site for a frontend engineer. **The site is itself the work sample** — performance, accessibility, and code quality are the product, not decoration.
 
-**Current state: Phases 0–5 complete.** Scaffold, tokens, content collections, the component library, page assembly, and every interactive system are built and deployed. Phase 6 (external integrations: form service, Calendly, analytics) is next, needs explicit human approval, and is blocked on [HUMAN] credentials for all three providers. Content is still fixtures and `TODO(human):` strings — real content lands in Phase 9.
+**Current state: Phases 0–6 complete.** Scaffold, tokens, content collections, the component library, page assembly, interactive systems, and external integrations are all built and deployed. Phase 7 (SEO and metadata) is next and needs explicit human approval. The form and Calendly are live against real credentials; `PUBLIC_ANALYTICS_SITE_ID` is still unset, so analytics no-ops. Content is still fixtures and `TODO(human):` strings — real content lands in Phase 9.
 
 Origin is `github.com/YasnaVladimirov/cv`. Push works over git; `gh` is authenticated to a different (JET) GitHub Enterprise host, so `gh` API commands fail against this repo — use plain `git`.
 
@@ -14,7 +14,7 @@ Origin is `github.com/YasnaVladimirov/cv`. Push works over git; `gh` is authenti
 
 Read specific document only when relevant. On conflict, higher wins; if they genuinely disagree, **ask the human — do not resolve it yourself** (`docs/implementation-plan-portfolio-website.md` §0.1).
 
-1. `docs/implementation-plan-portfolio-website.md` (v1.8) — what to build, in what order, and definition-of-done per phase. **Read its Changelog first.**
+1. `docs/implementation-plan-portfolio-website.md` (v1.9) — what to build, in what order, and definition-of-done per phase. **Read its Changelog first.**
 2. `docs/design-system-portfolio-website.md` (v1.3) — every visual and component decision (tokens, prohibitions, component specs §7)
 3. `docs/app-flow-portfolio-website.md` — navigation, state, interaction; the cross-cutting state matrix (§6) is the pre-launch verification grid
 4. `docs/prd-portfolio-website.md` — goals, scope, non-functional targets
@@ -109,7 +109,7 @@ Three pins that look wrong but are deliberate:
 - **No `@astrojs/tailwind`** — deprecated, and its last release caps at Astro 5. Tailwind is a Vite plugin here.
 - **No `tailwind.config.mjs`, no `postcss.config.mjs`, no autoprefixer** — v4 is CSS-first and handles all of it. The theme lives in `src/styles/base.css`.
 
-Form service, calendar, and analytics providers are [HUMAN] choices deferred to Phase 6; their config arrives as `PUBLIC_`-prefixed env vars (plan Appendix B).
+Form service is **Web3Forms**, calendar is **Calendly**, analytics is **Umami** (cookieless, so no consent banner). All config is `PUBLIC_`-prefixed env vars — see `.env.example`. Every one is optional: with all of them unset the site builds and converts via mailto and a direct booking link.
 
 ## How to answer
 
