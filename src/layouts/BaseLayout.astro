@@ -11,6 +11,24 @@ import '../styles/base.css';
 import applyLanguage from '../scripts/apply-language.js?raw';
 import { t, DEFAULT_LANG, HTML_LANG } from '../lib/i18n';
 import { jsonLd } from '../lib/meta';
+
+/*
+ * Font files imported for their hashed URLs so they can be preloaded.
+ *
+ * Both faces are declared in CSS with `font-display: swap`, so the fallback
+ * paints immediately — but the swap to the real face creates a SECOND, later
+ * LCP candidate, and that is the one Lighthouse records. Without a preload the
+ * browser cannot even discover these until the stylesheet has parsed, so the
+ * chain is HTML → CSS → font and the swap lands ~2s in on a throttled mobile
+ * connection. Measured in 8.1: render delay was 81% of a 2.25s LCP.
+ *
+ * Only the Latin subsets are preloaded. Latin-ext carries the Serbian
+ * diacritics (š đ č ć ž) but is needed for a minority of glyphs on a minority
+ * of visits, and preloading four files to fix two would spend the bandwidth
+ * this is trying to save.
+ */
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import monoLatin from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
 import SkipToContent from '../components/layout/SkipToContent.astro';
 import ToastHost from '../components/interactive/Toast';
 import ResumeToast from '../components/interactive/ResumeToast';
@@ -81,6 +99,17 @@ const siteName = t('hero.name', DEFAULT_LANG);
     */
     }
     <script is:inline set:html={applyLanguage} />
+
+    {
+      /*
+      Above the stylesheet, so the fetch starts in parallel with it rather
+      than after it. crossorigin is required even for same-origin fonts —
+      without it the preload is not matched to the CSS request and the file
+      is fetched twice.
+    */
+    }
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoLatin} as="font" type="font/woff2" crossorigin />
 
     <title>{resolvedTitle}</title>
     <meta name="description" content={resolvedDescription} />

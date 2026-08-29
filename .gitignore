@@ -32,3 +32,4 @@ pnpm-debug.log*
 
 # one-off browser verification output, never committed
 .playwright-mcp/
+.lighthouseci/

@@ -13,6 +13,16 @@ export default defineConfig({
   // TODO(human): replace with the production domain in Phase 7.5 / 10.1.
   site: 'https://example.com',
   output: 'static',
+  build: {
+    /*
+     * The stylesheet is ~9KB and every page needs all of it, so inlining it
+     * removes a render-blocking round trip. Measured in Phase 8.1 against
+     * Lighthouse's simulated Slow 4G: LCP 2406ms external, 2254ms inlined.
+     * The cost is that it is re-sent per page rather than cached across them,
+     * which on a four-page site is the cheaper side of the trade.
+     */
+    inlineStylesheets: 'always',
+  },
   integrations: [
     react(),
     mdx(),
