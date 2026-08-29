@@ -27,23 +27,40 @@ if (!existsSync(DIST)) {
   process.exit(1);
 }
 
-function cssFiles(dir) {
+/**
+ * Collects emitted CSS from wherever the build put it.
+ *
+ * Astro is configured with `inlineStylesheets: 'always'` (Phase 8.1, for the
+ * render-blocking round trip), so on this project the theme ships inside
+ * <style> blocks in each HTML file and there is no .css file at all. Reading
+ * only `*.css` made this check pass vacuously — or rather fail loudly, which
+ * is how it was caught. Both sources are read so the check survives that
+ * setting being flipped either way.
+ */
+function emittedCss(dir) {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...cssFiles(path));
-    else if (entry.name.endsWith('.css')) out.push(path);
+    if (entry.isDirectory()) out.push(...emittedCss(path));
+    else if (entry.name.endsWith('.css')) out.push(readFileSync(path, 'utf8'));
+    else if (entry.name.endsWith('.html')) {
+      const html = readFileSync(path, 'utf8');
+      for (const [, block] of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) out.push(block);
+    }
   }
   return out;
 }
 
-const files = cssFiles(DIST);
-if (files.length === 0) {
-  console.error(`✗ No stylesheet in ${DIST}/ — the theme did not reach the build.`);
+const blocks = emittedCss(DIST);
+const css = blocks.join('\n');
+
+// A vacuous pass is the failure mode this whole script exists to prevent, so
+// an empty haystack is an error rather than a silent green.
+if (!css.includes('--color-accent')) {
+  console.error('✗ No theme CSS found in dist/ — neither a stylesheet nor an inlined <style>.');
   process.exit(1);
 }
 
-const css = files.map((f) => readFileSync(f, 'utf8')).join('\n');
 const fail = [];
 
 /** Both spellings, for each of the two glass strengths. */
