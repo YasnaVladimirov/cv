@@ -22,22 +22,48 @@ interface Props {
   titleKey?: string;
   description?: string;
   descriptionKey?: string;
-  /** Keeps dev-only pages (tokens, components) out of search results. */
+  /** Overrides the canonical path; defaults to this page's own URL. */
+  canonicalPath?: string;
+  /** Share image under public/. 1200×630 (PRD §5.3). */
+  ogImagePath?: string;
+  /** `website` for the home page, `article` for a case study. */
+  ogType?: 'website' | 'article';
+  /** JSON-LD, serialised into a single ld+json block. */
+  structuredData?: Record<string, unknown>;
+  /** Keeps dev-only pages (tokens, components) and the 404 out of search results. */
   noindex?: boolean;
   /** Extra classes on <main>. Case-study pages narrow their measure here. */
   mainClass?: string;
 }
 
-const { title, titleKey, description, descriptionKey, noindex = false, mainClass } = Astro.props;
+const {
+  title,
+  titleKey,
+  description,
+  descriptionKey,
+  canonicalPath,
+  ogImagePath = '/og-default.png',
+  ogType = 'website',
+  structuredData,
+  noindex = false,
+  mainClass,
+} = Astro.props;
 
-// Metadata is deliberately English-only: with one URL per page there is no
-// Serbian URL for a crawler to index, so hreflang and translated meta would
-// both be lies (PRD §5.3, FR-6).
+// Metadata is deliberately English-only, and no hreflang is emitted: with one
+// URL per page there is no Serbian URL for a crawler to point at, so a
+// translated title or an alternate link would both be lies (PRD §5.3, FR-6).
 const resolvedTitle =
   title ?? (titleKey ? t(titleKey, DEFAULT_LANG) : t('meta.default.title', DEFAULT_LANG));
 const resolvedDescription =
   description ??
   (descriptionKey ? t(descriptionKey, DEFAULT_LANG) : t('meta.default.description', DEFAULT_LANG));
+
+// Absolute URLs, which OG and canonical both require. Astro.site comes from
+// astro.config.mjs; every absolute URL on the site derives from it, so
+// step 7.5 stays a one-line change.
+const canonical = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
+const ogImage = new URL(ogImagePath, Astro.site);
+const siteName = t('hero.name', DEFAULT_LANG);
 ---
 
 <html lang={HTML_LANG[DEFAULT_LANG]}>
@@ -56,8 +82,39 @@ const resolvedDescription =
     <script is:inline set:html={applyLanguage} />
 
     <title>{resolvedTitle}</title>
-    {resolvedDescription && <meta name="description" content={resolvedDescription} />}
+    <meta name="description" content={resolvedDescription} />
+    <link rel="canonical" href={canonical.href} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {
+      /*
+      Open Graph and Twitter. Case-study links get pasted into Slack threads
+      and ATS notes, so how they unfurl is part of the work sample (PRD §5.3).
+      og:locale is en_US alone — the Serbian text is injected client-side and
+      no crawler or unfurler will ever see it.
+    */
+    }
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={resolvedDescription} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={resolvedTitle} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={resolvedTitle} />
+    <meta name="twitter:description" content={resolvedDescription} />
+    <meta name="twitter:image" content={ogImage.href} />
+
+    {
+      structuredData && (
+        <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline />
+      )
+    }
   </head>
   <body>
     <SkipToContent />
