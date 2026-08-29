@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v1.9 |
+| **Document status** | v2.0 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.3 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v2.0** — Phase 7 build rules added to §7.0, and a new CI gate, `verify:metadata`, enforcing the phase's own verification list against the built output. Every absolute URL derives from `Astro.site`, so robots.txt became a route rather than a static file and step 7.5 stays one line. Placeholders are filtered out of JSON-LD rather than shipped invalid, `datePublished` is omitted rather than guessed from mtime, and `jsonLd()` escapes `<` so content cannot break out of the script block. `date_published` was added to the caseStudies schema as a coerced date.
 
 **v1.9** — Phase 6 build rules added to §6.0. Every integration degrades independently and the degraded path is what gets tested. Form field names follow Web3Forms (`access_key`, `botcheck`), not the plan's generic placeholders, which would 401. The access key is a real hidden input so the no-JS native POST still authenticates. Spam heuristics and Calendly URL normalisation live in `src/lib/` with unit tests — the pasted `PUBLIC_CALENDLY_URL` had no scheme. Calendly readiness means an iframe appeared, not that the script loaded. Analytics buffers events fired before the provider script arrives, and the `calendly_booked` postMessage listener checks its origin. Also records that the Calendly iframe is the one third party able to set cookies, against §2.
 
@@ -857,6 +859,17 @@ Commit: `phase-6.3: analytics with all event instrumentation`
 **Objective**: Every page has correct title, description, canonical, OG/Twitter tags, structured data, and appears in the sitemap.
 
 **Prerequisites**: Phase 6 complete. Custom domain decided (not necessarily purchased yet — decide the string).
+
+### 7.0 — General metadata build rules
+
+- **Every absolute URL derives from `Astro.site`.** Canonical, `og:url`, `og:image`, the JSON-LD `url` and `mainEntityOfPage`, and the `Sitemap:` line in robots.txt all resolve against it, so step 7.5 is genuinely one line in `astro.config.mjs`. `robots.txt` is therefore a route (`src/pages/robots.txt.ts`), not a static file — a hard-coded domain in `public/` would be a second place to forget.
+- **Never emit a placeholder into structured data.** A `TODO(human):` string in a title is embarrassing; the same string in JSON-LD `sameAs` is a validation failure that invalidates the whole block, which is worth less than emitting nothing. `realUrls()` filters them and the property is omitted.
+- **Omit rather than invent.** `datePublished` comes from frontmatter and is absent when the frontmatter is; file mtime was the alternative and is not stable across a fresh checkout or a CI runner, so it would have produced confident wrong dates.
+- **`JSON.stringify` does not escape `<`.** A `</script>` inside any content field would close the JSON-LD block and spill the rest into the document as markup. `jsonLd()` escapes it; unit-tested both ways.
+- **YAML turns an unquoted date into a `Date` and a quoted one into a string.** `date_published` uses `z.coerce.date()` so a content author does not have to know which, and an unparseable value still fails the build.
+- **The title suffix is conditional, not decorative.** `pageTitle()` appends the site name for branded search only when the result stays within 60 characters — a truncated suffix loses exactly the name it was added for.
+
+`scripts/verify-metadata.mjs` enforces the phase's verification list against `dist/`: title ≤60, description ≤155, both unique across indexable pages, canonical and `og:image` absolute, JSON-LD parses, no `hreflang`, and robots.txt naming a sitemap that exists. Each rule was negative-tested by breaking it.
 
 ### Step 7.1 — Base metadata layer
 
