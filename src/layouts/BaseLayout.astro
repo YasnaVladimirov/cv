@@ -147,6 +147,24 @@ const siteName = t('hero.name', DEFAULT_LANG);
     }
   </head>
   <body>
+    {
+      /*
+      Without JavaScript the language toggle cannot do anything — the swap is
+      a client-side store — but Astro server-renders islands, so the button is
+      in the HTML regardless. App Flow §2.3 puts the no-JS state at "the toggle
+      does not render"; a button that looks live and does nothing is worse than
+      no button. A <noscript> stylesheet is the only thing that can make that
+      distinction without JS having to run.
+    */
+    }
+    <noscript>
+      <style>
+        [data-lang-toggle] {
+          display: none;
+        }
+      </style>
+    </noscript>
+
     <SkipToContent />
 
     <slot name="header" />

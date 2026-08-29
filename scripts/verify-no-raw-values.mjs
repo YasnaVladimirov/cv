@@ -194,6 +194,10 @@ for (const file of ROOTS.flatMap(walk)) {
  *
  * <li> is the one exception: a bilingual list needs one <ul> holding tagged
  * items, and base.css restores `display: list-item` so the marker survives.
+ *
+ * The negative lookahead matters: `\bdata-lang\b` also matches the "data-lang"
+ * prefix of `data-lang-toggle`, because a hyphen is a word boundary. That
+ * fired on LanguageToggle and blamed it for a bug it did not have.
  */
 /**
  * `outline: none` is only ever acceptable beside a `:focus-visible` rule that
@@ -228,7 +232,7 @@ for (const file of ROOTS.flatMap(walk)) {
   if (EXEMPT.has(file.split(sep).join('/'))) continue;
   if (!file.endsWith('.astro') && !file.endsWith('.tsx')) continue;
   const src = stripComments(readFileSync(file, 'utf8'));
-  for (const m of src.matchAll(/<([a-zA-Z][\w.]*)\b[^>]*?\bdata-lang\b/g)) {
+  for (const m of src.matchAll(/<([a-zA-Z][\w.]*)\b[^>]*?\bdata-lang(?![\w-])/g)) {
     const tag = m[1];
     // A capitalised tag is a component, which renders its own markup and is
     // checked wherever it is defined.

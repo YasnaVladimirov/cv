@@ -121,19 +121,29 @@ Viewport 375×780.
 | N.6 | No endpoint configured | same error block — never a false success | pass |
 | N.7 | Calendly script blocked | 4s timeout → explanatory line + direct link | pass — 4046ms |
 | N.8 | Calendly widget never mounts | same fallback | pass |
-| N.9 | JavaScript disabled | see below | **not yet walked** |
+| N.9 | JavaScript disabled | see below | pass, from the served HTML |
 
-### N.9 — JavaScript off, by hand
+### N.9 — JavaScript off
 
-Chrome DevTools → Command palette → "Disable JavaScript", then reload:
+Verified by reading the served HTML directly, which is exactly what a
+JS-disabled browser gets. Re-check by hand in DevTools → Command palette →
+"Disable JavaScript" before launch.
 
-- [ ] Full page renders in English; all content present and Ctrl+F-findable
-- [ ] Timeline fully expanded; every skill plain text, none focusable
-- [ ] Language toggle does nothing (acceptable — documented consequence)
-- [ ] Resume link still downloads, no toast
-- [ ] Calendly placeholder replaced by a plain "Book a chat" link
-- [ ] Contact form posts natively and lands on the provider's confirmation page
-- [ ] Footer, mailto and all internal links work
+| Check | Expected | 2026-08-29 |
+|---|---|---|
+| Timeline fully in the HTML | all entries, all bullets, nothing hidden | pass — 4 entries, 10 bullets |
+| Every skill plain text | `<span>`, none focusable | pass — 21 spans, 0 buttons |
+| Language toggle | **hidden** — App Flow §2.3 | pass, after the fix below |
+| Resume link | downloads, no toast | pass — `download` present |
+| Calendly | `<noscript>` link replaces the placeholder | pass |
+| Contact form | posts natively, carrying `access_key` and the honeypot | pass |
+| mailto and internal links | work | pass — 2 mailto, 6 case-study links |
+
+**Fixed during this walk.** The language toggle was rendering with JS off.
+Astro server-renders islands, so the button was in the HTML, looked live, and
+did nothing when pressed. App Flow §2.3 puts the no-JS state at "the toggle
+does not render", so a `<noscript>` rule now hides it — a dead control is
+worse than no control.
 
 ---
 
@@ -141,24 +151,34 @@ Chrome DevTools → Command palette → "Disable JavaScript", then reload:
 
 Lighthouse does not test this at all.
 
-- [ ] Tab from a fresh load: **first** stop is "Skip to content"
-- [ ] Activating it moves focus into `<main>`
-- [ ] Every interactive element is reachable, in visual order
-- [ ] The focus ring is visible on every one — 2px accent, 2px offset, never suppressed
-- [ ] Case-study card is a **single** tab stop
-- [ ] Skill buttons reachable; Enter and Space both activate
-- [ ] Esc inside `#work` clears the filter
-- [ ] Toast close button reachable while the toast is up
-- [ ] No keyboard trap anywhere; no positive `tabindex`
+| # | Check | 2026-08-29 |
+|---|---|---|
+| K.1 | First Tab stop is "Skip to content" | pass |
+| K.2 | Focus ring visible — 2px solid accent, 2px offset | pass |
+| K.3 | `:focus { outline: none }` is paired with a `:focus-visible` ring | pass — enforced by `verify:values` |
+| K.4 | No positive `tabindex` anywhere | pass — none |
+| K.5 | Tab order follows visual order | pass — skip → name → toggle → CTA → hero CTAs → timeline → cards → skills |
+| K.6 | Case-study card is a **single** tab stop | pass — one `<a>`, eyebrow `aria-hidden` |
+| K.7 | Card's accessible name is title + outcome | pass |
+| K.8 | Esc inside `#work` clears the filter | pass |
+| K.9 | Skip link activates into `<main>` | **[HUMAN]** — needs a real key press |
+| K.10 | Enter and Space both activate a skill button | **[HUMAN]** |
+| K.11 | Toast close button reachable while up | **[HUMAN]** |
+| K.12 | No keyboard trap anywhere | **[HUMAN]** |
 
 ## Reduced motion / reduced transparency
 
 Set at OS level, not just in DevTools.
 
-- [ ] `prefers-reduced-motion` — anchor navigation jumps instantly (0ms, not merely faster)
-- [ ] Filter transition instant; toast appears without sliding
-- [ ] Availability badge dot stops pulsing
-- [ ] `prefers-reduced-transparency` — glass panels become solid `bg-elevated`; backdrop shapes disappear
+| # | Check | 2026-08-29 |
+|---|---|---|
+| M.1 | `prefers-reduced-motion` — anchor navigation jumps instantly, 0ms not merely faster | pass — forced via matchMedia, landed at 88px in one frame |
+| M.2 | Global rule flattens transitions and animations | pass — present in base.css |
+| M.3 | `@supports not (backdrop-filter)` → `.glass, .glass-strong` solid | pass — rule present |
+| M.4 | `prefers-reduced-transparency` → `.glass, .glass-strong` solid | pass — rule present |
+| M.5 | `prefers-reduced-transparency` → backdrop shapes removed | pass — rule present |
+| M.6 | The above verified at OS level, not just in the cascade | **[HUMAN]** |
+| M.7 | Availability badge dot stops pulsing | **[HUMAN]** — badge is disabled until Phase 9 |
 
 ---
 
@@ -170,7 +190,7 @@ Set at OS level, not just in DevTools.
 | Firefox | glass renders | **[HUMAN]** |
 | Firefox | `about:config` → `layout.css.backdrop-filter.enabled=false` → solid fallback per §10.4 | **[HUMAN]** |
 | Safari | `scroll-margin-top` — content must not land under the sticky header | **[HUMAN]** |
-| Safari | `-webkit-backdrop-filter` on all glass surfaces | **[HUMAN]** — `verify:css` proves both spellings survive the build |
+| Safari | `-webkit-backdrop-filter` on all glass surfaces | **[HUMAN]** — `verify:css` proves both spellings survive the build, but only a real Safari proves it renders |
 | All | OS-level reduced motion / transparency actually change behaviour | **[HUMAN]** |
 
 ## Real devices (§8.6) — [HUMAN]

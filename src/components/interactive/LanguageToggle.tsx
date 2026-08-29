@@ -13,6 +13,12 @@
  * All the real work is in the store: setLanguage writes <html lang>, persists
  * to localStorage, swaps translated attributes and fires the analytics event
  * (src/lib/i18n.ts). This component decides nothing.
+ *
+ * `data-lang-toggle` is what BaseLayout's <noscript> rule hides. Astro renders
+ * islands on the server too, so without JavaScript this button is present,
+ * looks live, and does nothing when pressed — a control that lies. App Flow
+ * §2.3 says the toggle does not render in that state, so it is hidden rather
+ * than left as a dead affordance.
  */
 import { useEffect } from 'react';
 import { applyAttributeTranslations, toggleLanguage } from '../../lib/i18n';
@@ -50,6 +56,7 @@ export default function LanguageToggle({ className }: Props) {
     <button
       type="button"
       onClick={toggleLanguage}
+      data-lang-toggle
       aria-pressed={isSerbian}
       aria-label={t(isSerbian ? 'language.switchToEnglish' : 'language.switchToSerbian')}
       className={[
