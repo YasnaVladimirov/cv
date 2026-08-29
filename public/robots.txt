@@ -1,3 +1,0 @@
-# Configured properly in Phase 7.4 once the production domain is set.
-User-agent: *
-Allow: /

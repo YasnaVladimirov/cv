@@ -23,6 +23,7 @@
     "verify:values": "node scripts/verify-no-raw-values.mjs",
     "verify:css": "node scripts/verify-css-output.mjs",
     "verify:no-flash": "node scripts/verify-no-flash.mjs",
+    "verify:metadata": "node scripts/verify-metadata.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
