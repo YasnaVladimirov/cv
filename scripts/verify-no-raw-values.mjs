@@ -26,10 +26,18 @@
  * Run: node scripts/verify-no-raw-values.mjs
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, extname } from 'node:path';
+import { join, extname, sep } from 'node:path';
 
 const SPEC = 'docs/design-system-portfolio-website.md';
-const ROOTS = ['src/components', 'src/layouts'];
+const ROOTS = ['src/components', 'src/layouts', 'src/pages'];
+
+/**
+ * The dev-only showcase pages are exempt. They exist to display raw token
+ * values next to their rendered result — `filter: blur(80px)` beside the
+ * shape it draws — so the literals in them are the subject, not a violation.
+ * Both are deleted in Phase 10.3.
+ */
+const EXEMPT = new Set(['src/pages/tokens.astro', 'src/pages/components.astro']);
 const EXTS = new Set(['.astro', '.tsx', '.jsx', '.ts', '.js', '.css']);
 
 /**
@@ -140,6 +148,7 @@ const stripComments = (src) =>
 const fail = [];
 
 for (const file of ROOTS.flatMap(walk)) {
+  if (EXEMPT.has(file.split(sep).join('/'))) continue;
   const src = stripComments(readFileSync(file, 'utf8'));
   const lines = src.split('\n');
 
@@ -186,9 +195,37 @@ for (const file of ROOTS.flatMap(walk)) {
  * <li> is the one exception: a bilingual list needs one <ul> holding tagged
  * items, and base.css restores `display: list-item` so the marker survives.
  */
+/**
+ * `outline: none` is only ever acceptable beside a `:focus-visible` rule that
+ * puts a ring back.
+ *
+ * Design System §10.6 never allows the focus ring to be suppressed, and this
+ * is the prohibition with the worst failure mode: removing the outline breaks
+ * the site for keyboard users completely, and it is invisible to everyone who
+ * tests with a mouse. base.css does exactly this pair on purpose — `:focus`
+ * clears the default so `:focus-visible` can draw the token ring — so the
+ * rule is "not without the replacement", not "never".
+ */
+const OUTLINE_SUPPRESSED = /outline\s*:\s*(none|0)\b/;
+
+for (const file of [...ROOTS.flatMap(walk), 'src/styles/base.css']) {
+  if (EXEMPT.has(file.split(sep).join('/'))) continue;
+  if (!existsSync(file)) continue;
+  const src = stripComments(readFileSync(file, 'utf8'));
+  if (!OUTLINE_SUPPRESSED.test(src)) continue;
+  if (!src.includes(':focus-visible')) {
+    const line = src.split('\n').findIndex((l) => OUTLINE_SUPPRESSED.test(l)) + 1;
+    fail.push(
+      `${file}:${line}  outline suppressed with no :focus-visible rule in the same file — ` +
+        `§10.6 never allows the focus ring to be removed without replacing it.`,
+    );
+  }
+}
+
 const LANG_TAG_ALLOWED = new Set(['span', 'li']);
 
 for (const file of ROOTS.flatMap(walk)) {
+  if (EXEMPT.has(file.split(sep).join('/'))) continue;
   if (!file.endsWith('.astro') && !file.endsWith('.tsx')) continue;
   const src = stripComments(readFileSync(file, 'utf8'));
   for (const m of src.matchAll(/<([a-zA-Z][\w.]*)\b[^>]*?\bdata-lang\b/g)) {

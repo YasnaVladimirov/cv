@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Runs the design and content lints that need no build (plan §8.3).
+#
+# Deliberately not husky or simple-git-hooks: both hang their installation off
+# a postinstall script, and pnpm blocks those by default — which turned every
+# `pnpm install` into a non-zero exit and took the lint script down with it.
+# A committed hooks directory plus `git config core.hooksPath` needs no
+# dependency and no install step at all.
+#
+# Enable once per clone:  pnpm hooks:install
+# Skip for one commit:    git commit --no-verify
+#
+# The build-dependent gates (Lighthouse, built-CSS, metadata, no-flash) are
+# not here on purpose — they need `pnpm build` first, which is too slow to sit
+# in front of every commit. CI runs those.
+set -e
+pnpm verify:source

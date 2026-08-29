@@ -24,8 +24,10 @@
     "verify:css": "node scripts/verify-css-output.mjs",
     "verify:no-flash": "node scripts/verify-no-flash.mjs",
     "verify:metadata": "node scripts/verify-metadata.mjs",
+    "verify:source": "pnpm lint && pnpm verify:values && pnpm verify:gradients && pnpm verify:i18n && pnpm verify:content",
     "lhci": "lhci autorun --config=lighthouserc.cjs",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "hooks:install": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.3.8",
