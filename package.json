@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "pnpm og && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
@@ -27,7 +27,8 @@
     "verify:source": "pnpm lint && pnpm verify:values && pnpm verify:gradients && pnpm verify:i18n && pnpm verify:content",
     "lhci": "lhci autorun --config=lighthouserc.cjs",
     "format": "prettier --write .",
-    "hooks:install": "git config core.hooksPath .githooks"
+    "hooks:install": "git config core.hooksPath .githooks",
+    "og": "node scripts/generate-og-images.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.3.8",

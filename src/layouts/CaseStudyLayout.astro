@@ -15,6 +15,7 @@ interface Props {
   description?: string;
   descriptionKey?: string;
   canonicalPath?: string;
+  ogImagePath?: string;
   ogType?: 'website' | 'article';
   structuredData?: Record<string, unknown>;
   /** Defaults to PUBLIC_CALENDLY_URL; §7.19's header CTA opens it in a new tab. */
@@ -27,6 +28,7 @@ const {
   description,
   descriptionKey,
   canonicalPath,
+  ogImagePath,
   ogType,
   structuredData,
   calendlyUrl = CALENDLY_URL,
@@ -39,6 +41,7 @@ const {
   {description}
   {descriptionKey}
   {canonicalPath}
+  {ogImagePath}
   {ogType}
   {structuredData}
 >

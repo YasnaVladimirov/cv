@@ -72,7 +72,7 @@ const article = {
   },
   inLanguage: 'en',
   mainEntityOfPage: new URL(`/work/${study.id}/`, Astro.site).href,
-  image: new URL(study.data.hero_image.src, Astro.site).href,
+  image: new URL(`/og/${study.id}.png`, Astro.site).href,
   // Both omitted rather than guessed when the source is absent.
   ...(study.data.date_published
     ? { datePublished: study.data.date_published.toISOString().slice(0, 10) }
@@ -91,6 +91,7 @@ const calendlyUrl = CALENDLY_URL || '/#contact';
   description={study.data.outcome_en}
   canonicalPath={`/work/${study.id}/`}
   ogType="article"
+  ogImagePath={`/og/${study.id}.png`}
   structuredData={article}
   calendlyUrl={calendlyUrl}
 >
