@@ -20,6 +20,7 @@ import T from '../../components/ui/T.astro';
 import TContent from '../../components/ui/TContent.astro';
 import { t, DEFAULT_LANG } from '../../lib/i18n';
 import { CALENDLY_URL } from '../../lib/calendly';
+import { pageTitle } from '../../lib/meta';
 
 export async function getStaticPaths() {
   const studies = (await getCollection('caseStudies', ({ data }) => data.published)).sort(
@@ -48,6 +49,8 @@ type Props = {
 const { study, previous, next, total } = Astro.props;
 const { Content } = await render(study);
 
+const siteName = t('hero.name', DEFAULT_LANG);
+
 // §4.9 sends the case-study CTAs straight to the calendar in a new tab: the
 // reader is at the end of an article on a page with no contact section of its
 // own, so #contact would be a link to nowhere.
@@ -55,8 +58,10 @@ const calendlyUrl = CALENDLY_URL || '/#contact';
 ---
 
 <CaseStudyLayout
-  title={study.data.title_en}
+  title={pageTitle(study.data.title_en, siteName)}
   description={study.data.outcome_en}
+  canonicalPath={`/work/${study.id}/`}
+  ogType="article"
   calendlyUrl={calendlyUrl}
 >
   <article id={study.id} class="mx-auto max-w-container px-4 py-24 sm:px-6 md:px-8 md:py-32">

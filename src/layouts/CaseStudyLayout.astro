@@ -14,14 +14,34 @@ interface Props {
   titleKey?: string;
   description?: string;
   descriptionKey?: string;
+  canonicalPath?: string;
+  ogType?: 'website' | 'article';
+  structuredData?: Record<string, unknown>;
   /** Defaults to PUBLIC_CALENDLY_URL; §7.19's header CTA opens it in a new tab. */
   calendlyUrl?: string;
 }
 
-const { title, titleKey, description, descriptionKey, calendlyUrl = CALENDLY_URL } = Astro.props;
+const {
+  title,
+  titleKey,
+  description,
+  descriptionKey,
+  canonicalPath,
+  ogType,
+  structuredData,
+  calendlyUrl = CALENDLY_URL,
+} = Astro.props;
 ---
 
-<BaseLayout {title} {titleKey} {description} {descriptionKey}>
+<BaseLayout
+  {title}
+  {titleKey}
+  {description}
+  {descriptionKey}
+  {canonicalPath}
+  {ogType}
+  {structuredData}
+>
   <Header slot="header" variant="case-study" calendlyUrl={calendlyUrl} />
   <slot />
   <Footer slot="footer" />

@@ -13,14 +13,15 @@ interface Props {
   titleKey?: string;
   description?: string;
   descriptionKey?: string;
+  structuredData?: Record<string, unknown>;
   /** [HUMAN] supplies the real Calendly URL in Phase 6. */
   calendlyUrl?: string;
 }
 
-const { title, titleKey, description, descriptionKey, calendlyUrl } = Astro.props;
+const { title, titleKey, description, descriptionKey, structuredData, calendlyUrl } = Astro.props;
 ---
 
-<BaseLayout {title} {titleKey} {description} {descriptionKey}>
+<BaseLayout {title} {titleKey} {description} {descriptionKey} {structuredData}>
   <Header slot="header" variant="home" calendlyUrl={calendlyUrl} />
 
   {
