@@ -3,12 +3,14 @@
 
 | | |
 |---|---|
-| **Document status** | v2.0 |
+| **Document status** | v2.1 |
 | **Companion to** | PRD v1.0, App Flow v1.0, Design System v1.3 |
 | **Audience** | Claude Code (executing agent) |
 | **Sequencing** | Phases run in strict order. Do not start Phase N+1 until Phase N's verification passes. |
 
 ### Changelog
+
+**v2.1** — Phase 8 build rules added to §8.0. Every new gate was negative-tested rather than assumed. Lighthouse asserts at two levels — the PRD's targets as warnings, a regression floor as errors — because the site's *observed* LCP is 41ms and the four-figure number is Lantern's simulated-Slow-4G projection against an uncompressed local server. Both languages are collected: Serbian needs a third font subset and runs measurably behind. `inlineStylesheets: 'always'` broke `verify:css` by removing the `.css` file it read; it now reads inlined `<style>` too. OG images are generated from glyph paths via fontkit, not `<text>`, and regenerate on every build. Git hooks are a committed `.githooks/` directory rather than a dependency. Two bugs found by walking: the language toggle rendered with JS off, and the `data-lang` lint matched `data-lang-toggle`.
 
 **v2.0** — Phase 7 build rules added to §7.0, and a new CI gate, `verify:metadata`, enforcing the phase's own verification list against the built output. Every absolute URL derives from `Astro.site`, so robots.txt became a route rather than a static file and step 7.5 stays one line. Placeholders are filtered out of JSON-LD rather than shipped invalid, `datePublished` is omitted rather than guessed from mtime, and `jsonLd()` escapes `<` so content cannot break out of the script block. `date_published` was added to the caseStudies schema as a coerced date.
 
@@ -936,6 +938,22 @@ Commit: `phase-7.5: set production site url` (deferred if domain not yet chosen)
 **Objective**: All Design System §11 automated and manual checks pass. Site meets every non-functional requirement in PRD §5.
 
 **Prerequisites**: Phase 7 complete.
+
+### 8.0 — General quality-gate build rules
+
+- **A gate that cannot fail is worse than no gate.** Every check added in this phase was broken on purpose to confirm it catches: the metadata gate against five separate rules, the focus-ring rule by renaming `:focus-visible`, the CSS gate by deleting a vendor prefix, the pre-commit hook by committing a hex literal, and the unit tests by mutating the code under them. A check nobody has seen fail is a check nobody knows works.
+- **Changing the build's output shape breaks the checks that read it.** `inlineStylesheets: 'always'` (added in 8.1 for the round trip) left no `.css` file in `dist/` at all, and `verify:css` — the gate protecting the glass recipe — started failing because it only looked for `*.css`. It now reads inlined `<style>` blocks too, and refuses to pass on an empty haystack.
+- **Lighthouse reports two numbers; know which one you are reading.** `observedLargestContentfulPaint` on this site is **41ms**. The four-figure LCP is Lantern projecting that onto simulated Slow 4G, against lhci's own server, which serves no compression and no HTTP/2. Assert against the model for regressions, and judge the PRD's field targets on the real deployment.
+- **Warn for the target, error for the floor.** The PRD's numbers stay visible in every run as warnings; CI blocks on a regression rather than on a gap that already exists. Deleting the target to make CI green loses the information permanently.
+- **Serbian is measurably slower and must be measured.** Every page is collected twice. SR needs the latin-ext subset for its diacritics — a third font file — and runs ~450ms behind EN in the model. A single-language Lighthouse run would never have shown it.
+- **Text in a generated image must be glyph paths, not `<text>`.** The rasteriser resolves fonts through system fontconfig, which has never heard of the Inter in `node_modules`, so a `<text>` element renders in a substitute — silently, on the one asset whose job is to look like the site.
+- **Do not install a git-hook manager.** husky and simple-git-hooks both hang installation off a postinstall script; pnpm blocks those by default, which turned `pnpm install` into a non-zero exit and took the lint script down with it. A committed `.githooks/` directory plus `git config core.hooksPath` needs no dependency and no install step.
+
+**Two bugs this phase's own walking found**, neither visible to any automated check:
+- The language toggle rendered with JavaScript off. Astro server-renders islands, so the button was in the HTML, looked live, and did nothing — App Flow §2.3 says it must not render at all. Fixed with a `<noscript>` rule.
+- The `data-lang` placement lint matched `data-lang-toggle`, because a hyphen is a word boundary. It blamed a component for a bug it did not have. Fixed with a negative lookahead.
+
+**Deviations:** `lighthouserc.cjs`, not `.mjs` — lhci 0.15 loads its config with `require()` and JSON-parses it, so an ES module fails outright. `total-blocking-time` stands in for the plan's INP assertion, which a lab run cannot produce at all.
 
 ### Step 8.1 — Lighthouse CI
 

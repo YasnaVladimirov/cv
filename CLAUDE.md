@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A bilingual (English / Serbian-Latin) CV & portfolio site for a frontend engineer. **The site is itself the work sample** — performance, accessibility, and code quality are the product, not decoration.
 
-**Current state: Phases 0–7 complete, except step 7.5.** Scaffold, tokens, content collections, the component library, page assembly, interactive systems, and external integrations are all built and deployed. Metadata, structured data, sitemap and robots are done; **step 7.5 is open** — `site` in `astro.config.mjs` is still `https://example.com`, and every absolute URL derives from it, so setting the real domain is a one-line change. Phase 8 (quality gates) is next and needs explicit human approval. The form and Calendly are live against real credentials; `PUBLIC_ANALYTICS_SITE_ID` is still unset, so analytics no-ops. Content is still fixtures and `TODO(human):` strings — real content lands in Phase 9.
+**Current state: Phases 0–8 complete, except steps 7.5, 8.6 and 8.7.** Scaffold, tokens, content collections, the component library, page assembly, interactive systems, and external integrations are all built and deployed. Metadata, structured data, sitemap and robots are done; **step 7.5 is open** — `site` in `astro.config.mjs` is still `https://example.com`, and every absolute URL derives from it, so setting the real domain is a one-line change. Quality gates are in: Lighthouse CI, 51 unit tests, the design lints and a pre-commit hook, `docs/manual-qa-checklist.md` walked in both languages, and generated OG images. **Still open:** 8.6 real-device and 8.7 screen-reader passes are [HUMAN]. Phase 9 (content integration) is next and needs explicit human approval. The form and Calendly are live against real credentials; `PUBLIC_ANALYTICS_SITE_ID` is still unset, so analytics no-ops. Content is still fixtures and `TODO(human):` strings — real content lands in Phase 9.
 
 Origin is `github.com/YasnaVladimirov/cv`. Push works over git; `gh` is authenticated to a different (JET) GitHub Enterprise host, so `gh` API commands fail against this repo — use plain `git`.
 
@@ -14,7 +14,7 @@ Origin is `github.com/YasnaVladimirov/cv`. Push works over git; `gh` is authenti
 
 Read specific document only when relevant. On conflict, higher wins; if they genuinely disagree, **ask the human — do not resolve it yourself** (`docs/implementation-plan-portfolio-website.md` §0.1).
 
-1. `docs/implementation-plan-portfolio-website.md` (v2.0) — what to build, in what order, and definition-of-done per phase. **Read its Changelog first.**
+1. `docs/implementation-plan-portfolio-website.md` (v2.1) — what to build, in what order, and definition-of-done per phase. **Read its Changelog first.**
 2. `docs/design-system-portfolio-website.md` (v1.3) — every visual and component decision (tokens, prohibitions, component specs §7)
 3. `docs/app-flow-portfolio-website.md` — navigation, state, interaction; the cross-cutting state matrix (§6) is the pre-launch verification grid
 4. `docs/prd-portfolio-website.md` — goals, scope, non-functional targets
@@ -96,6 +96,9 @@ pnpm verify:fonts     # font subset check (Serbian glyphs)
 pnpm verify:i18n      # i18n key parity check
 pnpm verify:no-flash  # pre-paint language script precedes all styles
 pnpm verify:metadata  # titles, descriptions, canonicals, JSON-LD, robots
+pnpm verify:source    # everything that needs no build — what pre-commit runs
+pnpm og               # regenerate the OG share images (runs on every build)
+pnpm hooks:install    # enable the pre-commit hook, once per clone
 pnpm lhci             # Lighthouse CI locally
 ```
 
