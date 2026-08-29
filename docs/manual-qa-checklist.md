@@ -184,6 +184,28 @@ Set at OS level, not just in DevTools.
 
 ## Cross-browser (§8.5)
 
+**Findings, 2026-08-29.** Only Chromium was driveable from the build environment,
+so Firefox and Safari remain open. Two of the three risk areas are structurally
+guaranteed rather than browser-tested, and it is worth being precise about the
+difference:
+
+- **`-webkit-backdrop-filter` survives the build.** `verify:css` reads `dist/`
+  and fails if either spelling is missing — added in Phase 3 after the CSS
+  minifier silently dropped the prefixed one, which would have removed the
+  blur on Safari 16.4–17 with no error anywhere. That proves the declaration
+  ships. It does **not** prove Safari renders it; only Safari does.
+- **Both glass fallbacks are in the cascade**, confirmed by reading the live
+  stylesheet: `@supports not (backdrop-filter: blur(1px))` and
+  `@media (prefers-reduced-transparency: reduce)`, each targeting
+  `.glass, .glass-strong`, plus a third removing the backdrop shapes. The
+  Firefox check below is what confirms the first one actually takes effect.
+- **`scroll-margin-top` lands correctly in Chromium** — every anchor stops the
+  section top at exactly 88px, header + 16px per §5.5. Safari is the one to
+  re-check, since this is where content most often ends up under a sticky
+  header.
+
+
+
 | Browser | Check | Status |
 |---|---|---|
 | Chrome | full walk | pass (Chromium 1200) |
