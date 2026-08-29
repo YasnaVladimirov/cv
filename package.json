@@ -24,6 +24,7 @@
     "verify:css": "node scripts/verify-css-output.mjs",
     "verify:no-flash": "node scripts/verify-no-flash.mjs",
     "verify:metadata": "node scripts/verify-metadata.mjs",
+    "verify:no-fixtures": "node scripts/verify-no-fixtures.mjs",
     "verify:source": "pnpm lint && pnpm verify:values && pnpm verify:gradients && pnpm verify:i18n && pnpm verify:content",
     "lhci": "lhci autorun --config=lighthouserc.cjs",
     "format": "prettier --write .",
