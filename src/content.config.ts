@@ -41,6 +41,18 @@ const caseStudies = defineCollection({
       hero_image_alt_en: z.string().min(1),
       hero_image_alt_sr: z.string().min(1),
       /**
+       * Publication date, for JSON-LD `datePublished` (plan §7.3).
+       *
+       * `coerce` because YAML parses an unquoted `2026-02-09` into a Date and
+       * a quoted one into a string, and a content author should not have to
+       * know which. Either is accepted; an unparseable value still fails.
+       *
+       * Optional: file mtime was the alternative and it is not stable across
+       * a fresh checkout or a CI runner, so an absent date beats an invented
+       * one — the property is simply omitted.
+       */
+      date_published: z.coerce.date().optional(),
+      /**
        * Unpublished entries generate no route, so a request 404s to S3.
        * This is the switch that drives the 1/2/3-card layouts in App Flow 4.3.
        */

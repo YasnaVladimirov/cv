@@ -10,11 +10,36 @@ import Hero from '../components/sections/Hero.astro';
 import ProofStrip from '../components/sections/ProofStrip.astro';
 import Timeline from '../components/sections/Timeline.astro';
 import CaseStudies from '../components/sections/CaseStudies.astro';
+import { t, DEFAULT_LANG } from '../lib/i18n';
+import { realUrls } from '../lib/meta';
 import SkillMatrix from '../components/sections/SkillMatrix.astro';
 import Contact from '../components/sections/Contact.astro';
+
+// Person schema (PRD §5.3). The primary SEO objective is branded search, and
+// this is what tells a search engine that the name, the job title and the
+// profiles all belong to one person.
+const sameAs = realUrls([
+  t('social.githubUrl', DEFAULT_LANG),
+  t('social.linkedinUrl', DEFAULT_LANG),
+]);
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: t('hero.name', DEFAULT_LANG),
+  jobTitle: t('hero.title', DEFAULT_LANG),
+  url: Astro.site?.href,
+  // Omitted entirely while the dictionary still holds TODO placeholders:
+  // an invalid URL here fails validation for the whole block.
+  ...(sameAs.length > 0 ? { sameAs } : {}),
+};
 ---
 
-<HomeLayout titleKey="meta.default.title" descriptionKey="meta.default.description">
+<HomeLayout
+  titleKey="meta.default.title"
+  descriptionKey="meta.default.description"
+  structuredData={person}
+>
   <Hero />
   {
     /*

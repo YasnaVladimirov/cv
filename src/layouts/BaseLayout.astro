@@ -10,6 +10,7 @@
 import '../styles/base.css';
 import applyLanguage from '../scripts/apply-language.js?raw';
 import { t, DEFAULT_LANG, HTML_LANG } from '../lib/i18n';
+import { jsonLd } from '../lib/meta';
 import SkipToContent from '../components/layout/SkipToContent.astro';
 import ToastHost from '../components/interactive/Toast';
 import ResumeToast from '../components/interactive/ResumeToast';
@@ -112,7 +113,7 @@ const siteName = t('hero.name', DEFAULT_LANG);
 
     {
       structuredData && (
-        <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline />
+        <script type="application/ld+json" set:html={jsonLd(structuredData)} is:inline />
       )
     }
   </head>

@@ -20,7 +20,7 @@ import T from '../../components/ui/T.astro';
 import TContent from '../../components/ui/TContent.astro';
 import { t, DEFAULT_LANG } from '../../lib/i18n';
 import { CALENDLY_URL } from '../../lib/calendly';
-import { pageTitle } from '../../lib/meta';
+import { articleExcerpt, pageTitle, realUrls } from '../../lib/meta';
 
 export async function getStaticPaths() {
   const studies = (await getCollection('caseStudies', ({ data }) => data.published)).sort(
@@ -48,8 +48,37 @@ type Props = {
 
 const { study, previous, next, total } = Astro.props;
 const { Content } = await render(study);
+const excerpt = articleExcerpt(study.body ?? '');
 
 const siteName = t('hero.name', DEFAULT_LANG);
+
+// Article schema (PRD §5.3). `author` is the same Person the home page
+// declares, so a crawler can join the two.
+const authorUrls = realUrls([
+  t('social.githubUrl', DEFAULT_LANG),
+  t('social.linkedinUrl', DEFAULT_LANG),
+]);
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: study.data.title_en,
+  description: study.data.outcome_en,
+  author: {
+    '@type': 'Person',
+    name: siteName,
+    url: Astro.site?.href,
+    ...(authorUrls.length > 0 ? { sameAs: authorUrls } : {}),
+  },
+  inLanguage: 'en',
+  mainEntityOfPage: new URL(`/work/${study.id}/`, Astro.site).href,
+  image: new URL(study.data.hero_image.src, Astro.site).href,
+  // Both omitted rather than guessed when the source is absent.
+  ...(study.data.date_published
+    ? { datePublished: study.data.date_published.toISOString().slice(0, 10) }
+    : {}),
+  ...(excerpt ? { articleBody: excerpt } : {}),
+};
 
 // §4.9 sends the case-study CTAs straight to the calendar in a new tab: the
 // reader is at the end of an article on a page with no contact section of its
@@ -62,6 +91,7 @@ const calendlyUrl = CALENDLY_URL || '/#contact';
   description={study.data.outcome_en}
   canonicalPath={`/work/${study.id}/`}
   ogType="article"
+  structuredData={article}
   calendlyUrl={calendlyUrl}
 >
   <article id={study.id} class="mx-auto max-w-container px-4 py-24 sm:px-6 md:px-8 md:py-32">
