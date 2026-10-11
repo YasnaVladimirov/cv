@@ -27,7 +27,7 @@ import TimelineEntry from '../components/content/TimelineEntry.astro';
 import CaseStudyCard from '../components/content/CaseStudyCard.astro';
 import TestimonialCard from '../components/content/TestimonialCard.astro';
 import { getCollection } from 'astro:content';
-import fixtureAvatar from '../content/case-studies/fixture-1.png';
+import fixtureAvatar from '../content/case-studies/chatbot-handover.png';
 import ToastHost from '../components/interactive/Toast';
 import LanguageToggle from '../components/interactive/LanguageToggle';
 import StickyFAB from '../components/interactive/StickyFAB';
@@ -259,7 +259,7 @@ const caseStudies = (await getCollection('caseStudies'))
 
     <Section id="timeline" spec="§7.14" title="Timeline entry">
       <Case
-        label="unfiltered — four fixture roles"
+        label="unfiltered — all roles"
         wide
         note="The first has end: null and reads as Present, translated. Dates go through Intl, never a template: switch language and the month abbreviation changes with it. The fourth role has no case study, so no link renders — that is content deciding, not a prop."
       >
@@ -283,8 +283,12 @@ const caseStudies = (await getCollection('caseStudies'))
         note="What a skill filter looks like once Phase 5 wires it. The match gains a 2px accent edge and indents to meet it; the non-match drops to 0.35 opacity. Both come from one data attribute, so applying a filter is a single write per entry."
       >
         <div class="w-full">
+          {
+            /* Same role twice: the gallery is demonstrating the two filter
+              states, not two jobs, and the collection may hold only one. */
+          }
           <TimelineEntry role={roles[0].data} filter="match" />
-          <TimelineEntry role={roles[1].data} filter="out" />
+          <TimelineEntry role={roles[0].data} filter="out" />
         </div>
       </Case>
     </Section>

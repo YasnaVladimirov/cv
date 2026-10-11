@@ -5,9 +5,13 @@
  * The layout is a function of how many case studies are published, because
  * the launch state may well be one. One card is a deliberate spotlight, not a
  * grid missing two members; zero removes the section entirely rather than
- * leaving a heading over nothing. Publishing a fourth study is a content
- * change, and the fallback keeps the three-card grid rather than inventing a
- * layout this document does not specify.
+ * leaving a heading over nothing.
+ *
+ * App Flow §4.3 specifies 1, 2 and 3. Four was added on the human's explicit
+ * instruction (Phase 9) because the content called for it: four in a
+ * three-column grid leaves one card orphaned on its own row. Four renders 2×2,
+ * reusing the `pair` column count. Five or more still fall back to the
+ * three-column grid — that is the last count this file is willing to guess at.
  */
 import { getCollection } from 'astro:content';
 import Section from './Section.astro';
@@ -18,14 +22,27 @@ const studies = (await getCollection('caseStudies', ({ data }) => data.published
   (a, b) => a.data.order - b.data.order,
 );
 
-const layout = studies.length === 1 ? 'spotlight' : studies.length === 2 ? 'pair' : 'grid';
+const layout =
+  studies.length === 1
+    ? 'spotlight'
+    : studies.length === 2
+      ? 'pair'
+      : studies.length === 4
+        ? 'quad'
+        : 'grid';
 
 // §5.3. A single card is full width, so it needs no grid at all.
 const GRID = {
   spotlight: '',
   pair: 'grid grid-cols-1 gap-6 md:grid-cols-2',
+  quad: 'grid grid-cols-1 gap-6 md:grid-cols-2',
   grid: 'grid grid-cols-1 gap-6 md:grid-cols-3',
 } as const;
+
+// A 2×2 cell is the same width as a pair cell, and the card only
+// distinguishes spotlight from everything else (§7.10), so `quad` has no
+// card-level meaning to add.
+const cardLayout = layout === 'quad' ? 'pair' : layout;
 ---
 
 {
@@ -51,7 +68,7 @@ const GRID = {
             image={study.data.hero_image}
             imageAlt_en={study.data.hero_image_alt_en}
             imageAlt_sr={study.data.hero_image_alt_sr}
-            layout={layout}
+            layout={cardLayout}
           />
         ))}
       </div>

@@ -1,0 +1,155 @@
+---
+_draft: 'DRAFT — not committed. The reflection is a candidate — you said "idk". Approve, replace, or tell me to cut the section down to one honest line. Check: is "with a colleague" right for the whole trial, or just the presentation? metrics empty and date_published omitted — no real numbers. Serbian drafted by Claude, needs review.'
+order: 3
+title_en: 'Evaluating two spec-driven development frameworks'
+title_sr: 'Procena dva radna okvira za razvoj vođen specifikacijom'
+outcome_en: 'Trialled two spec-driven development frameworks on real migration work, compared them on how a team would actually use them, and reported the result.'
+outcome_sr: 'Isprobavanje dva radna okvira za razvoj vođen specifikacijom na stvarnom poslu migracije, poređenje po tome kako bi ih tim zaista koristio i izveštaj o rezultatu.'
+metrics: []
+stack: ['OpenSpec', 'SpecKit', 'Vue 3']
+hero_image: './spec-driven-trial.png'
+hero_image_alt_en: 'DRAFT placeholder image — replace with a real screenshot or remove.'
+hero_image_alt_sr: 'NACRT rezervna slika — zameniti pravom slikom ili ukloniti.'
+published: true
+---
+
+<div data-lang="en">
+
+## Context
+
+Spec-driven development frameworks ask you to write a specification first and
+let it drive the implementation. Two of them — GitHub's SpecKit and Fission's
+OpenSpec — looked worth understanding.
+
+## Problem
+
+Nobody asked for this. That is the honest framing: I wanted to know whether
+these tools actually improve the output, or just add ceremony around work that
+would have happened anyway.
+
+A question like that is easy to answer badly. Read the documentation, form an
+opinion, recommend the one with the better README.
+
+## My role
+
+A colleague and I each ran the trial independently. We compared conclusions
+afterwards, found we had reached the same one, and presented it together.
+
+## Approach
+
+I used them on real work rather than on a toy problem — both frameworks, on the
+Vue 2 to Vue 3 migrations I was doing anyway. A tool that helps on an invented
+example and not on the actual codebase has told you nothing.
+
+Running it twice, separately, was worth the duplication. Two people who like
+the same tool for the same reasons is a weaker signal than two people who
+arrive there without comparing notes first.
+
+I compared them on the things that decide whether a team keeps using a tool
+after the first week: how easy it is to navigate, how many artifacts it
+generates, how much effort a review costs, and how verbose it is.
+
+OpenSpec won on all four. Fewer artifacts, easier to navigate, easier to
+review, less verbose — a better fit for small-to-medium tasks, which is most of
+what we did.
+
+## Outcome
+
+We presented both to the team with the recommendation, including which one to
+reach for and when.
+
+The team did not adopt it — and that was the right outcome. Adoption has a real
+cost: everyone has to learn it before anyone benefits. Against that, the
+existing practice of Confluence pages, READMEs, runbooks and ADRs was already
+adequate for the size of the projects we owned. Nobody could point to a
+meaningful improvement it would buy us.
+
+The team saw the potential and it stays on the table for larger work. A trial
+that produces an honest "not yet" has still answered the question.
+
+## Stack
+
+OpenSpec, SpecKit, Vue 3.
+
+## What I would do differently
+
+DRAFT — approve this or replace it.
+
+I evaluated on the work in front of me, which was small-to-medium and already
+well understood. That is exactly the case where documentation practice is
+adequate, so the result was close to decided before I started. To find out
+whether these tools earn their cost, I would have to trial one on the work
+where our existing documents actually fall short — something large, or
+unfamiliar, or handed over from another team.
+
+</div>
+
+<div data-lang="sr">
+
+## Kontekst
+
+Radni okviri za razvoj vođen specifikacijom traže da prvo napišeš
+specifikaciju, koja onda vodi implementaciju. Dva takva — GitHub SpecKit i
+Fission OpenSpec — delovala su vredno razumevanja.
+
+## Problem
+
+Niko to nije tražio. To je poštena postavka: htela sam da saznam da li ti alati
+zaista poboljšavaju rezultat ili samo dodaju formu oko posla koji bi se ionako
+uradio.
+
+Na takvo pitanje lako je loše odgovoriti. Pročitaš dokumentaciju, stekneš
+utisak i preporučiš onaj sa lepšim README fajlom.
+
+## Moja uloga
+
+Kolega i ja smo probu sproveli odvojeno, svako za sebe. Posle smo uporedili
+zaključke, utvrdili da smo došli do istog i zajedno ga predstavili.
+
+## Pristup
+
+Koristila sam ih na stvarnom poslu, a ne na izmišljenom primeru — oba radna
+okvira, na migracijama sa Vue 2 na Vue 3 koje sam ionako radila. Alat koji
+pomaže na izmišljenom primeru, a ne i na stvarnom kodu, nije rekao ništa.
+
+To što je proba rađena dvaput, odvojeno, vredelo je udvostručenog posla. Dvoje
+ljudi kojima se isti alat sviđa iz istih razloga slabiji je pokazatelj od dvoje
+koji do toga dođu bez prethodnog dogovaranja.
+
+Poredila sam ih po onome što odlučuje da li će tim nastaviti da koristi alat
+posle prve nedelje: koliko je lako snalaziti se u njemu, koliko artefakata
+stvara, koliko košta pregled i koliko je opširan.
+
+OpenSpec je bio bolji po sve četiri stavke. Manje artefakata, lakše snalaženje,
+lakši pregled, manje opširnosti — bolji izbor za male i srednje zadatke, a to je
+bio najveći deo našeg posla.
+
+## Rezultat
+
+Predstavili smo oba tima uz preporuku, uključujući i to kada koji posegnuti.
+
+Tim ga nije usvojio — i to je bio ispravan ishod. Usvajanje ima stvarnu cenu:
+svi moraju da ga nauče pre nego što iko od toga ima koristi. Nasuprot tome,
+postojeća praksa sa Confluence stranicama, README fajlovima, runbook-ovima i
+ADR dokumentima već je bila dovoljna za veličinu projekata koje smo održavali.
+Niko nije mogao da ukaže na značajno poboljšanje koje bi nam to donelo.
+
+Tim je video potencijal i to ostaje otvoreno za veće poslove. Proba koja daje
+pošteno „ne još“ ipak je odgovorila na pitanje.
+
+## Tehnologije
+
+OpenSpec, SpecKit, Vue 3.
+
+## Šta bih uradila drugačije
+
+NACRT — odobri ovo ili zameni.
+
+Procenjivala sam na poslu koji je bio preda mnom, a on je bio malog do srednjeg
+obima i već dobro poznat. To je upravo slučaj u kojem je praksa dokumentovanja
+dovoljna, pa je ishod bio skoro odlučen pre nego što sam počela. Da bih saznala
+da li ti alati vrede svoje cene, morala bih da ih isprobam na poslu na kojem
+naši postojeći dokumenti zaista ne pomažu — nečemu velikom, nepoznatom ili
+preuzetom od drugog tima.
+
+</div>

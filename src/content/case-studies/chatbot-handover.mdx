@@ -1,0 +1,145 @@
+---
+_draft: 'DRAFT — not committed. ??? blocks need real answers: the Problem, the Outcome, and the reflection. `metrics` empty and `date_published` omitted on purpose — no real numbers. Serbian drafted by Claude, needs review.'
+order: 4
+title_en: 'Taking over someone else’s chatbot'
+title_sr: 'Preuzimanje tuđeg chatbota'
+outcome_en: 'DRAFT — inherited a chatbot application from another team and got it to a state my team could run, test and release.'
+outcome_sr: 'NACRT — preuzimanje chatbot aplikacije od drugog tima i dovođenje u stanje u kojem je moj tim može pokretati, testirati i izdati.'
+metrics: []
+stack: ['Python', 'TypeScript', 'React']
+hero_image: './chatbot-handover.png'
+hero_image_alt_en: 'DRAFT placeholder image — replace with a real screenshot or remove.'
+hero_image_alt_sr: 'NACRT rezervna slika — zameniti pravom slikom ili ukloniti.'
+published: false
+---
+
+<div data-lang="en">
+
+## Context
+
+A chatbot application inside a partner-facing web portal, letting business
+partners change their account settings by typing what they want instead of
+finding the right settings screen. Another team built it. It was moving to
+mine, and I was the one responsible for the move.
+
+## Problem
+
+??? What actually made this hard? Pick the ones that are true:
+
+- the code was spread across several repositories
+- nobody on my team had run the service before
+- we had no access to the services it depends on
+- it was not documented
+- something else
+
+## My role
+
+I owned the handover end to end. Not the original build — the transfer, and
+everything the team needed to own it afterwards.
+
+## Approach
+
+Three things had to be true before my team could call it ours.
+
+**The code had to live in one place.** It was spread across more than one
+repository, so I consolidated it into ours.
+
+**The team had to be able to run it.** That meant obtaining service access and
+credentials, and submitting the changes that registered us with every system
+the chatbot talks to. Unglamorous, and nothing works until it is done.
+
+**The knowledge could not stay with one person.** I presented the system —
+architecture, tools, knowledge base, prompt design, memory — to my team and
+beyond it, because a handover that ends with one person who understands the
+service is not finished.
+
+Then I tested it, fixed what the transfer left behind, and prepared it for
+release. One change I made along the way: the assistant used to confirm
+actions by reading typed replies. I replaced that with explicit confirm and
+cancel buttons, so intent could not be misread from free text.
+
+## Outcome
+
+??? Did it reach release? Is the team running it independently now? Any number
+at all — time to first deploy, issues found in testing? If there is none, this
+section says what shipped and stops.
+
+## Stack
+
+Python, TypeScript, React, and a hosted LLM provider.
+
+## What I would do differently
+
+??? Needs your answer. What went wrong, or slower than it should have?
+
+Candidates, if any are true: chasing access one service at a time instead of
+listing everything up front; presenting the architecture at the end rather
+than while learning it; testing only after the move rather than during.
+
+</div>
+
+<div data-lang="sr">
+
+## Kontekst
+
+Chatbot aplikacija unutar veb portala za partnere, koja poslovnim partnerima
+omogućava da podešavanja naloga menjaju tako što napišu šta žele, umesto da
+traže odgovarajući ekran. Napravio ju je drugi tim. Prelazila je u moj, a ja
+sam bila zadužena za taj prelazak.
+
+## Problem
+
+??? Šta je ovo zapravo činilo teškim? Izaberi ono što je tačno:
+
+- kod je bio razbacan po više repozitorijuma
+- niko u mom timu nije ranije pokretao servis
+- nismo imali pristup servisima od kojih zavisi
+- nije bilo dokumentacije
+- nešto drugo
+
+## Moja uloga
+
+Vodila sam preuzimanje od početka do kraja. Ne originalnu izradu — prelazak, i
+sve što je timu bilo potrebno da posle toga bude vlasnik.
+
+## Pristup
+
+Tri stvari su morale da budu ispunjene pre nego što tim to nazove svojim.
+
+**Kod je morao da bude na jednom mestu.** Bio je razbacan po više
+repozitorijuma, pa sam ga objedinila u naš.
+
+**Tim je morao da može da ga pokrene.** To je značilo obezbeđivanje pristupa
+servisima i pristupnih podataka, kao i izmene kojima smo registrovani u svakom
+sistemu sa kojim chatbot komunicira. Nezahvalno, a ništa ne radi dok se ne
+uradi.
+
+**Znanje nije smelo da ostane kod jedne osobe.** Predstavila sam sistem —
+arhitekturu, alate, bazu znanja, dizajn prompta, memoriju — svom timu i šire,
+jer preuzimanje posle kojeg samo jedna osoba razume servis nije završeno.
+
+Zatim sam ga testirala, ispravila ono što je prelazak ostavio i pripremila ga za
+izdanje. Jedna izmena usput: asistent je ranije potvrđivao akcije čitanjem
+otkucanih odgovora. Zamenila sam to izričitim dugmadima za potvrdu i
+otkazivanje, da se namera ne bi pogrešno tumačila iz slobodnog teksta.
+
+## Rezultat
+
+??? Da li je stiglo do izdanja? Da li tim sada samostalno održava servis? Bilo
+kakav podatak — vreme do prvog postavljanja, broj problema nađenih u
+testiranju? Ako ga nema, ovaj deo navodi šta je isporučeno i tu staje.
+
+## Tehnologije
+
+Python, TypeScript, React i LLM provajder.
+
+## Šta bih uradila drugačije
+
+??? Potreban je tvoj odgovor. Šta je krenulo naopako ili sporije nego što je
+trebalo?
+
+Mogućnosti, ako je nešto od ovoga tačno: traženje pristupa servis po servis
+umesto da sam sve popisala unapred; predstavljanje arhitekture na kraju umesto
+tokom učenja; testiranje tek posle prelaska umesto tokom njega.
+
+</div>

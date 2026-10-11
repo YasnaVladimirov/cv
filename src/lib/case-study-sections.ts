@@ -27,6 +27,9 @@ export const SECTION_EYEBROW: Record<string, string> = {
   Pristup: 'caseStudy.eyebrow.approach',
   Rezultat: 'caseStudy.eyebrow.outcome',
   Tehnologije: 'caseStudy.eyebrow.stack',
+  // Serbian past tense is gendered, so the reflection heading has two forms.
+  // Both map to the same eyebrow; the content decides which one it uses.
+  'Šta bih uradila drugačije': 'caseStudy.eyebrow.reflection',
   'Šta bih uradio drugačije': 'caseStudy.eyebrow.reflection',
 };
 

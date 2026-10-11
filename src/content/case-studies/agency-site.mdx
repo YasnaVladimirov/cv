@@ -1,0 +1,147 @@
+---
+_draft: 'DRAFT — not committed. The client is deliberately unnamed: the NDA lists client lists as confidential and carries no public-domain exception. Name it only with written permission. The reflection is a candidate, not your words. Approve or replace. The page count and the bilingual mechanism are left out on purpose — you did not remember them and I will not invent either. metrics empty and date_published omitted — no real numbers. Serbian drafted by Claude, needs review.'
+order: 5
+title_en: 'Generating a portfolio site instead of hand-writing it'
+title_sr: 'Generisanje sajta portfolija umesto ručnog pisanja stranica'
+outcome_en: 'Built a design agency’s bilingual site from Figma as a static site whose project pages are generated from data, not copied one file at a time. Live.'
+outcome_sr: 'Izrada dvojezičnog sajta jedne dizajn agencije po Figma dizajnu, kao statičkog sajta čije se stranice projekata generišu iz podataka, umesto da se kopiraju jedna po jedna. Sajt je u produkciji.'
+metrics: []
+stack: ['JavaScript', 'SCSS', 'Handlebars', 'Panini', 'Gulp']
+hero_image: './agency-site.png'
+hero_image_alt_en: 'DRAFT placeholder image — replace with a real screenshot or remove.'
+hero_image_alt_sr: 'NACRT rezervna slika — zameniti pravom slikom ili ukloniti.'
+published: true
+---
+
+<div data-lang="en">
+
+## Context
+
+A design agency needed its own site, built from scratch: home, about, services,
+a project gallery with a detail page per project, and contact. The designs were
+made in-house in Figma. I built the client side. A colleague built the backend.
+
+This was the project I spent most of two years on.
+
+## Problem
+
+The whole point of an agency's site is the project pages, and there are a lot
+of them. They share one layout and differ only in content.
+
+The obvious way to build that is to copy a page, paste it, and change the text
+and the images. It is fast on the first day and it charges you for it every day
+after. A layout change means editing every file. Adding a project means adding a
+file. The pages drift apart, because nothing forces them to stay the same.
+
+## My role
+
+I built the entire client side, working from the designer's Figma files. The
+visual decisions were theirs. How the site was put together was mine.
+
+## Approach
+
+**One layout, many pages.** I wrote the project page once as a template, and
+kept each project's content as data. The build generates one page per entry.
+Adding a project is a data change, not a new file, and a layout change happens
+in one place.
+
+That decision is the reason the site was still cheap to change a year later.
+
+**Custom responsive, not the framework's grid.** The starter template shipped
+with a grid system. I did the responsive work by hand instead, with breakpoints
+chosen for these layouts, because the designs did not fit a generic column grid
+and forcing them into one would have cost more than writing the rules directly.
+
+**The About page.** I built that page on its own, end to end. It carries most of
+the site's animation, and it is the page where the design asked for the most.
+
+One honest note: the build pipeline came with the starter template. I used it and
+extended the site on top of it, but I did not set it up.
+
+## Outcome
+
+The site is live, and the version running now is the one I built.
+
+## Stack
+
+JavaScript, SCSS, Handlebars templating through Panini, on a Gulp build.
+
+## What I would do differently
+
+DRAFT — approve this or replace it.
+
+I made the project pages a structural decision and got that right. I did not do
+the same for the second language — which is why, asked about it now, I cannot
+tell you how it worked. It came with the setup rather than from a choice I made.
+A site that ships in two languages should treat the second one as part of the
+structure from the start, the way the project pages were.
+
+</div>
+
+<div data-lang="sr">
+
+## Kontekst
+
+Dizajn agenciji je bio potreban sopstveni sajt, izrađen od nule: početna, o
+nama, usluge, galerija projekata sa zasebnom stranicom po projektu i kontakt.
+Dizajn je rađen interno, u Figmi. Ja sam radila klijentsku stranu. Kolega je
+radio bekend.
+
+Na tom projektu sam provela najviše vremena tokom dve godine.
+
+## Problem
+
+Suština sajta jedne agencije jesu stranice projekata, a ima ih mnogo. Dele isti
+raspored i razlikuju se samo po sadržaju.
+
+Očigledan način da se to napravi jeste da se stranica kopira i da se zamene
+tekst i slike. To je brzo prvog dana, a naplaćuje se svakog sledećeg. Izmena
+rasporeda znači izmenu svake datoteke. Dodavanje projekta znači novu datoteku.
+Stranice vremenom počnu da se razilaze, jer ih ništa ne drži istim.
+
+## Moja uloga
+
+Napravila sam celu klijentsku stranu, radeći po Figma datotekama dizajnera.
+Vizuelne odluke bile su njihove. Način na koji je sajt sastavljen bio je moj.
+
+## Pristup
+
+**Jedan raspored, mnogo stranica.** Stranicu projekta napisala sam jednom, kao
+šablon, a sadržaj svakog projekta držala sam kao podatke. Build generiše po jednu
+stranicu za svaki unos. Dodavanje projekta je izmena podataka, a ne nova
+datoteka, dok se izmena rasporeda radi na jednom mestu.
+
+Zbog te odluke je sajt i godinu dana kasnije ostao jeftin za izmene.
+
+**Sopstveno prilagođavanje ekranima, a ne mreža radnog okvira.** Početni šablon
+je dolazio sa sistemom mreže. Umesto njega, prilagođavanje ekranima radila sam
+ručno, sa prelomnim tačkama biranim za ove konkretne rasporede, jer dizajn nije
+odgovarao opštoj mreži kolona, a uklapanje na silu koštalo bi više nego da
+pravila napišem direktno.
+
+**Stranica „O nama“.** Tu stranicu sam napravila zasebno, od početka do kraja. Na
+njoj je najveći deo animacija na sajtu i to je stranica na kojoj je dizajn
+tražio najviše.
+
+Jedna poštena napomena: build je došao uz početni šablon. Koristila sam ga i na
+njemu gradila sajt, ali ga nisam ja postavila.
+
+## Rezultat
+
+Sajt je u produkciji, a verzija koja sada radi jeste ona koju sam napravila.
+
+## Tehnologije
+
+JavaScript, SCSS, Handlebars šabloni kroz Panini, uz Gulp build.
+
+## Šta bih uradila drugačije
+
+NACRT — odobri ovo ili zameni.
+
+Stranice projekata sam tretirala kao strukturnu odluku i to sam uradila kako
+treba. Isto to nisam uradila i za drugi jezik — zbog čega danas, na pitanje kako
+je radio, ne umem da odgovorim. Došao je uz postavku, a ne iz odluke koju sam
+donela. Sajt koji izlazi na dva jezika treba da drugi jezik od početka tretira
+kao deo strukture, kao što je bio slučaj sa stranicama projekata.
+
+</div>

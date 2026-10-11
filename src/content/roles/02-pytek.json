@@ -1,0 +1,29 @@
+{
+  "_draft": "DRAFT — not committed. No metrics, none are known. Client names deliberately absent: the NDA lists client lists as confidential and has no public-domain carve-out. Swap to real names only if Pytek gives written permission. Serbian drafted by Claude, needs review — see the gender note in chat. Bullet 1 assumes the agency site was one long-running project rather than several sites from the same designer; correct that line if wrong.",
+  "order": 2,
+  "company": "Pytek Ltd.",
+  "role_en": "Frontend Developer",
+  "role_sr": "Frontend developer",
+  "start": "2023-11",
+  "end": "2025-11",
+  "location_en": "Sofia, Bulgaria",
+  "location_sr": "Sofija, Bugarska",
+  "bullets_en": [
+    "Built the frontend of a design agency's bilingual site from Figma, from scratch — the project that took the largest share of two years. Templated so that project pages are generated from data rather than maintained one file at a time.",
+    "Built that site's About page end to end on my own, its most animation-heavy page, and made every project I worked on responsive with custom breakpoints rather than a framework grid.",
+    "Maintained and developed two client mobile applications in React Native.",
+    "Ran staging and production releases to Google Play and the App Store, and diagnosed and completed the company's first Huawei AppGallery release after an earlier attempt stalled mid-submission.",
+    "Built the React frontend of an internal log monitoring tool, and took part in the architecture discussions that decided what it would show and how.",
+    "Maintained legacy jQuery sites alongside new work, and reviewed other developers' code."
+  ],
+  "bullets_sr": [
+    "Izrada frontend dela dvojezičnog sajta jedne dizajn agencije po Figma dizajnu, od nule — projekat na kojem je provedeno najviše vremena tokom dve godine. Postavljen tako da se stranice projekata generišu iz podataka, umesto da se održavaju datoteka po datoteka.",
+    "Samostalna izrada stranice „O nama“ na tom sajtu, stranice sa najviše animacija, i prilagođavanje svih projekata veličinama ekrana sopstvenim prelomnim tačkama umesto gotovom mrežom radnog okvira.",
+    "Održavanje i razvoj dve klijentske mobilne aplikacije u React Native-u.",
+    "Objavljivanje staging i produkcijskih verzija na Google Play i App Store, kao i utvrđivanje uzroka i dovršavanje prvog objavljivanja kompanije na Huawei AppGallery, pošto je raniji pokušaj zastao usred postupka.",
+    "Izrada React frontenda za interni alat za praćenje logova i učešće u arhitektonskim razgovorima o tome šta alat prikazuje i na koji način.",
+    "Održavanje starijih sajtova na jQuery-ju uporedo sa novim poslom i pregled koda drugih programera."
+  ],
+  "stack": ["JavaScript", "SCSS", "Handlebars", "React", "React Native"],
+  "case_study": "agency-site"
+}

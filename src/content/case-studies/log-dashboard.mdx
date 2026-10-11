@@ -1,0 +1,166 @@
+---
+_draft: 'DRAFT — not committed. The reflection is a candidate, not your words. Approve or replace. I describe grouping without claiming why it was there — you said "grouping" and I did not invent a reason. Add one if you remember it. metrics empty and date_published omitted — no real numbers. Serbian drafted by Claude, needs review.'
+order: 6
+title_en: 'Deciding what an internal log tool should show'
+title_sr: 'Odlučivanje šta interni alat za logove treba da prikazuje'
+outcome_en: 'Built the React frontend of an internal log monitoring tool and helped decide what belonged in it. Working against a real backend, unfinished when I left.'
+outcome_sr: 'Izrada React frontenda za interni alat za praćenje logova i učešće u odlučivanju šta u njemu treba da postoji. Radio je uz pravi bekend, ali je ostao nedovršen kada sam otišla.'
+metrics: []
+stack: ['React', 'JavaScript']
+hero_image: './log-dashboard.png'
+hero_image_alt_en: 'DRAFT placeholder image — replace with a real screenshot or remove.'
+hero_image_alt_sr: 'NACRT rezervna slika — zameniti pravom slikom ili ukloniti.'
+published: true
+---
+
+<div data-lang="en">
+
+## Context
+
+Work went quiet. Rather than sit idle, the team decided to build something for
+itself: one place to see error, warning and info logs across all of our
+projects, and to assign a log to the developer who should deal with it.
+
+Sentry and Datadog already do this. We were not trying to beat them. We had the
+capacity, and a tool we understood end to end would be useful to us later.
+
+That is the honest reason it existed, and it is worth saying out loud, because
+it shaped what happened.
+
+## Problem
+
+Collecting logs is the easy half. The hard half is deciding what to show.
+
+A log stream is more than anyone will read. Show all of it and it is noise, and
+people stop opening the tool. Show too little and they stop trusting it. Every
+useful decision in a tool like this is a decision about what to leave out.
+
+## My role
+
+I built the frontend. A colleague built the backend. I was in the architecture
+discussions from the start — what belonged in the tool, what did not, how the
+data should be presented, and what a log's detail view needs to carry.
+
+That last question was the one we spent the most time on. A developer opening a
+log has one decision to make: is this mine, and do I act on it. Everything on
+that screen either helps with that or is in the way.
+
+## Approach
+
+The frontend was built around four things:
+
+**Filters**, so the stream can be narrowed to what someone is actually
+responsible for.
+
+**Grouping**, so related entries are read as one thing rather than as a list.
+
+**A detail view** carrying the information a developer needs to decide whether
+to act — the part the team argued about most.
+
+**Assignment**, so a log becomes someone's, and stops being everyone's.
+
+I built it in React against the real backend as it came together, not against
+mock data. Screens that have never met real data hide the problems that matter.
+
+## Outcome
+
+I left the company before it was finished, and it was never released.
+
+What existed was a working React frontend running against a real backend:
+filters, grouping, detail views and assignment, all clickable against real logs.
+Not a prototype of screens — a partly built tool.
+
+## Stack
+
+React, JavaScript.
+
+## What I would do differently
+
+DRAFT — approve this or replace it.
+
+We started from the tool we wanted to build rather than from the problem we
+had. Nobody had written down what was actually going wrong with logs at that
+point — which errors were being missed, and by whom. Spare capacity is a fine
+reason to start something. It is not a definition of done, and without one it is
+easy for a project to simply stop when the capacity does.
+
+I would write down the question the tool has to answer, and for whom, before
+deciding what it shows.
+
+</div>
+
+<div data-lang="sr">
+
+## Kontekst
+
+Posla je bilo malo. Umesto da stojimo, tim je odlučio da napravi nešto za sebe:
+jedno mesto na kojem se vide error, warning i info logovi sa svih naših
+projekata i na kojem se log može dodeliti programeru koji treba da se time bavi.
+
+Sentry i Datadog to već rade. Nismo pokušavali da ih nadmašimo. Imali smo
+vremena, a alat koji razumemo od početka do kraja bio bi nam koristan kasnije.
+
+To je pošten razlog zbog kojeg je nastao i vredi ga izgovoriti naglas, jer je
+odredio sve što je usledilo.
+
+## Problem
+
+Prikupljanje logova je lakša polovina. Teža je odluka šta prikazati.
+
+Tok logova je veći nego što će iko pročitati. Prikaži sve i to je šum, pa ljudi
+prestanu da otvaraju alat. Prikaži premalo i prestanu da mu veruju. Svaka
+korisna odluka u ovakvom alatu jeste odluka o tome šta izostaviti.
+
+## Moja uloga
+
+Radila sam frontend. Kolega je radio bekend. Bila sam u arhitektonskim razgovorima
+od početka — šta pripada alatu, šta ne, kako podatke prikazati i šta detaljan
+prikaz jednog loga mora da sadrži.
+
+Na tom poslednjem pitanju proveli smo najviše vremena. Programer koji otvori log
+ima jednu odluku: da li je ovo moje i da li nešto preduzimam. Sve na tom ekranu
+ili pomaže toj odluci ili smeta.
+
+## Pristup
+
+Frontend je izgrađen oko četiri stvari:
+
+**Filteri**, da bi se tok suzio na ono za šta je neko zaista odgovoran.
+
+**Grupisanje**, da bi se povezani unosi čitali kao jedna stvar, a ne kao spisak.
+
+**Detaljan prikaz**, sa informacijama potrebnim programeru da odluči da li da
+reaguje — deo oko kojeg se tim najviše raspravljao.
+
+**Dodeljivanje**, da bi log postao nečiji i prestao da bude svačiji.
+
+Pravila sam ga u React-u uz pravi bekend kako je nastajao, a ne uz izmišljene
+podatke. Ekrani koji nikada nisu videli prave podatke skrivaju upravo one
+probleme koji su bitni.
+
+## Rezultat
+
+Otišla sam iz kompanije pre nego što je dovršen i nikada nije objavljen.
+
+Ono što je postojalo bio je frontend u React-u koji radi uz pravi bekend:
+filteri, grupisanje, detaljni prikazi i dodeljivanje, sve upotrebljivo nad
+stvarnim logovima. Ne prototip ekrana, već delimično izgrađen alat.
+
+## Tehnologije
+
+React, JavaScript.
+
+## Šta bih uradila drugačije
+
+NACRT — odobri ovo ili zameni.
+
+Krenuli smo od alata koji smo hteli da napravimo, a ne od problema koji smo
+imali. Niko nije zapisao šta zapravo nije valjalo sa logovima u tom trenutku —
+koje greške se propuštaju i kome. Slobodno vreme je sasvim dobar razlog da se
+nešto započne. Nije definicija završenog, a bez nje je lako da projekat prosto
+stane kada stane i to vreme.
+
+Zapisala bih pitanje na koje alat mora da odgovori, i za koga, pre nego što bih
+odlučivala šta prikazuje.
+
+</div>

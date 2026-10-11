@@ -1,0 +1,29 @@
+{
+  "_draft": "DRAFT — not committed. No metrics, none are known. Serbian drafted by Claude, needs review. case_study can only hold ONE reference but this role has three published case studies — see chat.",
+  "order": 1,
+  "company": "Just Eat Takeaway",
+  "role_en": "Software Engineer",
+  "role_sr": "Softverski inženjer",
+  "start": "2025-12",
+  "end": null,
+  "location_en": "Sofia, Bulgaria",
+  "location_sr": "Sofija, Bugarska",
+  "bullets_en": [
+    "Built and released a Terms and Conditions micro frontend, moving it out of an application that held several unrelated concerns and off an end-of-life framework version.",
+    "Migrated two applications from Vue 2 to Vue 3, working around an internal dependency that had no Vue 3 release rather than waiting for one.",
+    "Evaluated two spec-driven development frameworks on real migration work and presented a recommendation to the team.",
+    "Took over a chatbot application from another team: consolidated it from several repositories, obtained the access and credentials the team needed to run it, tested it for release, and presented its architecture to my team and beyond.",
+    "Replaced free-text confirmations in the chatbot with explicit confirm and cancel buttons, so a user's intent could no longer be misread before a live setting changed.",
+    "Ran the team's monthly retrospectives."
+  ],
+  "bullets_sr": [
+    "Izrada i izdanje mikro-frontend aplikacije za uslove korišćenja, izdvojene iz aplikacije koja je sadržala više nepovezanih namena i sa verzije radnog okvira kojoj je istekla podrška.",
+    "Prelazak dve aplikacije sa Vue 2 na Vue 3, uz zaobilaženje interne zavisnosti koja nije imala izdanje za Vue 3, umesto čekanja na njega.",
+    "Procena dva radna okvira za razvoj vođen specifikacijom na stvarnom poslu migracije i predstavljanje preporuke timu.",
+    "Preuzimanje chatbot aplikacije od drugog tima: objedinjavanje iz više repozitorijuma, obezbeđivanje pristupa i pristupnih podataka potrebnih timu za pokretanje, testiranje pred izdanje i predstavljanje arhitekture mom timu i šire.",
+    "Zamena potvrda u vidu slobodnog teksta u chatbotu izričitim dugmadima za potvrdu i otkazivanje, čime se namera korisnika više ne tumači pogrešno pre izmene aktivnog podešavanja.",
+    "Vođenje mesečnih retrospektiva tima."
+  ],
+  "stack": ["Vue 3", "single-spa", "TypeScript", "Python", "React"],
+  "case_study": "chatbot-handover"
+}

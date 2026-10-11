@@ -1,0 +1,128 @@
+---
+_draft: 'DRAFT — not committed. Check: was TypeScript involved? I assumed it. The reflection is a candidate, not your words. Approve or replace. metrics empty and date_published omitted — no real numbers. Serbian drafted by Claude, needs review.'
+order: 2
+title_en: 'Migrating to Vue 3 without waiting for the blocker'
+title_sr: 'Prelazak na Vue 3 bez čekanja na prepreku'
+outcome_en: 'Migrated two applications from Vue 2 to Vue 3 despite an internal dependency that had no Vue 3 release. Both are live.'
+outcome_sr: 'Prelazak dve aplikacije sa Vue 2 na Vue 3 uprkos internoj zavisnosti koja nije imala izdanje za Vue 3. Obe su u produkciji.'
+metrics: []
+stack: ['Vue 3', 'Vue 2', 'TypeScript']
+hero_image: './vue3-migration.png'
+hero_image_alt_en: 'DRAFT placeholder image — replace with a real screenshot or remove.'
+hero_image_alt_sr: 'NACRT rezervna slika — zameniti pravom slikom ili ukloniti.'
+published: true
+---
+
+<div data-lang="en">
+
+## Context
+
+Two applications running on Vue 2, both needing to move to Vue 3.
+
+## Problem
+
+The framework upgrade itself is well-documented work. The blocker was not the
+framework.
+
+Both applications depended on internal shared libraries, and one of them — a
+component library owned by another team — had no Vue 3 release at all. An
+application cannot move to a major version its dependencies refuse to follow,
+and the fix was not mine to make. Waiting for the owning team would have parked
+both migrations for an unknown length of time.
+
+## My role
+
+I ran both migrations.
+
+## Approach
+
+I treated each blocked dependency as its own decision rather than treating "the
+dependencies" as one problem.
+
+Where a Vue 3 version existed, I upgraded to it and adapted the calling code to
+whatever had changed in its API.
+
+Where none existed, I built a replacement inside the application — scoped to
+exactly what that application used, and nothing more. Deliberately narrow: this
+was a stopgap to be deleted once the owning team shipped their version, not a
+fork to be maintained. Keeping it small is what makes removing it later cheap
+rather than another migration.
+
+That unblocked the work without waiting and without taking on somebody else's
+library.
+
+## Outcome
+
+Both applications are live on Vue 3.
+
+## Stack
+
+Vue 3, Vue 2, TypeScript.
+
+## What I would do differently
+
+DRAFT — approve this or replace it.
+
+The in-app replacement was the right call, but it is only temporary if somebody
+actually removes it. I would tie it to something that will not be forgotten —
+an issue on the owning team's release, or a note in the code that fails a check
+once their version exists — rather than relying on the team remembering why it
+is there.
+
+</div>
+
+<div data-lang="sr">
+
+## Kontekst
+
+Dve aplikacije na Vue 2, obe su morale da pređu na Vue 3.
+
+## Problem
+
+Sama nadogradnja radnog okvira dobro je dokumentovan posao. Prepreka nije bio
+radni okvir.
+
+Obe aplikacije zavisile su od internih deljenih biblioteka, a jedna od njih —
+biblioteka komponenti u vlasništvu drugog tima — uopšte nije imala izdanje za
+Vue 3. Aplikacija ne može da pređe na veliku verziju koju njene zavisnosti ne
+prate, a ispravka nije bila u mojim rukama. Čekanje na tim vlasnik zaustavilo bi
+obe migracije na neodređeno vreme.
+
+## Moja uloga
+
+Sprovela sam obe migracije.
+
+## Pristup
+
+Svaku blokiranu zavisnost tretirala sam kao zasebnu odluku, umesto da „zavisnosti“
+posmatram kao jedan problem.
+
+Tamo gde je verzija za Vue 3 postojala, nadogradila sam je i prilagodila kod koji
+je poziva onome što se promenilo u njenom API-ju.
+
+Tamo gde je nije bilo, napravila sam zamenu unutar same aplikacije — ograničenu
+tačno na ono što ta aplikacija koristi i ništa više. Namerno usko: to je bilo
+privremeno rešenje koje treba obrisati čim tim vlasnik objavi svoju verziju, a
+ne grana koju treba održavati. Upravo to što je malo čini njeno kasnije
+uklanjanje jeftinim, umesto još jednom migracijom.
+
+Time je posao odblokiran bez čekanja i bez preuzimanja tuđe biblioteke.
+
+## Rezultat
+
+Obe aplikacije su u produkciji na Vue 3.
+
+## Tehnologije
+
+Vue 3, Vue 2, TypeScript.
+
+## Šta bih uradila drugačije
+
+NACRT — odobri ovo ili zameni.
+
+Zamena unutar aplikacije bila je ispravan potez, ali je privremena samo ako je neko
+zaista ukloni. Vezala bih je za nešto što se neće zaboraviti — zadatak vezan za
+izdanje tima vlasnika, ili napomenu u kodu koja obara proveru čim njihova
+verzija postoji — umesto da se oslanjam na to da će tim zapamtiti zašto je tu.
+
+</div>

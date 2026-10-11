@@ -1,0 +1,138 @@
+---
+_draft: 'DRAFT — not committed. Check: is the new app Vue 3 and TypeScript? I assumed both. The reflection is a candidate, not your words — you said nothing was hard. Approve it, replace it, or tell me and I write that nothing was hard. metrics empty and date_published omitted — no real numbers. Serbian drafted by Claude, needs review.'
+order: 1
+title_en: 'Splitting Terms and Conditions into its own app'
+title_sr: 'Izdvajanje uslova korišćenja u zasebnu aplikaciju'
+outcome_en: 'Moved Terms and Conditions out of a shared micro frontend into its own application, off an end-of-life framework version and into production.'
+outcome_sr: 'Izdvajanje uslova korišćenja iz zajedničke mikro-frontend aplikacije u zasebnu, sa verzije radnog okvira kojoj je istekla podrška i u produkciju.'
+metrics: []
+stack: ['Vue 3', 'single-spa', 'TypeScript']
+hero_image: './terms-microfrontend.png'
+hero_image_alt_en: 'DRAFT placeholder image — replace with a real screenshot or remove.'
+hero_image_alt_sr: 'NACRT rezervna slika — zameniti pravom slikom ili ukloniti.'
+published: true
+---
+
+<div data-lang="en">
+
+## Context
+
+The company's terms and conditions were served by a micro frontend that also
+held several other, unrelated things. It was not built around one concern, and
+it ran on Vue 2.
+
+## Problem
+
+Three problems, and they reinforced each other.
+
+Vue 2 had reached end of life. An unmaintained framework version stops
+receiving security patches, so staying on it is a standing vulnerability rather
+than a piece of tech debt to schedule.
+
+Releases were coupled. A change to the terms shipped alongside everything else
+living in that application, which makes a small, low-risk edit carry the risk
+of everything it travels with.
+
+Ownership was unclear. An application covering several unrelated concerns has
+no obvious owner for any one of them.
+
+## My role
+
+I built and released it end to end — from the project template to production.
+
+## Approach
+
+Upgrading the shared application in place would have solved the framework
+problem and neither of the other two. Extraction solved all three at once, so I
+took the terms out rather than modernising around them.
+
+I started from the organisation's micro frontend template, moved the logic
+across, wired the new application into the single-spa host, and released it as
+its own deployable unit.
+
+The reasons to extract were also the reasons to keep the result small: one
+concern, one owner, one release.
+
+## Outcome
+
+It is live. Terms and conditions now deploy independently of the application
+they came from, on a supported framework version, with a clear owner.
+
+## Stack
+
+Vue 3, single-spa, TypeScript.
+
+## What I would do differently
+
+DRAFT — approve this or replace it.
+
+Nothing about the build was difficult, and that is worth saying plainly: the
+template did its job, and the interesting decision had already been made before
+any code was written. The question worth more of my time was the one I answered
+quickly — extract, or upgrade in place. It was the right call here because
+three problems collapsed into one piece of work, but I would want to be able to
+show that rather than assert it.
+
+</div>
+
+<div data-lang="sr">
+
+## Kontekst
+
+Uslovi korišćenja kompanije bili su deo mikro-frontend aplikacije koja je
+sadržala i još nekoliko nepovezanih stvari. Nije bila građena oko jedne
+namene, a radila je na Vue 2.
+
+## Problem
+
+Tri problema, koja su se međusobno pojačavala.
+
+Vue 2 je izgubio podršku. Verzija radnog okvira koja se više ne održava ne
+dobija bezbednosne zakrpe, pa ostanak na njoj nije tehnički dug koji se
+planira, već stalna ranjivost.
+
+Izdanja su bila povezana. Izmena uslova isporučivala se zajedno sa svim ostalim
+što živi u toj aplikaciji, pa mala izmena niskog rizika nosi rizik svega sa čim
+putuje.
+
+Vlasništvo je bilo nejasno. Aplikacija koja pokriva nekoliko nepovezanih namena
+nema očiglednog vlasnika ni za jednu od njih.
+
+## Moja uloga
+
+Izradila sam je i izdala od početka do kraja — od šablona projekta do produkcije.
+
+## Pristup
+
+Nadogradnja zajedničke aplikacije na licu mesta rešila bi problem radnog okvira
+i nijedan od druga dva. Izdvajanje je rešilo sva tri odjednom, pa sam uslove
+izdvojila umesto da ih modernizujem u postojećem okruženju.
+
+Krenula sam od organizacionog šablona za mikro-frontend, prebacila logiku,
+povezala novu aplikaciju sa single-spa domaćinom i izdala je kao zasebnu
+jedinicu za postavljanje.
+
+Razlozi za izdvajanje bili su ujedno i razlozi da rezultat ostane mali: jedna
+namena, jedan vlasnik, jedno izdanje.
+
+## Rezultat
+
+U produkciji je. Uslovi korišćenja se sada postavljaju nezavisno od aplikacije
+iz koje su potekli, na podržanoj verziji radnog okvira i sa jasnim vlasnikom.
+
+## Tehnologije
+
+Vue 3, single-spa, TypeScript.
+
+## Šta bih uradila drugačije
+
+NACRT — odobri ovo ili zameni.
+
+Ništa u samoj izradi nije bilo teško, i to vredi reći otvoreno: šablon je
+odradio svoj posao, a zanimljiva odluka bila je doneta pre nego što je napisan
+i jedan red koda. Pitanje koje je zasluživalo više vremena bilo je ono na koje
+sam brzo odgovorila — izdvojiti ili nadograditi na licu mesta. Ovde je odluka
+bila ispravna jer su se tri problema svela na jedan posao, ali bih volela da to
+mogu i da pokažem, a ne samo da tvrdim.
+
+</div>
